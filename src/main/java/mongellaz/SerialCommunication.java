@@ -1,3 +1,5 @@
+package mongellaz;
+
 import com.fazecast.jSerialComm.*;
 
 import java.util.Arrays;
