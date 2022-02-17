@@ -20,12 +20,12 @@ public class SerialCommunication {
             Thread.sleep(3000);
 
             int nChecks = 10;
-            for (int i = 0 ; i < nChecks ; i++) {
+            for (int i = 0; i < nChecks; i++) {
                 // Write handshake
-                byte handshakeCode = 0x10;
-                byte[] softwareId = {0x01, (byte) 0xEE, 0x35, (byte) 0xD7, 0x2A, (byte) 0x80, 0x58, (byte) 0xEA};
-                byte[] expectedResponse = {16, -123, -14, -98, -29, 67, 25, -22, -10};
-                byte endCode = 0x00;
+                final byte handshakeCode = 0x10;
+                final byte[] softwareId = {0x01, (byte) 0xEE, 0x35, (byte) 0xD7, 0x2A, (byte) 0x80, 0x58, (byte) 0xEA};
+                final byte[] expectedResponse = {16, -123, -14, -98, -29, 67, 25, -22, -10, 0};
+                final byte endCode = 0x00;
                 byte[] writeBuffer = new byte[softwareId.length + 2];
                 writeBuffer[0] = handshakeCode;
                 System.arraycopy(softwareId, 0, writeBuffer, 1, softwareId.length);
@@ -33,22 +33,27 @@ public class SerialCommunication {
                 comPort.writeBytes(writeBuffer, writeBuffer.length);
 
                 // Read response
-                int responseSize = 9;
-                byte[] responseBuffer = new byte[responseSize];
+                final int inputBufferSize = 16;
+                byte[] responseBuffer = new byte[inputBufferSize];
                 int readBytes = 0;
-                while (readBytes < responseSize) {
-                    int bufferSize = 128;
+                byte lastReadByte = (byte) 0xFF;
+                int totalReadBytes = 0;
+                while (lastReadByte != endCode && totalReadBytes < inputBufferSize) {
+                    final int bufferSize = 128;
                     byte[] readBuffer = new byte[bufferSize];
                     int readBytesInOnce = comPort.readBytes(readBuffer, comPort.bytesAvailable());
+                    totalReadBytes += readBytesInOnce;
                     if (readBytesInOnce > 0) {
+                        lastReadByte = readBuffer[readBytesInOnce - 1];
                         System.arraycopy(readBuffer, 0, responseBuffer, readBytes, readBytesInOnce);
                         readBytes += readBytesInOnce;
-                        if (responseBuffer[readBytes - 1] == -1) {
-                            throw new ArduinoErrorException();
-                        }
                     }
                 }
-                if (Arrays.equals(responseBuffer, expectedResponse)) {
+                if (lastReadByte != endCode) {
+                    throw new ArduinoErrorException();
+                }
+                final byte[] response = Arrays.copyOfRange(responseBuffer, 0, expectedResponse.length);
+                if (Arrays.equals(response, expectedResponse)) {
                     logger.info("OK");
                 } else {
                     logger.error("Not OK");
