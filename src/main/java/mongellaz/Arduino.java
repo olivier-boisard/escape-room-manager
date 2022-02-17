@@ -8,12 +8,7 @@ import java.util.Arrays;
 
 public class Arduino {
     public static void main(String[] args) {
-        SerialPort comPort = SerialPort.getCommPorts()[0];
-        Logger logger = LogManager.getLogger();
-        if (!comPort.openPort()) {
-            logger.fatal("Could not open serial port. Aborting");
-            return;
-        }
+
 
         try {
             // Wait for serial port to be ready
@@ -30,29 +25,9 @@ public class Arduino {
                 writeBuffer[0] = handshakeCode;
                 System.arraycopy(softwareId, 0, writeBuffer, 1, softwareId.length);
                 writeBuffer[writeBuffer.length - 1] = endCode;
-                comPort.writeBytes(writeBuffer, writeBuffer.length);
+                //TODO write
+                //TODO read
 
-                // Read response
-                final int inputBufferSize = 16;
-                byte[] responseBuffer = new byte[inputBufferSize];
-                int readBytes = 0;
-                byte lastReadByte = (byte) 0xFF;
-                int totalReadBytes = 0;
-                while (lastReadByte != endCode && totalReadBytes < inputBufferSize) {
-                    final int bufferSize = 128;
-                    byte[] readBuffer = new byte[bufferSize];
-                    int readBytesInOnce = comPort.readBytes(readBuffer, comPort.bytesAvailable());
-                    totalReadBytes += readBytesInOnce;
-                    if (readBytesInOnce > 0) {
-                        lastReadByte = readBuffer[readBytesInOnce - 1];
-                        System.arraycopy(readBuffer, 0, responseBuffer, readBytes, readBytesInOnce);
-                        readBytes += readBytesInOnce;
-                    }
-                }
-                if (lastReadByte != endCode) {
-                    throw new ArduinoErrorException();
-                }
-                final byte[] response = Arrays.copyOfRange(responseBuffer, 0, expectedResponse.length);
                 if (Arrays.equals(response, expectedResponse)) {
                     logger.info("OK");
                 } else {
