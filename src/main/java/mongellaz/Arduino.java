@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 
-public class SerialCommunication {
+public class Arduino {
     public static void main(String[] args) {
         SerialPort comPort = SerialPort.getCommPorts()[0];
         Logger logger = LogManager.getLogger();
