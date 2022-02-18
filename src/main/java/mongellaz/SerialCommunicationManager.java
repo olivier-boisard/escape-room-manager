@@ -42,9 +42,9 @@ public class SerialCommunicationManager implements CommunicationManager {
             int readBytesInOnce = serialPort.readBytes(readBuffer, serialPort.bytesAvailable());
 
             if (readBytesInOnce > 0) {
-                totalReadBytes += readBytesInOnce;
                 lastReadByte = readBuffer[readBytesInOnce - 1];
                 System.arraycopy(readBuffer, 0, responseBuffer, totalReadBytes, readBytesInOnce);
+                totalReadBytes += readBytesInOnce;
             }
         } while (continueRead(totalReadBytes, lastReadByte));
         checkReadSuccessful(lastReadByte);
