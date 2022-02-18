@@ -6,20 +6,30 @@ import java.util.Arrays;
 
 public class SerialCommunicationManager implements CommunicationManager {
 
-    public void initialize() throws ArduinoErrorException {
-        serialPort = SerialPort.getCommPorts()[0];
-        if (!serialPort.openPort()) {
-            throw new ArduinoErrorException("Could not open serial port. Aborting");
+    public void initialize() throws CommunicationException {
+        try {
+            serialPort = SerialPort.getCommPorts()[0];
+            if (!serialPort.openPort()) {
+                throw new CommunicationException("Could not open serial port. Aborting");
+            }
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new CommunicationException(e);
         }
     }
 
+    public void close() {
+        serialPort.closePort();
+    }
+
     @Override
-    public void write(byte[] data) throws ArduinoErrorException {
+    public void write(byte[] data) throws CommunicationException {
         serialPort.writeBytes(data, data.length);
     }
 
     @Override
-    public byte[] read() throws ArduinoErrorException {
+    public byte[] read() throws CommunicationException {
         final int inputBufferSize = 16;
         byte[] responseBuffer = new byte[inputBufferSize];
         int readBytes = 0;
@@ -41,7 +51,7 @@ public class SerialCommunicationManager implements CommunicationManager {
             }
         }
         if (lastReadByte != endCode) {
-            throw new ArduinoErrorException();
+            throw new CommunicationException();
         }
 
         return Arrays.copyOfRange(responseBuffer, 0, totalReadBytes);

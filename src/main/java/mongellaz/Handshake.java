@@ -1,14 +1,17 @@
 package mongellaz;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Arrays;
 
 public class Handshake {
     public static void main(String[] args) {
-
+        SerialCommunicationManager communicationManager = new SerialCommunicationManager();
+        Logger logger = LogManager.getLogger();
 
         try {
-            // Wait for serial port to be ready
-            Thread.sleep(3000);
+            communicationManager.initialize();
 
             int nChecks = 10;
             for (int i = 0; i < nChecks; i++) {
@@ -21,8 +24,8 @@ public class Handshake {
                 writeBuffer[0] = handshakeCode;
                 System.arraycopy(softwareId, 0, writeBuffer, 1, softwareId.length);
                 writeBuffer[writeBuffer.length - 1] = endCode;
-                //TODO write
-                //TODO read
+                communicationManager.write(writeBuffer);
+                byte[] response = communicationManager.read();
 
                 if (Arrays.equals(response, expectedResponse)) {
                     logger.info("OK");
@@ -30,13 +33,10 @@ public class Handshake {
                     logger.error("Not OK");
                 }
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            e.printStackTrace();
-        } catch (ArduinoErrorException e) {
+        } catch (CommunicationException e) {
             e.printStackTrace();
         } finally {
-            comPort.closePort();
+            communicationManager.close();
         }
     }
 }
