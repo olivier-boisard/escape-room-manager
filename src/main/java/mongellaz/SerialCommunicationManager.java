@@ -1,12 +1,10 @@
 package mongellaz;
 
 import com.fazecast.jSerialComm.SerialPort;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 
-public class ArduinoSerialCommunication implements ArduinoCommunication {
+public class SerialCommunicationManager implements CommunicationManager {
 
     public void initialize() throws ArduinoErrorException {
         serialPort = SerialPort.getCommPorts()[0];

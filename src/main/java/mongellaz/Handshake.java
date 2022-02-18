@@ -1,12 +1,8 @@
 package mongellaz;
 
-import com.fazecast.jSerialComm.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.Arrays;
 
-public class Arduino {
+public class Handshake {
     public static void main(String[] args) {
 
 
