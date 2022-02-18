@@ -30,33 +30,48 @@ public class SerialCommunicationManager implements CommunicationManager {
 
     @Override
     public byte[] read() throws CommunicationException {
-        final int inputBufferSize = 16;
-        byte[] responseBuffer = new byte[inputBufferSize];
-        int readBytes = 0;
-        byte lastReadByte = (byte) 0xFF;
+        // Variable declarations
+        byte[] responseBuffer = new byte[INPUT_BUFFER_SIZE];
         int totalReadBytes = 0;
-        final byte endCode = 0x00;
-        while (lastReadByte != endCode && totalReadBytes < inputBufferSize) {
+        byte lastReadByte = 0x00;
+
+        // Read data from serial port
+        do {
             final int bufferSize = 128;
             byte[] readBuffer = new byte[bufferSize];
-
-            //TODO only this bit depend on SerialComm
             int readBytesInOnce = serialPort.readBytes(readBuffer, serialPort.bytesAvailable());
 
-            totalReadBytes += readBytesInOnce;
             if (readBytesInOnce > 0) {
+                totalReadBytes += readBytesInOnce;
                 lastReadByte = readBuffer[readBytesInOnce - 1];
-                System.arraycopy(readBuffer, 0, responseBuffer, readBytes, readBytesInOnce);
-                readBytes += readBytesInOnce;
+                System.arraycopy(readBuffer, 0, responseBuffer, totalReadBytes, readBytesInOnce);
             }
-        }
-        if (lastReadByte != endCode) {
-            throw new CommunicationException();
-        }
+        } while (continueRead(totalReadBytes, lastReadByte));
+        checkReadSuccessful(lastReadByte);
 
+        // Return
         return Arrays.copyOfRange(responseBuffer, 0, totalReadBytes);
     }
 
+    private boolean continueRead(int totalReadBytes, byte lastReadByte) {
+        final boolean readAtLeastOneByte = totalReadBytes > 0;
+        final boolean bufferOverflow = totalReadBytes > INPUT_BUFFER_SIZE;
+        return isNotTerminationByte(lastReadByte) && readAtLeastOneByte && !bufferOverflow;
+    }
+
+    private void checkReadSuccessful(byte lastReadByte) throws CommunicationException {
+        if (isNotTerminationByte(lastReadByte)) {
+            throw new CommunicationException();
+        }
+    }
+
+    private boolean isNotTerminationByte(byte b) {
+        final byte terminationByte = 0x00;
+        return b != terminationByte;
+    }
+
     private SerialPort serialPort;
+
+    private static final int INPUT_BUFFER_SIZE = 16;
 
 }
