@@ -7,7 +7,8 @@ import org.apache.logging.log4j.Logger;
 
 public class StatusRequestTest {
     public static void main(String[] args) {
-        new SerialCommunicationTest(new StatusRequestFactory(), new StatusRequestResponseProcessor()).run();
+        int nChecks = 100;
+        new SerialCommunicationTest(new StatusRequestFactory(), new StatusRequestResponseProcessor()).run(nChecks);
     }
 
     private static class StatusRequestResponseProcessor implements ResponseProcessor {
@@ -65,7 +66,11 @@ public class StatusRequestTest {
                         default -> throw new CommunicationException("Unexpected byte: " + responseByte);
                     }
                 }
+                Thread.sleep(1000);
             } catch (CommunicationException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 e.printStackTrace();
             }
         }
