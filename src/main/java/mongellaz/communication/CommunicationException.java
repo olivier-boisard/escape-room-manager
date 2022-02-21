@@ -11,7 +11,4 @@ public class CommunicationException extends Exception {
         super(message);
     }
 
-    public CommunicationException(Throwable e) {
-        super(e);
-    }
 }
