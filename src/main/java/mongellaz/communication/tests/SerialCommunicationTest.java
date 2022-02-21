@@ -9,7 +9,8 @@ public record SerialCommunicationTest(ByteArrayFactory commandFactory, ResponseP
             Thread.sleep(3000);
             final int nChecks = 10;
             for (int i = 0; i < nChecks; i++) {
-                serialCommunicationManager.write(commandFactory.generate());
+                byte[] command = commandFactory.generate();
+                serialCommunicationManager.write(command);
                 byte[] response = serialCommunicationManager.read();
                 responseProcessor.process(response);
             }
