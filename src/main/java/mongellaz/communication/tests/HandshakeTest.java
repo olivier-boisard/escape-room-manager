@@ -1,27 +1,29 @@
-package mongellaz.communication;
+package mongellaz.communication.tests;
 
 import mongellaz.commands.HandshakeFactory;
 import mongellaz.commands.ResponseProcessor;
+import mongellaz.communication.CommunicationException;
+import mongellaz.communication.SerialCommunicationManager;
 
-public class CommunicationTests {
+public class HandshakeTest {
     public static void main(String[] args) {
-        SerialCommunicationManager communicationManager = new SerialCommunicationManager();
+        SerialCommunicationManager serialCommunicationManager = new SerialCommunicationManager();
         HandshakeFactory handshakeFactory = new HandshakeFactory();
         ResponseProcessor responseProcessor = new ResponseProcessor();
 
         try {
-            communicationManager.initialize();
+            serialCommunicationManager.initialize();
 
             final int nChecks = 10;
             for (int i = 0; i < nChecks; i++) {
-                communicationManager.write(handshakeFactory.generate());
-                byte[] response = communicationManager.read();
+                serialCommunicationManager.write(handshakeFactory.generate());
+                byte[] response = serialCommunicationManager.read();
                 responseProcessor.process(response);
             }
         } catch (CommunicationException e) {
             e.printStackTrace();
         } finally {
-            communicationManager.close();
+            serialCommunicationManager.close();
         }
     }
 }
