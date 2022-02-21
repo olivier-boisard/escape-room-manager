@@ -1,4 +1,4 @@
-package mongellaz;
+package mongellaz.communication;
 
 
 public class CommunicationException extends Exception {

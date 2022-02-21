@@ -1,4 +1,4 @@
-package mongellaz;
+package mongellaz.communication;
 
 import com.fazecast.jSerialComm.SerialPort;
 
