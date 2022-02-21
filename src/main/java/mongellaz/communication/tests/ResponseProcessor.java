@@ -1,4 +1,4 @@
-package mongellaz.commands;
+package mongellaz.communication.tests;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
