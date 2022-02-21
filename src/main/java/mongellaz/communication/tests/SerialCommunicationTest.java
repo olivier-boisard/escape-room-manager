@@ -4,10 +4,10 @@ import mongellaz.commands.ByteArrayFactory;
 import mongellaz.communication.SerialCommunicationManager;
 
 public record SerialCommunicationTest(ByteArrayFactory commandFactory, ResponseProcessor responseProcessor) {
-    public void run() {
+
+    public void run(int nChecks) {
         try (SerialCommunicationManager serialCommunicationManager = new SerialCommunicationManager()) {
             Thread.sleep(3000);
-            final int nChecks = 10;
             for (int i = 0; i < nChecks; i++) {
                 byte[] command = commandFactory.generate();
                 serialCommunicationManager.write(command);
@@ -20,5 +20,10 @@ public record SerialCommunicationTest(ByteArrayFactory commandFactory, ResponseP
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void run() {
+        int nChecks = 1;
+        run(nChecks);
     }
 }

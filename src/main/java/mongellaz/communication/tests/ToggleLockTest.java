@@ -9,7 +9,8 @@ import java.util.Arrays;
 
 public class ToggleLockTest {
     public static void main(String[] args) {
-        new SerialCommunicationTest(new ToggleLockCommandFactory(), new ToggleLockResponseProcessor()).run();
+        int nChecks = 10;
+        new SerialCommunicationTest(new ToggleLockCommandFactory(), new ToggleLockResponseProcessor()).run(nChecks);
     }
 
     private static class ToggleLockResponseProcessor implements ResponseProcessor {

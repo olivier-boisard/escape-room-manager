@@ -9,10 +9,11 @@ import java.util.Arrays;
 
 public class ToggleConfigurationModeTest {
     public static void main(String[] args) {
+        int nChecks = 10;
         new SerialCommunicationTest(
                 new ToggleConfigurationModeCommandFactory(),
                 new ToggleConfigurationModeResponseProcessor()
-        ).run();
+        ).run(nChecks);
     }
 
     private static class ToggleConfigurationModeResponseProcessor implements ResponseProcessor {

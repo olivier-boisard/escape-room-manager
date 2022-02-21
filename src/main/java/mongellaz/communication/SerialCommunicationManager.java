@@ -45,7 +45,7 @@ public class SerialCommunicationManager implements CommunicationManager {
         checkReadSuccessful(lastReadByte);
 
         // Return
-        return Arrays.copyOfRange(responseBuffer, 0, totalReadBytes);
+        return Arrays.copyOfRange(responseBuffer, 0, totalReadBytes - 1);
     }
 
     private boolean continueRead(int totalReadBytes, byte lastReadByte) {
