@@ -6,25 +6,20 @@ import java.util.Arrays;
 
 public class SerialCommunicationManager implements CommunicationManager {
 
-    public void initialize() throws CommunicationException {
-        try {
-            serialPort = SerialPort.getCommPorts()[0];
-            if (!serialPort.openPort()) {
-                throw new CommunicationException("Could not open serial port. Aborting");
-            }
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new CommunicationException(e);
+    public SerialCommunicationManager() throws CommunicationException {
+        serialPort = SerialPort.getCommPorts()[0];
+        if (!serialPort.openPort()) {
+            throw new CommunicationException("Could not open serial port. Aborting");
         }
     }
 
+    @Override
     public void close() {
         serialPort.closePort();
     }
 
     @Override
-    public void write(byte[] data) throws CommunicationException {
+    public void write(byte[] data) {
         serialPort.writeBytes(data, data.length);
     }
 
@@ -70,7 +65,7 @@ public class SerialCommunicationManager implements CommunicationManager {
         return b != terminationByte;
     }
 
-    private SerialPort serialPort;
+    private final SerialPort serialPort;
 
     private static final int INPUT_BUFFER_SIZE = 16;
 
