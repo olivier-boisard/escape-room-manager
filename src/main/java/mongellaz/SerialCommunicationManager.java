@@ -54,9 +54,9 @@ public class SerialCommunicationManager implements CommunicationManager {
     }
 
     private boolean continueRead(int totalReadBytes, byte lastReadByte) {
-        final boolean readAtLeastOneByte = totalReadBytes > 0;
-        final boolean bufferOverflow = totalReadBytes > INPUT_BUFFER_SIZE;
-        return isNotTerminationByte(lastReadByte) && readAtLeastOneByte && !bufferOverflow;
+        final boolean bufferNotFilled = totalReadBytes < INPUT_BUFFER_SIZE;
+        final boolean readZeroBytes = totalReadBytes == 0;
+        return bufferNotFilled && (isNotTerminationByte(lastReadByte) || readZeroBytes);
     }
 
     private void checkReadSuccessful(byte lastReadByte) throws CommunicationException {
