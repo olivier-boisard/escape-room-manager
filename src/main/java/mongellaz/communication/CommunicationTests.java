@@ -1,16 +1,13 @@
 package mongellaz.communication;
 
 import mongellaz.commands.HandshakeFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Arrays;
+import mongellaz.commands.ResponseProcessor;
 
 public class CommunicationTests {
     public static void main(String[] args) {
         SerialCommunicationManager communicationManager = new SerialCommunicationManager();
-        Logger logger = LogManager.getLogger();
         HandshakeFactory handshakeFactory = new HandshakeFactory();
+        ResponseProcessor responseProcessor = new ResponseProcessor();
 
         try {
             communicationManager.initialize();
@@ -19,12 +16,7 @@ public class CommunicationTests {
             for (int i = 0; i < nChecks; i++) {
                 communicationManager.write(handshakeFactory.generate());
                 byte[] response = communicationManager.read();
-                final byte[] expectedResponse = {16, -123, -14, -98, -29, 67, 25, -22, -10, 0};
-                if (Arrays.equals(response, expectedResponse)) {
-                    logger.info("OK");
-                } else {
-                    logger.error("Not OK");
-                }
+                responseProcessor.process(response);
             }
         } catch (CommunicationException e) {
             e.printStackTrace();
