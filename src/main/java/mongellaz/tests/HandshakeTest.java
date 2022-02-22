@@ -1,5 +1,6 @@
 package mongellaz.tests;
 
+import mongellaz.commands.ResponseProcessor;
 import mongellaz.commands.handshake.HandshakeFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

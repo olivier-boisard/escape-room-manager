@@ -1,4 +1,4 @@
-package mongellaz.tests;
+package mongellaz.commands;
 
 
 @FunctionalInterface

@@ -1,6 +1,7 @@
 package mongellaz.tests;
 
 import mongellaz.commands.ByteArrayFactory;
+import mongellaz.commands.ResponseProcessor;
 import mongellaz.communication.SerialCommunicationManager;
 
 @SuppressWarnings("ClassCanBeRecord")

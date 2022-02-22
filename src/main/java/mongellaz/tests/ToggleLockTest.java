@@ -1,5 +1,6 @@
 package mongellaz.tests;
 
+import mongellaz.commands.ResponseProcessor;
 import mongellaz.commands.togglelock.ToggleLockCommandFactory;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;
