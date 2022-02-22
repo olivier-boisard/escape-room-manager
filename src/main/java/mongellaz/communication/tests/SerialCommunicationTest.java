@@ -3,7 +3,13 @@ package mongellaz.communication.tests;
 import mongellaz.commands.ByteArrayFactory;
 import mongellaz.communication.SerialCommunicationManager;
 
-public record SerialCommunicationTest(ByteArrayFactory commandFactory, ResponseProcessor responseProcessor) {
+@SuppressWarnings("ClassCanBeRecord")
+public class SerialCommunicationTest {
+
+    public SerialCommunicationTest(ByteArrayFactory commandFactory, ResponseProcessor responseProcessor) {
+        this.commandFactory = commandFactory;
+        this.responseProcessor = responseProcessor;
+    }
 
     public void run(int nChecks) {
         try (SerialCommunicationManager serialCommunicationManager = new SerialCommunicationManager()) {
@@ -21,4 +27,8 @@ public record SerialCommunicationTest(ByteArrayFactory commandFactory, ResponseP
             e.printStackTrace();
         }
     }
+
+    private final ByteArrayFactory commandFactory;
+    private final ResponseProcessor responseProcessor;
+
 }
