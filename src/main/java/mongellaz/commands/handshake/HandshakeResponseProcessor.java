@@ -9,13 +9,18 @@ import java.util.Arrays;
 public class HandshakeResponseProcessor implements ResponseProcessor {
     @Override
     public void process(final byte[] response) {
-        final byte[] expectedResponse = {16, -123, -14, -98, -29, 67, 25, -22, -10};
-        if (Arrays.equals(response, expectedResponse)) {
-            logger.info("Received expected response");
-        } else {
-            if (logger.isErrorEnabled()) {
-                logger.error("Invalid response: {}", Arrays.toString(response));
+        final byte commandCode = 0x10;
+        if (response[0] == commandCode) {
+            final byte[] expectedResponse = {commandCode, -123, -14, -98, -29, 67, 25, -22, -10};
+            if (Arrays.equals(response, expectedResponse)) {
+                logger.info("Received expected response");
+            } else {
+                if (logger.isErrorEnabled()) {
+                    logger.error("Invalid response: {}", Arrays.toString(response));
+                }
             }
+        } else {
+            logger.debug("Ignoring command with code {}", commandCode);
         }
     }
 

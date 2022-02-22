@@ -1,8 +1,12 @@
 package mongellaz.application;
 
+import com.fazecast.jSerialComm.SerialPort;
 import mongellaz.commands.handshake.HandshakeFactory;
+import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
-import mongellaz.communication.CommunicationException;
+import mongellaz.commands.statusrequest.StatusRequestResponseProcessor;
+import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
+import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
 import mongellaz.communication.SerialCommunicationManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +22,20 @@ public class Application {
         ScheduledExecutorService statusRequestExecutorService = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-        try (SerialCommunicationManager communicationManager = new SerialCommunicationManager()) {
+        LinkedListArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new LinkedListArduinoSerialPortMessageListener();
+        arduinoSerialPortMessageListener.addResponseProcessor(new HandshakeResponseProcessor());
+        arduinoSerialPortMessageListener.addResponseProcessor(new StatusRequestResponseProcessor());
+        arduinoSerialPortMessageListener.addResponseProcessor(new ToggleLockResponseProcessor());
+        arduinoSerialPortMessageListener.addResponseProcessor(new ToggleConfigurationModeResponseProcessor());
+
+        SerialPort serialPort = SerialPort.getCommPorts()[0];
+        if (!serialPort.openPort()) {
+            logger.fatal("Could not open serial port. Aborting");
+            return;
+        }
+        serialPort.addDataListener(arduinoSerialPortMessageListener);
+
+        try (SerialCommunicationManager communicationManager = new SerialCommunicationManager(serialPort)) {
             Thread.sleep(3000);
 
             // Start command writer thread
@@ -41,12 +58,8 @@ public class Application {
                     TimeUnit.SECONDS
             );
 
-            // TODO start thread for reading serial port
-
             //noinspection ResultOfMethodCallIgnored
             commandWriterExecutorService.awaitTermination(1, TimeUnit.MINUTES);
-        } catch (CommunicationException e) {
-            logger.error(e.getMessage());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             logger.fatal("Could not run Thread.sleep(): {}", e.getMessage());

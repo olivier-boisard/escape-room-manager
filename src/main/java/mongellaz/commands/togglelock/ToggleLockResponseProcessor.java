@@ -15,23 +15,29 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
     }
 
     private void processResponse(byte[] response) {
-        try {
-            final byte[] expectedResponse = {0x30, 0x03, (byte) 0xF1};
-            if (Arrays.equals(Arrays.copyOfRange(response, 0, expectedResponse.length), expectedResponse)) {
-                final byte openStatus = 0x01;
-                final byte closedStatus = 0x02;
-                final byte status = response[3];
-                String statusStr = switch (status) {
-                    case openStatus -> " - Open";
-                    case closedStatus -> " - Closed";
-                    default -> throw new CommunicationException("Unknown status " + status);
-                };
-                logger.info("OK - {}", statusStr);
-            } else {
-                logger.error("Not OK");
+        final byte commandCode = 0x30;
+
+        if (response[0] == commandCode) {
+            try {
+                final byte[] expectedResponse = {commandCode, 0x03, (byte) 0xF1};
+                if (Arrays.equals(Arrays.copyOfRange(response, 0, expectedResponse.length), expectedResponse)) {
+                    final byte openStatus = 0x01;
+                    final byte closedStatus = 0x02;
+                    final byte status = response[3];
+                    String statusStr = switch (status) {
+                        case openStatus -> " - Open";
+                        case closedStatus -> " - Closed";
+                        default -> throw new CommunicationException("Unknown status " + status);
+                    };
+                    logger.info("OK - {}", statusStr);
+                } else {
+                    logger.error("Not OK");
+                }
+            } catch (CommunicationException e) {
+                e.printStackTrace();
             }
-        } catch (CommunicationException e) {
-            e.printStackTrace();
+        } else {
+            logger.debug("Ignoring command with code {}", commandCode);
         }
     }
 
