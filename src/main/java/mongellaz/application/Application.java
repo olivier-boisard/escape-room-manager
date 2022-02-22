@@ -21,19 +21,18 @@ public class Application {
         StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
         ScheduledExecutorService statusRequestExecutorService = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
-
-        LinkedListArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new LinkedListArduinoSerialPortMessageListener();
-        arduinoSerialPortMessageListener.addResponseProcessor(new HandshakeResponseProcessor());
-        arduinoSerialPortMessageListener.addResponseProcessor(new StatusRequestResponseProcessor());
-        arduinoSerialPortMessageListener.addResponseProcessor(new ToggleLockResponseProcessor());
-        arduinoSerialPortMessageListener.addResponseProcessor(new ToggleConfigurationModeResponseProcessor());
+        ScheduledExecutorService arduinoSerialPortProcessorExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         SerialPort serialPort = SerialPort.getCommPorts()[0];
         if (!serialPort.openPort()) {
             logger.fatal("Could not open serial port. Aborting");
             return;
         }
-        serialPort.addDataListener(arduinoSerialPortMessageListener);
+        LinkedListArduinoSerialPortMessageProcessor arduinoSerialPortMessageProcessor = new LinkedListArduinoSerialPortMessageProcessor(serialPort);
+        arduinoSerialPortMessageProcessor.addResponseProcessor(new HandshakeResponseProcessor());
+        arduinoSerialPortMessageProcessor.addResponseProcessor(new StatusRequestResponseProcessor());
+        arduinoSerialPortMessageProcessor.addResponseProcessor(new ToggleLockResponseProcessor());
+        arduinoSerialPortMessageProcessor.addResponseProcessor(new ToggleConfigurationModeResponseProcessor());
 
         try (SerialCommunicationManager communicationManager = new SerialCommunicationManager(serialPort)) {
             //TODO parameterize
@@ -41,10 +40,18 @@ public class Application {
 
             // Start command writer thread
             CommandsWriter commandsWriter = new ConcurrentLinkedQueueCommandsWriter(communicationManager);
-            commandWriterExecutorService.scheduleAtFixedRate(
+            commandWriterExecutorService.scheduleWithFixedDelay(
                     commandsWriter::runNextCommand,
                     0,
                     100,//TODO parameterize
+                    TimeUnit.MILLISECONDS
+            );
+
+            // Start command reader thread
+            arduinoSerialPortProcessorExecutorService.scheduleWithFixedDelay(
+                    arduinoSerialPortMessageProcessor,
+                    0,
+                    100,
                     TimeUnit.MILLISECONDS
             );
 
@@ -52,10 +59,10 @@ public class Application {
             commandsWriter.addCommand(handshakeFactory.generate());
 
             // Start status request thread
-            statusRequestExecutorService.scheduleAtFixedRate(
+            statusRequestExecutorService.scheduleWithFixedDelay(
                     () -> commandsWriter.addCommand(statusRequestFactory.generate()),
                     0,
-                    5,//TODO parameterize
+                    1,//TODO parameterize
                     TimeUnit.SECONDS
             );
 
