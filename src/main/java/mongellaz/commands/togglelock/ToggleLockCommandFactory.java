@@ -1,4 +1,6 @@
-package mongellaz.commands;
+package mongellaz.commands.togglelock;
+
+import mongellaz.commands.ByteArrayFactory;
 
 public class ToggleLockCommandFactory implements ByteArrayFactory {
     @Override

@@ -1,4 +1,6 @@
-package mongellaz.commands;
+package mongellaz.commands.handshake;
+
+import mongellaz.commands.ByteArrayFactory;
 
 public class HandshakeFactory implements ByteArrayFactory {
     @Override

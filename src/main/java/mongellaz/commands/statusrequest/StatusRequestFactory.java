@@ -1,4 +1,6 @@
-package mongellaz.commands;
+package mongellaz.commands.statusrequest;
+
+import mongellaz.commands.ByteArrayFactory;
 
 public class StatusRequestFactory implements ByteArrayFactory {
     @Override

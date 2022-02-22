@@ -1,4 +1,6 @@
-package mongellaz.commands;
+package mongellaz.commands.toggleconfigurationmode;
+
+import mongellaz.commands.ByteArrayFactory;
 
 public class ToggleConfigurationModeCommandFactory implements ByteArrayFactory {
     @Override

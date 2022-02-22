@@ -1,6 +1,6 @@
 package mongellaz.communication.tests;
 
-import mongellaz.commands.ToggleConfigurationModeCommandFactory;
+import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,6 +1,6 @@
 package mongellaz.communication.tests;
 
-import mongellaz.commands.HandshakeFactory;
+import mongellaz.commands.handshake.HandshakeFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
