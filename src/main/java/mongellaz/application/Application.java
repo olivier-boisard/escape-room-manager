@@ -19,7 +19,6 @@ public class Application {
     public static void main(String[] args) {
         HandshakeFactory handshakeFactory = new HandshakeFactory();
         StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
-        ScheduledExecutorService statusRequestExecutorService = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         LinkedListArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new LinkedListArduinoSerialPortMessageListener();
@@ -51,13 +50,8 @@ public class Application {
             // Run handshake
             commandsWriter.addCommand(handshakeFactory.generate());
 
-            // Start status request thread
-            statusRequestExecutorService.scheduleAtFixedRate(
-                    () -> commandsWriter.addCommand(statusRequestFactory.generate()),
-                    0,
-                    5,//TODO parameterize
-                    TimeUnit.SECONDS
-            );
+            // Get status
+            commandsWriter.addCommand(statusRequestFactory.generate());
 
             //noinspection ResultOfMethodCallIgnored
             commandWriterExecutorService.awaitTermination(1, TimeUnit.MINUTES);
@@ -65,7 +59,6 @@ public class Application {
             Thread.currentThread().interrupt();
             logger.fatal("Could not run Thread.sleep(): {}", e.getMessage());
         } finally {
-            statusRequestExecutorService.shutdown();
             commandWriterExecutorService.shutdown();
         }
     }
