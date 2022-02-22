@@ -1,4 +1,4 @@
-package mongellaz.communication.tests;
+package mongellaz.tests;
 
 import mongellaz.commands.ByteArrayFactory;
 import mongellaz.communication.SerialCommunicationManager;

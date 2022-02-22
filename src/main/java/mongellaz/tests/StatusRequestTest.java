@@ -1,4 +1,4 @@
-package mongellaz.communication.tests;
+package mongellaz.tests;
 
 import mongellaz.commands.statusrequest.StatusRequestFactory;
 import mongellaz.communication.CommunicationException;

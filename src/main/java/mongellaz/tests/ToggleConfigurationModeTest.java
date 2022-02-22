@@ -1,4 +1,4 @@
-package mongellaz.communication.tests;
+package mongellaz.tests;
 
 import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
 import mongellaz.communication.CommunicationException;
