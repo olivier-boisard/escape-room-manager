@@ -36,6 +36,7 @@ public class Application {
         serialPort.addDataListener(arduinoSerialPortMessageListener);
 
         try (SerialCommunicationManager communicationManager = new SerialCommunicationManager(serialPort)) {
+            //TODO parameterize
             Thread.sleep(3000);
 
             // Start command writer thread
@@ -43,7 +44,7 @@ public class Application {
             commandWriterExecutorService.scheduleAtFixedRate(
                     commandsWriter::runNextCommand,
                     0,
-                    100,
+                    100,//TODO parameterize
                     TimeUnit.MILLISECONDS
             );
 
@@ -54,7 +55,7 @@ public class Application {
             statusRequestExecutorService.scheduleAtFixedRate(
                     () -> commandsWriter.addCommand(statusRequestFactory.generate()),
                     0,
-                    5,
+                    5,//TODO parameterize
                     TimeUnit.SECONDS
             );
 
