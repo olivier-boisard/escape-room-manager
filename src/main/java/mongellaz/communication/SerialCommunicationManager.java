@@ -6,10 +6,10 @@ import java.util.Arrays;
 
 public class SerialCommunicationManager implements CommunicationManager {
 
-    public SerialCommunicationManager() throws CommunicationException {
+    public SerialCommunicationManager() throws SerialCommunicationException {
         serialPort = SerialPort.getCommPorts()[0];
         if (!serialPort.openPort()) {
-            throw new CommunicationException("Could not open serial port. Aborting");
+            throw new SerialCommunicationException("Could not open serial port. Aborting");
         }
     }
 
