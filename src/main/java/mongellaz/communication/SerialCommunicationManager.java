@@ -4,7 +4,7 @@ import com.fazecast.jSerialComm.SerialPort;
 
 import java.util.Arrays;
 
-public class SerialCommunicationManager implements CommunicationManager {
+public class SerialCommunicationManager implements AutoCloseable, ByteArrayWriter, ByteArrayReader {
 
     public SerialCommunicationManager() throws SerialCommunicationException {
         serialPort = SerialPort.getCommPorts()[0];
