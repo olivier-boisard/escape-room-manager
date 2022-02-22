@@ -54,7 +54,7 @@ public class Application {
             statusRequestExecutorService.scheduleAtFixedRate(
                     () -> commandsWriter.addCommand(statusRequestFactory.generate()),
                     0,
-                    1,
+                    5,
                     TimeUnit.SECONDS
             );
 
