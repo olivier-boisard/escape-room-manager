@@ -18,6 +18,7 @@ public class StatusRequestResponseProcessor implements ResponseProcessor {
         final byte noPicc = 0x01;
         final byte wrongPicc = 0x02;
         final byte correctPicc = 0x03;
+        final byte newPicc = 0x04;
         int index = 0;
 
         if (response[0]==commandCode) {
@@ -34,6 +35,7 @@ public class StatusRequestResponseProcessor implements ResponseProcessor {
                                     case noPicc -> "No Picc";
                                     case wrongPicc -> "Wrong PICC";
                                     case correctPicc -> "Correct PICC";
+                                    case newPicc -> "New PICC";
                                     default -> throw new CommunicationException("Unknown status: " + status);
                                 };
                                 logger.info(piccReaderStatusMsg);
