@@ -11,11 +11,13 @@ public class Application {
     public static void main(String[] args) {
         try (SerialCommunicationManager communicationManager = new SerialCommunicationManager()) {
             Thread.sleep(3000);
-            // Handshake
-            HandshakeFactory handshakeFactory = new HandshakeFactory();
-            communicationManager.write(handshakeFactory.generate());
-            byte[] response= communicationManager.read();
-            new HandshakeResponseProcessor().process(response);
+
+            CommandCycle handShakeCycle = new CommandCycle(
+                    communicationManager,
+                    new HandshakeFactory(),
+                    new HandshakeResponseProcessor()
+            );
+            handShakeCycle.run();
         } catch (CommunicationException e) {
             logger.error(e.getMessage());
         } catch (InterruptedException e) {
