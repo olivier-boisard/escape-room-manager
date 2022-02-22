@@ -1,9 +1,7 @@
 package mongellaz.application;
 
 import mongellaz.commands.handshake.HandshakeFactory;
-import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
-import mongellaz.commands.statusrequest.StatusRequestResponseProcessor;
 import mongellaz.communication.CommunicationException;
 import mongellaz.communication.SerialCommunicationManager;
 import org.apache.logging.log4j.LogManager;
@@ -15,33 +13,38 @@ import java.util.concurrent.TimeUnit;
 
 public class Application {
     public static void main(String[] args) {
+        HandshakeFactory handshakeFactory = new HandshakeFactory();
+        StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
         ScheduledExecutorService statusRequestExecutorService = Executors.newSingleThreadScheduledExecutor();
+        ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
+
         try (SerialCommunicationManager communicationManager = new SerialCommunicationManager()) {
             Thread.sleep(3000);
 
-            CommandCycle handShakeCycle = new CommandCycle(
-                    communicationManager,
-                    new HandshakeFactory(),
-                    new HandshakeResponseProcessor()
+            // Start command writer thread
+            CommandsWriter commandsWriter = new ConcurrentLinkedQueueCommandsWriter(communicationManager);
+            commandWriterExecutorService.scheduleAtFixedRate(
+                    commandsWriter::runNextCommand,
+                    0,
+                    100,
+                    TimeUnit.MILLISECONDS
             );
 
-            CommandCycle statusRequestCycle = new CommandCycle(
-                    communicationManager,
-                    new StatusRequestFactory(),
-                    new StatusRequestResponseProcessor()
+            // Run handshake
+            commandsWriter.addCommand(handshakeFactory.generate());
+
+            // Start status request thread
+            statusRequestExecutorService.scheduleAtFixedRate(
+                    () -> commandsWriter.addCommand(statusRequestFactory.generate()),
+                    0,
+                    1,
+                    TimeUnit.SECONDS
             );
-            Runnable statusRequestCycleRunner = () -> {
-                try {
-                    statusRequestCycle.run();
-                } catch (CommunicationException e) {
-                    logger.error(e.getMessage());
-                }
-            };
-            handShakeCycle.run();
-            statusRequestExecutorService.scheduleAtFixedRate(statusRequestCycleRunner, 0, 1, TimeUnit.SECONDS);
+
+            // TODO start thread for reading serial port
 
             //noinspection ResultOfMethodCallIgnored
-            statusRequestExecutorService.awaitTermination(1, TimeUnit.MINUTES);
+            commandWriterExecutorService.awaitTermination(1, TimeUnit.MINUTES);
         } catch (CommunicationException e) {
             logger.error(e.getMessage());
         } catch (InterruptedException e) {
@@ -49,6 +52,7 @@ public class Application {
             logger.fatal("Could not run Thread.sleep(): {}", e.getMessage());
         } finally {
             statusRequestExecutorService.shutdown();
+            commandWriterExecutorService.shutdown();
         }
     }
 
