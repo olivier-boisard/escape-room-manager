@@ -21,9 +21,4 @@ public record SerialCommunicationTest(ByteArrayFactory commandFactory, ResponseP
             e.printStackTrace();
         }
     }
-
-    public void run() {
-        int nChecks = 1;
-        run(nChecks);
-    }
 }
