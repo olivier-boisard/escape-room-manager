@@ -4,7 +4,7 @@ import com.fazecast.jSerialComm.SerialPort;
 
 import java.util.Arrays;
 
-public class SerialCommunicationManager implements AutoCloseable, ByteArrayWriter, ByteArrayReader {
+public class SerialCommunicationManager implements AutoCloseable, ByteArrayWriter {
 
     public SerialCommunicationManager() throws SerialCommunicationException {
         serialPort = SerialPort.getCommPorts()[0];
@@ -23,7 +23,6 @@ public class SerialCommunicationManager implements AutoCloseable, ByteArrayWrite
         serialPort.writeBytes(data, data.length);
     }
 
-    @Override
     public byte[] read() throws CommunicationException {
         // Variable declarations
         byte[] responseBuffer = new byte[INPUT_BUFFER_SIZE];
