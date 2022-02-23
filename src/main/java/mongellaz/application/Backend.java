@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Application {
+public class Backend {
     public static void main(String[] args) {
         HandshakeFactory handshakeFactory = new HandshakeFactory();
         StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
