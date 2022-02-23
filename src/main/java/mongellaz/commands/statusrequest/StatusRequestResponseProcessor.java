@@ -21,7 +21,7 @@ public class StatusRequestResponseProcessor implements ResponseProcessor {
         final byte newPicc = 0x04;
         int index = 0;
 
-        if (response[0]==commandCode) {
+        if (response[0] == commandCode) {
             try {
                 while (index < response.length) {
                     byte responseByte = response[index++];
