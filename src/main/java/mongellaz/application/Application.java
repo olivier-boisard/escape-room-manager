@@ -22,6 +22,7 @@ public class Application {
         try {
             // Create UI
             Ui ui = new Ui(controller);
+            ui.setConnectionStateToConnecting();
             controller.addHandshakeResultObserver(ui);
             controller.addLockStateObserver(ui);
             controller.addConfigurationModeStateObserver(ui);

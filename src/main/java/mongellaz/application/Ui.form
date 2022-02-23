@@ -10,21 +10,27 @@
     <children>
       <component id="281aa" class="javax.swing.JButton" binding="toggleLockButton">
         <constraints>
-          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <minimum-size width="300" height="-1"/>
+          </grid>
         </constraints>
         <properties>
-          <text value="Verrou"/>
+          <enabled value="false"/>
+          <text value="&amp;Ouvrir le verrou"/>
         </properties>
       </component>
       <component id="df8b7" class="javax.swing.JButton" binding="toggleConfigurationModeButton">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false">
+            <minimum-size width="300" height="-1"/>
+          </grid>
         </constraints>
         <properties>
-          <text value="Config" noi18n="true"/>
+          <enabled value="false"/>
+          <text value="&amp;Activer le mode configuration" noi18n="true"/>
         </properties>
       </component>
-      <component id="ca6b5" class="javax.swing.JLabel" binding="statusLabel">
+      <component id="ca6b5" class="javax.swing.JLabel" binding="connectionStateText">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -32,7 +38,7 @@
           <text value="Status"/>
         </properties>
       </component>
-      <component id="258f4" class="javax.swing.JLabel" binding="statusTextLabel">
+      <component id="258f4" class="javax.swing.JLabel" binding="connectionStateTextLabel">
         <constraints>
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

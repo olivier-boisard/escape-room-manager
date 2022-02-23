@@ -56,11 +56,16 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver, Ha
         }
 
         if (connectionStatusString != null) {
-            statusTextLabel.setText(connectionStatusString);
+            connectionStateTextLabel.setText(connectionStatusString);
         }
         if (textColor != null) {
-            statusTextLabel.setForeground(textColor);
+            connectionStateTextLabel.setForeground(textColor);
         }
+    }
+
+    public void setConnectionStateToConnecting() {
+        connectionStateTextLabel.setText("Connection...");
+        connectionStateTextLabel.setForeground(Color.GRAY);
     }
 
     public JPanel getMainPanel() {
@@ -71,6 +76,6 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver, Ha
     private JButton toggleLockButton;
     private JButton toggleConfigurationModeButton;
     @SuppressWarnings("unused")
-    private JLabel statusLabel;
-    private JLabel statusTextLabel;
+    private JLabel connectionStateText;
+    private JLabel connectionStateTextLabel;
 }
