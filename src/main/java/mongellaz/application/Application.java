@@ -26,6 +26,7 @@ public class Application {
             // Create UI
             Ui ui = new Ui(controller);
             controller.addLockStateObserver(ui);
+            controller.addConfigurationModeStateObserver(ui);
 
             // Set up UI
             JFrame frame = new JFrame("Ui");

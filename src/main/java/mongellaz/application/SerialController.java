@@ -1,11 +1,13 @@
 package mongellaz.application;
 
 import com.fazecast.jSerialComm.SerialPort;
+import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.LockStateObserver;
 import mongellaz.commands.handshake.HandshakeFactory;
 import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
 import mongellaz.commands.statusrequest.StatusRequestResponseProcessor;
+import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
 import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
 import mongellaz.commands.togglelock.ToggleLockCommandFactory;
 import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
@@ -19,7 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class SerialController implements Controller, Closeable {
+public class SerialController implements Controller, Closeable, BoardStateObserver {
 
     public void start() throws CommunicationException {
         try {
@@ -34,13 +36,24 @@ public class SerialController implements Controller, Closeable {
         }
     }
 
+    @Override
     public void addLockStateObserver(LockStateObserver lockStateObserver) {
         toggleLockResponseProcessor.addLockStateObserver(lockStateObserver);
     }
 
     @Override
+    public void addConfigurationModeStateObserver(ConfigurationModeStateObserver configurationModeStateObserver) {
+        toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(configurationModeStateObserver);
+    }
+
+    @Override
     public void sendToggleLockCommand() {
         commandsWriter.addCommand(toggleLockCommandFactory.generate());
+    }
+
+    @Override
+    public void sendToggleConfigurationModeCommand() {
+        commandsWriter.addCommand(toggleConfigurationModeCommandFactory.generate());
     }
 
     @Override
@@ -96,13 +109,15 @@ public class SerialController implements Controller, Closeable {
         arduinoSerialPortMessageListener.addResponseProcessor(new HandshakeResponseProcessor());
         arduinoSerialPortMessageListener.addResponseProcessor(new StatusRequestResponseProcessor());
         arduinoSerialPortMessageListener.addResponseProcessor(toggleLockResponseProcessor);
-        arduinoSerialPortMessageListener.addResponseProcessor(new ToggleConfigurationModeResponseProcessor());
+        arduinoSerialPortMessageListener.addResponseProcessor(toggleConfigurationModeResponseProcessor);
         return arduinoSerialPortMessageListener;
     }
 
     private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
+    private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();
     private final ToggleLockResponseProcessor toggleLockResponseProcessor = new ToggleLockResponseProcessor();
+    private final ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor = new ToggleConfigurationModeResponseProcessor();
     private CommandsWriter commandsWriter;
     private SerialCommunicationManager communicationManager;
     private ScheduledExecutorService commandWriterExecutorService;

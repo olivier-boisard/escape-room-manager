@@ -1,5 +1,6 @@
 package mongellaz.commands.toggleconfigurationmode;
 
+import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.ResponseProcessor;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;
@@ -46,11 +47,6 @@ public class ToggleConfigurationModeResponseProcessor implements ResponseProcess
         }
     }
 
-    public enum ConfigurationModeState {
-        ENABLED,
-        DISABLED
-    }
-
     public void addConfigurationModeStateObserver(ConfigurationModeStateObserver configurationModeStateObserver) {
         configurationModeStateObservers.add(configurationModeStateObserver);
     }
@@ -59,11 +55,6 @@ public class ToggleConfigurationModeResponseProcessor implements ResponseProcess
         for (ConfigurationModeStateObserver configurationModeStateObserver : configurationModeStateObservers) {
             configurationModeStateObserver.update(newConfigurationModeState);
         }
-    }
-
-    @FunctionalInterface
-    public interface ConfigurationModeStateObserver {
-        void update(ConfigurationModeState configurationModeState);
     }
 
     private final List<ConfigurationModeStateObserver> configurationModeStateObservers = new LinkedList<>();

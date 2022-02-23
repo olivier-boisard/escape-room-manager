@@ -1,38 +1,43 @@
 package mongellaz.application;
 
 import mongellaz.commands.LockStateObserver;
+import mongellaz.commands.ConfigurationModeStateObserver;
+import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 
-public class Ui implements LockStateObserver {
+public class Ui implements LockStateObserver, ConfigurationModeStateObserver {
     public Ui(Controller controller) {
         toggleLockButton.addActionListener(e -> {
             controller.sendToggleLockCommand();
             toggleLockButton.setEnabled(false);
         });
+
+        toggleConfigurationModeButton.addActionListener(e -> {
+            controller.sendToggleConfigurationModeCommand();
+            toggleConfigurationModeButton.setEnabled(false);
+        });
     }
 
     @Override
     public void update(LockState lockState) {
-        String lockButtonNewText = null;
-        switch (lockState) {
-            case OPEN -> {
-                lockButtonNewText = "Fermer le verrou";
-            }
-            case CLOSED -> {
-                lockButtonNewText = "Ouvrir le verrou";
-            }
-            default -> {
-                logger.error("Unknown status {}", lockState);
-            }
-        }
-        if (lockButtonNewText != null) {
-            toggleLockButton.setText(lockButtonNewText);
-            toggleLockButton.setEnabled(true);
-        }
+        String lockButtonNewText = switch (lockState) {
+            case OPEN -> "Fermer le verrou";
+            case CLOSED -> "Ouvrir le verrou";
+        };
+        toggleLockButton.setText(lockButtonNewText);
+        toggleLockButton.setEnabled(true);
+    }
+
+    @Override
+    public void update(ConfigurationModeState configurationModeState) {
+        String toggleConfigurationModeButtonNewText = switch (configurationModeState) {
+            case ENABLED -> "Désactiver le mode configuration";
+            case DISABLED -> "Activer le mode configuration";
+        };
+        toggleConfigurationModeButton.setText(toggleConfigurationModeButtonNewText);
+        toggleConfigurationModeButton.setEnabled(true);
     }
 
     public JPanel getMainPanel() {
@@ -41,5 +46,5 @@ public class Ui implements LockStateObserver {
 
     private JPanel mainPanel;
     private JButton toggleLockButton;
-    private final Logger logger = LogManager.getLogger();
+    private JButton toggleConfigurationModeButton;
 }
