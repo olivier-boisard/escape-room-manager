@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 public class SerialController implements Controller, Closeable {
 
     //TODO this method is too big
-
     public void start() throws CommunicationException {
         HandshakeFactory handshakeFactory = new HandshakeFactory();
         commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -29,7 +28,7 @@ public class SerialController implements Controller, Closeable {
         ArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new ArduinoSerialPortMessageListener();
         arduinoSerialPortMessageListener.addResponseProcessor(new HandshakeResponseProcessor());
         arduinoSerialPortMessageListener.addResponseProcessor(new StatusRequestResponseProcessor());
-        arduinoSerialPortMessageListener.addResponseProcessor(new ToggleLockResponseProcessor());
+        arduinoSerialPortMessageListener.addResponseProcessor(toggleLockResponseProcessor);
         arduinoSerialPortMessageListener.addResponseProcessor(new ToggleConfigurationModeResponseProcessor());
 
         SerialPort serialPort = SerialPort.getCommPorts()[0];
@@ -85,6 +84,7 @@ public class SerialController implements Controller, Closeable {
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
     private SerialCommunicationManager communicationManager;
     private ScheduledExecutorService commandWriterExecutorService;
+    private final ToggleLockResponseProcessor toggleLockResponseProcessor = new ToggleLockResponseProcessor();
 
     private static final Logger logger = LogManager.getLogger();
 }

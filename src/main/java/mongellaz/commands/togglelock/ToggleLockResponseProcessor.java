@@ -1,5 +1,6 @@
 package mongellaz.commands.togglelock;
 
+import mongellaz.commands.MagnetStateObserver;
 import mongellaz.commands.ResponseProcessor;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;
@@ -63,11 +64,6 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
         for (MagnetStateObserver magnetStateObserver : magnetStateObservers) {
             magnetStateObserver.update(magnetState);
         }
-    }
-
-    @FunctionalInterface
-    public interface MagnetStateObserver {
-        void update(MagnetState magnetState);
     }
 
     private final Logger logger = LogManager.getLogger();
