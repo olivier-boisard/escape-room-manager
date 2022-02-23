@@ -11,7 +11,7 @@ public class StatusRequestResponseProcessor implements ResponseProcessor {
         final byte commandCode = 0x20;
         final byte piccReadersStatusCode = 0x01;
         final byte configurationModeStatusCode = 0x02;
-        final byte magnetStatusCode = 0x03;
+        final byte lockStatusCode = 0x03;
         final byte errorCode = (byte) 0xFF;
         final byte enabledCode = 0x03;
         final byte disabledCode = 0x04;
@@ -50,14 +50,14 @@ public class StatusRequestResponseProcessor implements ResponseProcessor {
                             };
                             logger.info(configurationModeStatusMsg);
                         }
-                        case magnetStatusCode -> {
-                            byte magnetStatus = response[index++];
-                            String magnetStatusMsg = "Magnet is " + switch (magnetStatus) {
+                        case lockStatusCode -> {
+                            byte lockStatus = response[index++];
+                            String lockStatusMsg = "Lock is " + switch (lockStatus) {
                                 case enabledCode -> "locked";
                                 case disabledCode -> "unlocked";
-                                default -> throw new CommunicationException("Unknown status " + magnetStatus);
+                                default -> throw new CommunicationException("Unknown status " + lockStatus);
                             };
-                            logger.info(magnetStatusMsg);
+                            logger.info(lockStatusMsg);
                         }
                         case errorCode -> logger.error("Error");
                         default -> throw new CommunicationException("Unexpected byte: " + responseByte);

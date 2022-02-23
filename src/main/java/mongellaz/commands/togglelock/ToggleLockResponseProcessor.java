@@ -1,6 +1,6 @@
 package mongellaz.commands.togglelock;
 
-import mongellaz.commands.MagnetStateObserver;
+import mongellaz.commands.LockStateObserver;
 import mongellaz.commands.ResponseProcessor;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;
@@ -26,19 +26,19 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
                     final byte openStatus = 0x01;
                     final byte closedStatus = 0x02;
                     final byte status = response[3];
-                    MagnetState magnetState;
+                    LockState lockState;
                     String statusStr = switch (status) {
                         case openStatus -> {
-                            magnetState = MagnetState.OPEN;
+                            lockState = LockState.OPEN;
                             yield " - Open";
                         }
                         case closedStatus -> {
-                            magnetState = MagnetState.CLOSED;
+                            lockState = LockState.CLOSED;
                             yield " - Closed";
                         }
                         default -> throw new CommunicationException("Unknown status " + status);
                     };
-                    notifyAllMagnetStateObserver(magnetState);
+                    notifyAllLockStateObserver(lockState);
                     logger.info("OK - {}", statusStr);
                 } else {
                     logger.error("Not OK");
@@ -51,21 +51,16 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
         }
     }
 
-    public enum MagnetState {
-        OPEN,
-        CLOSED
+    public void addLockStateObserver(LockStateObserver lockStateObserver) {
+        lockStateObservers.add(lockStateObserver);
     }
 
-    public void addMagnetStateObserver(MagnetStateObserver magnetStateObserver) {
-        magnetStateObservers.add(magnetStateObserver);
-    }
-
-    public void notifyAllMagnetStateObserver(MagnetState magnetState) {
-        for (MagnetStateObserver magnetStateObserver : magnetStateObservers) {
-            magnetStateObserver.update(magnetState);
+    public void notifyAllLockStateObserver(LockState lockState) {
+        for (LockStateObserver lockStateObserver : lockStateObservers) {
+            lockStateObserver.update(lockState);
         }
     }
 
     private final Logger logger = LogManager.getLogger();
-    private final List<MagnetStateObserver> magnetStateObservers = new LinkedList<>();
+    private final List<LockStateObserver> lockStateObservers = new LinkedList<>();
 }
