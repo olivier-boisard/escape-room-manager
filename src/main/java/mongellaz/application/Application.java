@@ -22,7 +22,12 @@ public class Application {
         try {
             controller.start();
             JFrame frame = new JFrame("Ui");
-            frame.setContentPane(new Ui(controller).getMainPanel());
+
+            //TODO this is a circular reference and should be fixed
+            Ui ui = new Ui(controller);
+            controller.addLockStateObserver(ui);
+
+            frame.setContentPane(ui.getMainPanel());
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.pack();
             frame.setVisible(true);

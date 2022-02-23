@@ -1,6 +1,7 @@
 package mongellaz.application;
 
 import com.fazecast.jSerialComm.SerialPort;
+import mongellaz.commands.LockStateObserver;
 import mongellaz.commands.handshake.HandshakeFactory;
 import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
@@ -77,6 +78,10 @@ public class SerialController implements Controller, Closeable {
         if (communicationManager != null) {
             communicationManager.close();
         }
+    }
+
+    public void addLockStateObserver(LockStateObserver lockStateObserver){
+        toggleLockResponseProcessor.addLockStateObserver(lockStateObserver);
     }
 
     private CommandsWriter commandsWriter;
