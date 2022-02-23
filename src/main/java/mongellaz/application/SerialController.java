@@ -6,20 +6,26 @@ import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
 import mongellaz.commands.statusrequest.StatusRequestResponseProcessor;
 import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
+import mongellaz.commands.togglelock.ToggleLockCommandFactory;
 import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
+import mongellaz.communication.CommunicationException;
 import mongellaz.communication.SerialCommunicationManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Backend {
-    public static void main(String[] args) {
+public class SerialController implements Controller, Closeable {
+
+    //TODO this method is too big
+
+    public void start() throws CommunicationException {
         HandshakeFactory handshakeFactory = new HandshakeFactory();
-        StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
-        ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
+        commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         LinkedListArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new LinkedListArduinoSerialPortMessageListener();
         arduinoSerialPortMessageListener.addResponseProcessor(new HandshakeResponseProcessor());
@@ -34,12 +40,13 @@ public class Backend {
         }
         serialPort.addDataListener(arduinoSerialPortMessageListener);
 
-        try (SerialCommunicationManager communicationManager = new SerialCommunicationManager(serialPort)) {
+        SerialCommunicationManager communicationManager = new SerialCommunicationManager(serialPort);
+        try {
             //TODO parameterize
-            Thread.sleep(3000);
+            Thread.sleep(5000);
 
             // Start command writer thread
-            CommandsWriter commandsWriter = new ConcurrentLinkedQueueCommandsWriter(communicationManager);
+            commandsWriter = new ConcurrentLinkedQueueCommandsWriter(communicationManager);
             commandWriterExecutorService.scheduleAtFixedRate(
                     commandsWriter::runNextCommand,
                     0,
@@ -52,17 +59,33 @@ public class Backend {
 
             // Get status
             commandsWriter.addCommand(statusRequestFactory.generate());
-
-            //noinspection ResultOfMethodCallIgnored
-            commandWriterExecutorService.awaitTermination(1, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            logger.fatal("Could not run Thread.sleep(): {}", e.getMessage());
-        } finally {
             commandWriterExecutorService.shutdown();
+            throw new CommunicationException(e);
         }
     }
 
-    private static final Logger logger = LogManager.getLogger();
+    @Override
+    public void sendStatusRequestCommand() {
+        commandsWriter.addCommand(statusRequestFactory.generate());
+    }
 
+    @Override
+    public void sendToggleLockCommand() {
+        commandsWriter.addCommand(toggleLockCommandFactory.generate());
+    }
+
+    @Override
+    public void close() {
+        commandWriterExecutorService.shutdown();
+    }
+
+    private CommandsWriter commandsWriter;
+    private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
+    private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
+
+    private ScheduledExecutorService commandWriterExecutorService;
+
+    private static final Logger logger = LogManager.getLogger();
 }
