@@ -10,6 +10,7 @@ import mongellaz.commands.togglelock.LockState;
 import javax.swing.*;
 import java.awt.*;
 
+@SuppressWarnings("unused")
 public class Ui implements LockStateObserver, ConfigurationModeStateObserver, HandshakeResultObserver {
     public Ui(Controller controller) {
         toggleLockButton.addActionListener(e -> {
@@ -56,16 +57,16 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver, Ha
         }
 
         if (connectionStatusString != null) {
-            connectionStateTextLabel.setText(connectionStatusString);
+            connectionStateTextValue.setText(connectionStatusString);
         }
         if (textColor != null) {
-            connectionStateTextLabel.setForeground(textColor);
+            connectionStateTextValue.setForeground(textColor);
         }
     }
 
     public void setConnectionStateToConnecting() {
-        connectionStateTextLabel.setText("Connection...");
-        connectionStateTextLabel.setForeground(Color.GRAY);
+        connectionStateTextValue.setText("Connection...");
+        connectionStateTextValue.setForeground(Color.GRAY);
     }
 
     public JPanel getMainPanel() {
@@ -75,7 +76,12 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver, Ha
     private JPanel mainPanel;
     private JButton toggleLockButton;
     private JButton toggleConfigurationModeButton;
-    @SuppressWarnings("unused")
     private JLabel connectionStateText;
-    private JLabel connectionStateTextLabel;
+    private JLabel connectionStateTextValue;
+    private JPanel buttonPanel;
+    private JPanel statusPanel;
+    private JLabel lockStateText;
+    private JLabel lockStateTextValue;
+    private JLabel configurationModeText;
+    private JLabel configurationModeTextValue;
 }
