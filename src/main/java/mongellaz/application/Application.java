@@ -23,7 +23,6 @@ public class Application {
             controller.start();
             JFrame frame = new JFrame("Ui");
 
-            //TODO this is a circular reference and should be fixed
             Ui ui = new Ui(controller);
             controller.addLockStateObserver(ui);
 
