@@ -39,11 +39,13 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     @Override
     public void addLockStateObserver(LockStateObserver lockStateObserver) {
         toggleLockResponseProcessor.addLockStateObserver(lockStateObserver);
+        statusRequestResponseProcessor.addLockStateObserver(lockStateObserver);
     }
 
     @Override
     public void addConfigurationModeStateObserver(ConfigurationModeStateObserver configurationModeStateObserver) {
         toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(configurationModeStateObserver);
+        statusRequestResponseProcessor.addConfigurationModeStateObserver(configurationModeStateObserver);
     }
 
     @Override
@@ -107,7 +109,7 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     private ArduinoSerialPortMessageListener createArduinoSerialPortMessageListener() {
         ArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new ArduinoSerialPortMessageListener();
         arduinoSerialPortMessageListener.addResponseProcessor(new HandshakeResponseProcessor());
-        arduinoSerialPortMessageListener.addResponseProcessor(new StatusRequestResponseProcessor());
+        arduinoSerialPortMessageListener.addResponseProcessor(statusRequestResponseProcessor);
         arduinoSerialPortMessageListener.addResponseProcessor(toggleLockResponseProcessor);
         arduinoSerialPortMessageListener.addResponseProcessor(toggleConfigurationModeResponseProcessor);
         return arduinoSerialPortMessageListener;
@@ -118,6 +120,7 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();
     private final ToggleLockResponseProcessor toggleLockResponseProcessor = new ToggleLockResponseProcessor();
     private final ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor = new ToggleConfigurationModeResponseProcessor();
+    private final StatusRequestResponseProcessor statusRequestResponseProcessor = new StatusRequestResponseProcessor();
     private CommandsWriter commandsWriter;
     private SerialCommunicationManager communicationManager;
     private ScheduledExecutorService commandWriterExecutorService;
