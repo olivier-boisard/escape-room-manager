@@ -49,9 +49,6 @@ public class Application {
         }
         // We shouldn't use the "finally" block here to call controller.stop() because that block would be reached
         // before the end of the application
-
-        // End of application
-        logger.info("Application end");
     }
 
 }
