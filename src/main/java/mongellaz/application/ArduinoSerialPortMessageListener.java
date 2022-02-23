@@ -6,13 +6,10 @@ import com.fazecast.jSerialComm.SerialPortMessageListener;
 import mongellaz.commands.ResponseProcessor;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ArduinoSerialPortMessageListener implements SerialPortMessageListener {
-
-    public ArduinoSerialPortMessageListener(List<ResponseProcessor> responseProcessors) {
-        this.responseProcessors = responseProcessors;
-    }
 
     void addResponseProcessor(ResponseProcessor responseProcessor) {
         responseProcessors.add(responseProcessor);
@@ -43,5 +40,5 @@ public class ArduinoSerialPortMessageListener implements SerialPortMessageListen
         }
     }
 
-    private final List<ResponseProcessor> responseProcessors;
+    private final List<ResponseProcessor> responseProcessors = new LinkedList<>();
 }

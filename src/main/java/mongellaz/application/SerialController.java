@@ -14,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +26,7 @@ public class SerialController implements Controller, Closeable {
         HandshakeFactory handshakeFactory = new HandshakeFactory();
         commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-        LinkedListArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new LinkedListArduinoSerialPortMessageListener();
+        ArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new ArduinoSerialPortMessageListener();
         arduinoSerialPortMessageListener.addResponseProcessor(new HandshakeResponseProcessor());
         arduinoSerialPortMessageListener.addResponseProcessor(new StatusRequestResponseProcessor());
         arduinoSerialPortMessageListener.addResponseProcessor(new ToggleLockResponseProcessor());
@@ -40,7 +39,7 @@ public class SerialController implements Controller, Closeable {
         }
         serialPort.addDataListener(arduinoSerialPortMessageListener);
 
-        SerialCommunicationManager communicationManager = new SerialCommunicationManager(serialPort);
+        communicationManager = new SerialCommunicationManager(serialPort);
         try {
             //TODO parameterize
             Thread.sleep(5000);
@@ -78,13 +77,18 @@ public class SerialController implements Controller, Closeable {
 
     @Override
     public void close() {
-        commandWriterExecutorService.shutdown();
+        if (commandWriterExecutorService != null) {
+            commandWriterExecutorService.shutdown();
+        }
+        if (communicationManager != null) {
+            communicationManager.close();
+        }
     }
 
     private CommandsWriter commandsWriter;
     private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
-
+    private SerialCommunicationManager communicationManager;
     private ScheduledExecutorService commandWriterExecutorService;
 
     private static final Logger logger = LogManager.getLogger();
