@@ -11,7 +11,6 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
     @Override
     public void process(final byte[] response) {
         processResponse(response);
-        waitOneSecond(); // To avoid locking/unlocking the magnet to quickly
     }
 
     private void processResponse(byte[] response) {
@@ -38,15 +37,6 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
             }
         } else {
             logger.debug("Ignoring command with code {}", commandCode);
-        }
-    }
-
-    private static void waitOneSecond() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            e.printStackTrace();
         }
     }
 
