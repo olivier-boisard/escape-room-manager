@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ToggleLockResponseProcessor implements ResponseProcessor {
     @Override
@@ -23,11 +25,19 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
                     final byte openStatus = 0x01;
                     final byte closedStatus = 0x02;
                     final byte status = response[3];
+                    MagnetState magnetState;
                     String statusStr = switch (status) {
-                        case openStatus -> " - Open";
-                        case closedStatus -> " - Closed";
+                        case openStatus -> {
+                            magnetState = MagnetState.OPEN;
+                            yield " - Open";
+                        }
+                        case closedStatus -> {
+                            magnetState = MagnetState.CLOSED;
+                            yield " - Closed";
+                        }
                         default -> throw new CommunicationException("Unknown status " + status);
                     };
+                    notifyAllMagnetStateObserver(magnetState);
                     logger.info("OK - {}", statusStr);
                 } else {
                     logger.error("Not OK");
@@ -40,5 +50,26 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
         }
     }
 
+    public enum MagnetState {
+        OPEN,
+        CLOSED
+    }
+
+    public void addMagnetStateObserver(MagnetStateObserver magnetStateObserver) {
+        magnetStateObservers.add(magnetStateObserver);
+    }
+
+    public void notifyAllMagnetStateObserver(MagnetState magnetState) {
+        for (MagnetStateObserver magnetStateObserver : magnetStateObservers) {
+            magnetStateObserver.update(magnetState);
+        }
+    }
+
+    @FunctionalInterface
+    public interface MagnetStateObserver {
+        void update(MagnetState magnetState);
+    }
+
     private final Logger logger = LogManager.getLogger();
+    private final List<MagnetStateObserver> magnetStateObservers = new LinkedList<>();
 }
