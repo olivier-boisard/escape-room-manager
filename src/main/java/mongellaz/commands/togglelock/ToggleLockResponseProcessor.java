@@ -55,7 +55,7 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
         lockStateObservers.add(lockStateObserver);
     }
 
-    public void notifyAllLockStateObserver(LockState lockState) {
+    private void notifyAllLockStateObserver(LockState lockState) {
         for (LockStateObserver lockStateObserver : lockStateObservers) {
             lockStateObserver.update(lockState);
         }
