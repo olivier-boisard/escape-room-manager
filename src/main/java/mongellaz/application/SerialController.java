@@ -2,6 +2,7 @@ package mongellaz.application;
 
 import com.fazecast.jSerialComm.SerialPort;
 import mongellaz.commands.ConfigurationModeStateObserver;
+import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.LockStateObserver;
 import mongellaz.commands.handshake.HandshakeFactory;
 import mongellaz.commands.handshake.HandshakeResponseProcessor;
@@ -35,6 +36,11 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
             commandWriterExecutorService.shutdown();
             throw new CommunicationException(e);
         }
+    }
+
+    @Override
+    public void addHandshakeResultObserver(HandshakeResultObserver handshakeResultObserver) {
+        handshakeResponseProcessor.addHandshakeResultObserver(handshakeResultObserver);
     }
 
     @Override
@@ -109,7 +115,7 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
 
     private ArduinoSerialPortMessageListener createArduinoSerialPortMessageListener() {
         ArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new ArduinoSerialPortMessageListener();
-        arduinoSerialPortMessageListener.addResponseProcessor(new HandshakeResponseProcessor());
+        arduinoSerialPortMessageListener.addResponseProcessor(handshakeResponseProcessor);
         arduinoSerialPortMessageListener.addResponseProcessor(statusRequestResponseProcessor);
         arduinoSerialPortMessageListener.addResponseProcessor(toggleLockResponseProcessor);
         arduinoSerialPortMessageListener.addResponseProcessor(toggleConfigurationModeResponseProcessor);
@@ -119,6 +125,7 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
     private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();
+    private final HandshakeResponseProcessor handshakeResponseProcessor = new HandshakeResponseProcessor();
     private final ToggleLockResponseProcessor toggleLockResponseProcessor = new ToggleLockResponseProcessor();
     private final ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor = new ToggleConfigurationModeResponseProcessor();
     private final StatusRequestResponseProcessor statusRequestResponseProcessor = new StatusRequestResponseProcessor();
