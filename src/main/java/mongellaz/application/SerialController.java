@@ -66,11 +66,6 @@ public class SerialController implements Controller, Closeable {
     }
 
     @Override
-    public void sendStatusRequestCommand() {
-        commandsWriter.addCommand(statusRequestFactory.generate());
-    }
-
-    @Override
     public void sendToggleLockCommand() {
         commandsWriter.addCommand(toggleLockCommandFactory.generate());
     }
