@@ -4,11 +4,12 @@ import mongellaz.communication.ByteArrayWriter;
 import mongellaz.communication.CommunicationException;
 
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class CommandsWriter {
 
-    public CommandsWriter(Queue<byte[]> commands, ByteArrayWriter commandWriter) {
-        this.commands = commands;
+    public CommandsWriter(ByteArrayWriter commandWriter) {
+        this.commands = new ConcurrentLinkedQueue<>();
         this.commandWriter = commandWriter;
     }
 

@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+//TODO refactor this class
 public class SerialController implements Controller, Closeable, BoardStateObserver {
 
     public void start() throws CommunicationException {
@@ -76,7 +77,7 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     }
 
     private void initializeCommandWriter() {
-        commandsWriter = new ConcurrentLinkedQueueCommandsWriter(communicationManager);
+        commandsWriter = new CommandsWriter(communicationManager);
     }
 
     private void startCommandWriterExecutorService() {
