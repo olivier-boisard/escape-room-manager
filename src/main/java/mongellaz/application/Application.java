@@ -22,11 +22,9 @@ public class Application {
         try {
             // Create UI
             Ui ui = new Ui(controller);
+            controller.addHandshakeResultObserver(ui);
             controller.addLockStateObserver(ui);
             controller.addConfigurationModeStateObserver(ui);
-
-            // Start controller
-            controller.start();
 
             // Set up UI
             JFrame frame = new JFrame("Ui");
@@ -44,6 +42,8 @@ public class Application {
             // Start UI
             frame.setVisible(true);
 
+            // Start controller
+            controller.start();
         } catch (CommunicationException e) {
             logger.fatal(e.getMessage());
             resourcesCloser.closeResources();
