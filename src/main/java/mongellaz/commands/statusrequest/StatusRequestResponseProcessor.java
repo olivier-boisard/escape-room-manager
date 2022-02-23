@@ -71,11 +71,11 @@ public class StatusRequestResponseProcessor implements ResponseProcessor {
                             LockState lockState;
                             String lockStatusMsg = "Lock is " + switch (lockStatus) {
                                 case enabledCode -> {
-                                    lockState = LockState.OPEN;
+                                    lockState = LockState.CLOSED;
                                     yield "locked";
                                 }
                                 case disabledCode -> {
-                                    lockState = LockState.CLOSED;
+                                    lockState = LockState.OPEN;
                                     yield "unlocked";
                                 }
                                 default -> throw new CommunicationException("Unknown status " + lockStatus);
