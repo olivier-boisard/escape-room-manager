@@ -1,13 +1,16 @@
 package mongellaz.application;
 
+import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.LockStateObserver;
 import mongellaz.commands.ConfigurationModeStateObserver;
+import mongellaz.commands.handshake.HandshakeResult;
 import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class Ui implements LockStateObserver, ConfigurationModeStateObserver {
+public class Ui implements LockStateObserver, ConfigurationModeStateObserver, HandshakeResultObserver {
     public Ui(Controller controller) {
         toggleLockButton.addActionListener(e -> {
             controller.sendToggleLockCommand();
@@ -40,6 +43,26 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver {
         toggleConfigurationModeButton.setEnabled(true);
     }
 
+    @Override
+    public void update(HandshakeResult handshakeResult) {
+        String connectionStatusString = null;
+        Color textColor = null;
+        if (handshakeResult == HandshakeResult.SUCCESS) {
+            connectionStatusString = "Connecté";
+            textColor = Color.GREEN;
+        } else if (handshakeResult == HandshakeResult.FAILURE) {
+            connectionStatusString = "Non connecté";
+            textColor = Color.RED;
+        }
+
+        if (connectionStatusString != null) {
+            statusTextLabel.setText(connectionStatusString);
+        }
+        if (textColor != null) {
+            statusTextLabel.setForeground(textColor);
+        }
+    }
+
     public JPanel getMainPanel() {
         return mainPanel;
     }
@@ -47,4 +70,7 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver {
     private JPanel mainPanel;
     private JButton toggleLockButton;
     private JButton toggleConfigurationModeButton;
+    @SuppressWarnings("unused")
+    private JLabel statusLabel;
+    private JLabel statusTextLabel;
 }
