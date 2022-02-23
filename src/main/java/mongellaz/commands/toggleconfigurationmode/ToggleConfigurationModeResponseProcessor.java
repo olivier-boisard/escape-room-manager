@@ -51,7 +51,7 @@ public class ToggleConfigurationModeResponseProcessor implements ResponseProcess
         configurationModeStateObservers.add(configurationModeStateObserver);
     }
 
-    public void notifyAllConfigurationModeStateObservers(ConfigurationModeState newConfigurationModeState) {
+    private void notifyAllConfigurationModeStateObservers(ConfigurationModeState newConfigurationModeState) {
         for (ConfigurationModeStateObserver configurationModeStateObserver : configurationModeStateObservers) {
             configurationModeStateObserver.update(newConfigurationModeState);
         }
