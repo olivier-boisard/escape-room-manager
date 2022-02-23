@@ -61,6 +61,7 @@ public class ToggleConfigurationModeResponseProcessor implements ResponseProcess
         }
     }
 
+    @FunctionalInterface
     public interface ConfigurationModeStateObserver {
         void update(ConfigurationModeState configurationModeState);
     }
