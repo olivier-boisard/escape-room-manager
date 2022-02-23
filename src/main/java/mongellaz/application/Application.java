@@ -20,13 +20,13 @@ public class Application {
         resourcesCloser.addCloseable(controller);
 
         try {
-            // Start controller
-            controller.start();
-
             // Create UI
             Ui ui = new Ui(controller);
             controller.addLockStateObserver(ui);
             controller.addConfigurationModeStateObserver(ui);
+
+            // Start controller
+            controller.start();
 
             // Set up UI
             JFrame frame = new JFrame("Ui");
