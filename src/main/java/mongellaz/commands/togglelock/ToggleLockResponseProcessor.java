@@ -11,7 +11,7 @@ public class ToggleLockResponseProcessor implements ResponseProcessor {
     @Override
     public void process(final byte[] response) {
         processResponse(response);
-        waitOneSecond();
+        waitOneSecond(); // To avoid locking/unlocking the magnet to quickly
     }
 
     private void processResponse(byte[] response) {
