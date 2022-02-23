@@ -16,9 +16,8 @@ public class Application {
     public static void main(String[] args) {
         Logger logger = LogManager.getLogger();
         SerialController controller = new SerialController();
-        LinkedList<Closeable> resourcesToClose = new LinkedList<>();
-        resourcesToClose.add(controller);
-        ResourcesCloser resourcesCloser = new ResourcesCloser(resourcesToClose);
+        ResourcesCloser resourcesCloser = new ResourcesCloser();
+        resourcesCloser.addCloseable(controller);
         logger.info("Application start");
         try {
             controller.start();
@@ -40,8 +39,8 @@ public class Application {
 
     private static class ResourcesCloser extends WindowAdapter {
 
-        public ResourcesCloser(List<Closeable> closeables) {
-            this.closeables = closeables;
+        public ResourcesCloser() {
+            this.closeables = new LinkedList<>();
         }
 
         @Override
@@ -58,6 +57,10 @@ public class Application {
                     logger.fatal("Error while closing resource: {}", ex.getMessage());
                 }
             }
+        }
+
+        public void addCloseable(Closeable closeable) {
+            closeables.add(closeable);
         }
 
         private final List<Closeable> closeables;
