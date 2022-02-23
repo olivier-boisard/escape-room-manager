@@ -21,19 +21,19 @@ public class ToggleConfigurationModeResponseProcessor implements ResponseProcess
                     final byte enabledStatus = 0x03;
                     final byte disabledStatus = 0x04;
                     final byte status = response[3];
-                    MagnetState magnetState;
+                    ConfigurationModeState configurationModeState;
                     String statusStr = switch (status) {
                         case enabledStatus -> {
-                            magnetState = MagnetState.OPEN;
+                            configurationModeState = ConfigurationModeState.ENABLED;
                             yield " - Enabled";
                         }
                         case disabledStatus -> {
-                            magnetState = MagnetState.CLOSED;
+                            configurationModeState = ConfigurationModeState.DISABLED;
                             yield " - Disabled";
                         }
                         default -> throw new CommunicationException("Unknown status " + status);
                     };
-                    notifyAllMagnetStateObservers(magnetState);
+                    notifyAllConfigurationModeStateObservers(configurationModeState);
                     logger.info("OK - {}", statusStr);
                 } else {
                     logger.error("Not OK");
@@ -46,25 +46,25 @@ public class ToggleConfigurationModeResponseProcessor implements ResponseProcess
         }
     }
 
-    public enum MagnetState {
-        OPEN,
-        CLOSED
+    public enum ConfigurationModeState {
+        ENABLED,
+        DISABLED
     }
 
-    public void addMagnetStateObserver(MagnetStateObserver magnetStateObserver) {
-        magnetStateObservers.add(magnetStateObserver);
+    public void addConfigurationModeStateObserver(ConfigurationModeStateObserver configurationModeStateObserver) {
+        configurationModeStateObservers.add(configurationModeStateObserver);
     }
 
-    public void notifyAllMagnetStateObservers(MagnetState newMagnetState) {
-        for (MagnetStateObserver magnetStateObserver : magnetStateObservers) {
-            magnetStateObserver.update(newMagnetState);
+    public void notifyAllConfigurationModeStateObservers(ConfigurationModeState newConfigurationModeState) {
+        for (ConfigurationModeStateObserver configurationModeStateObserver : configurationModeStateObservers) {
+            configurationModeStateObserver.update(newConfigurationModeState);
         }
     }
 
-    public interface MagnetStateObserver {
-        void update(MagnetState magnetState);
+    public interface ConfigurationModeStateObserver {
+        void update(ConfigurationModeState configurationModeState);
     }
 
-    private final List<MagnetStateObserver> magnetStateObservers = new LinkedList<>();
+    private final List<ConfigurationModeStateObserver> configurationModeStateObservers = new LinkedList<>();
     private final Logger logger = LogManager.getLogger();
 }
