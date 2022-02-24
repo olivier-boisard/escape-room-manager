@@ -132,13 +132,13 @@ public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceControl
         return serialPort;
     }
 
-    private ArduinoSerialPortMessageListener createArduinoSerialPortMessageListener() {
-        ArduinoSerialPortMessageListener arduinoSerialPortMessageListener = new ArduinoSerialPortMessageListener();
-        arduinoSerialPortMessageListener.addResponseProcessor(handshakeResponseProcessor);
-        arduinoSerialPortMessageListener.addResponseProcessor(statusRequestResponseProcessor);
-        arduinoSerialPortMessageListener.addResponseProcessor(toggleLockResponseProcessor);
-        arduinoSerialPortMessageListener.addResponseProcessor(toggleConfigurationModeResponseProcessor);
-        return arduinoSerialPortMessageListener;
+    private ResponseProcessorStackSerialPortMessageListener createArduinoSerialPortMessageListener() {
+        ResponseProcessorStackSerialPortMessageListener responseProcessorStackSerialPortMessageListener = new ResponseProcessorStackSerialPortMessageListener();
+        responseProcessorStackSerialPortMessageListener.addResponseProcessor(handshakeResponseProcessor);
+        responseProcessorStackSerialPortMessageListener.addResponseProcessor(statusRequestResponseProcessor);
+        responseProcessorStackSerialPortMessageListener.addResponseProcessor(toggleLockResponseProcessor);
+        responseProcessorStackSerialPortMessageListener.addResponseProcessor(toggleConfigurationModeResponseProcessor);
+        return responseProcessorStackSerialPortMessageListener;
     }
 
     private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();

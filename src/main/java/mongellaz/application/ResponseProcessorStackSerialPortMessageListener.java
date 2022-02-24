@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ArduinoSerialPortMessageListener implements SerialPortMessageListener {
+public class ResponseProcessorStackSerialPortMessageListener implements SerialPortMessageListener {
 
     void addResponseProcessor(ResponseProcessor responseProcessor) {
         responseProcessors.add(responseProcessor);
