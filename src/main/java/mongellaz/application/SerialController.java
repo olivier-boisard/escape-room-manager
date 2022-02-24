@@ -74,12 +74,12 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
 
     @Override
     public void sendToggleLockCommand() {
-        commandsWriter.addCommand(toggleLockCommandFactory.generate());
+        commandsConsumer.addCommand(toggleLockCommandFactory.generate());
     }
 
     @Override
     public void sendToggleConfigurationModeCommand() {
-        commandsWriter.addCommand(toggleConfigurationModeCommandFactory.generate());
+        commandsConsumer.addCommand(toggleConfigurationModeCommandFactory.generate());
     }
 
     @Override
@@ -100,14 +100,14 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     }
 
     private void initializeCommandWriter() {
-        commandsWriter = new CommandsWriter(communicationManager);
+        commandsConsumer = new ByteArrayConsumer(communicationManager);
     }
 
     private void startCommandWriterExecutorService() {
         final int commandReadRateTimeMs = 100;
         commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
         commandWriterExecutorService.scheduleAtFixedRate(
-                commandsWriter::runNextCommand,
+                commandsConsumer::runNextCommand,
                 0,
                 commandReadRateTimeMs,
                 TimeUnit.MILLISECONDS
@@ -115,8 +115,8 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     }
 
     private void startCommunicationWithBoard() {
-        commandsWriter.addCommand(new HandshakeFactory().generate());
-        commandsWriter.addCommand(statusRequestFactory.generate());
+        commandsConsumer.addCommand(new HandshakeFactory().generate());
+        commandsConsumer.addCommand(statusRequestFactory.generate());
     }
 
     private SerialPort createSerialPortHandler() throws CommunicationException, InterruptedException {
@@ -146,7 +146,7 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     private final ToggleLockResponseProcessor toggleLockResponseProcessor = new ToggleLockResponseProcessor();
     private final ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor = new ToggleConfigurationModeResponseProcessor();
     private final StatusRequestResponseProcessor statusRequestResponseProcessor = new StatusRequestResponseProcessor();
-    private CommandsWriter commandsWriter;
+    private ByteArrayConsumer commandsConsumer;
     private SerialCommunicationManager communicationManager;
     private ScheduledExecutorService commandWriterExecutorService;
 

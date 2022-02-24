@@ -6,9 +6,9 @@ import mongellaz.communication.CommunicationException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class CommandsWriter {
+public class ByteArrayConsumer {
 
-    public CommandsWriter(ByteArrayWriter commandWriter) {
+    public ByteArrayConsumer(ByteArrayWriter commandWriter) {
         this.commandWriter = commandWriter;
     }
 
