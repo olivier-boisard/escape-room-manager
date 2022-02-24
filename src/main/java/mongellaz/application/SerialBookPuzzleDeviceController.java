@@ -1,6 +1,8 @@
 package mongellaz.application;
 
 import com.fazecast.jSerialComm.SerialPort;
+import mongellaz.bookpuzzle.BookPuzzleDeviceController;
+import mongellaz.bookpuzzle.BookPuzzleDeviceStateObservable;
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.LockStateObserver;
@@ -26,7 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 //TODO refactor this class
-public class SerialArduinoArduinoBoardController implements ArduinoBoardController, Closeable, ArduinoBoardStateObservable {
+public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceController, Closeable, BookPuzzleDeviceStateObservable {
 
     public void start() throws CommunicationException {
         try {

@@ -1,5 +1,6 @@
 package mongellaz.application;
 
+import mongellaz.bookpuzzle.BookPuzzleDeviceController;
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.LockStateObserver;
@@ -17,18 +18,18 @@ import java.util.Vector;
 
 @SuppressWarnings("unused")
 public class Ui implements LockStateObserver, ConfigurationModeStateObserver, HandshakeResultObserver, PiccReaderStatusesObserver {
-    public Ui(ArduinoBoardController arduinoBoardController) {
+    public Ui(BookPuzzleDeviceController bookPuzzleBoardController) {
         toggleLockButton.addActionListener(e -> {
-            arduinoBoardController.sendToggleLockCommand();
+            bookPuzzleBoardController.sendToggleLockCommand();
             toggleLockButton.setEnabled(false);
         });
 
         toggleConfigurationModeButton.addActionListener(e -> {
-            arduinoBoardController.sendToggleConfigurationModeCommand();
+            bookPuzzleBoardController.sendToggleConfigurationModeCommand();
             toggleConfigurationModeButton.setEnabled(false);
         });
 
-        for (String connectionOption : arduinoBoardController.getConnectionOptions()) {
+        for (String connectionOption : bookPuzzleBoardController.getConnectionOptions()) {
             serialPortComboBox.addItem(connectionOption);
         }
     }

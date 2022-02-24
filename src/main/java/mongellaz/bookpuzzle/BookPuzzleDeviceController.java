@@ -1,8 +1,8 @@
-package mongellaz.application;
+package mongellaz.bookpuzzle;
 
 import java.util.List;
 
-public interface ArduinoBoardController {
+public interface BookPuzzleDeviceController {
     List<String> getConnectionOptions();
     void sendToggleLockCommand();
     void sendToggleConfigurationModeCommand();
