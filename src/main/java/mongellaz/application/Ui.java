@@ -155,7 +155,7 @@ public class Ui implements BookPuzzleDeviceStateObserver {
         Color textColor;
         if (configurationModeState == ConfigurationModeState.ENABLED) {
             configurationModeTextValueText = "Activé";
-            textColor = Color.GREEN;
+            textColor = Color.ORANGE;
         } else {
             configurationModeTextValueText = "Désactivé";
             textColor = Color.BLACK;
