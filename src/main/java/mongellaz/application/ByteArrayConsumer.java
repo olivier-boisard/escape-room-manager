@@ -1,25 +1,20 @@
 package mongellaz.application;
 
-import mongellaz.communication.ByteArrayWriter;
-import mongellaz.communication.CommunicationException;
+import mongellaz.communication.ByteArrayObserver;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ByteArrayConsumer {
 
-    public ByteArrayConsumer(ByteArrayWriter commandWriter) {
+    public ByteArrayConsumer(ByteArrayObserver commandWriter) {
         this.commandWriter = commandWriter;
     }
 
     public void runNextCommand() {
-        try {
-            byte[] command = commands.poll();
-            if (command != null) {
-                commandWriter.write(command);
-            }
-        } catch (CommunicationException e) {
-            e.printStackTrace();
+        byte[] command = commands.poll();
+        if (command != null) {
+            commandWriter.update(command);
         }
     }
 
@@ -28,6 +23,5 @@ public class ByteArrayConsumer {
     }
 
     private final Queue<byte[]> commands = new ConcurrentLinkedQueue<>();
-    ByteArrayWriter commandWriter;
-
+    ByteArrayObserver commandWriter;
 }

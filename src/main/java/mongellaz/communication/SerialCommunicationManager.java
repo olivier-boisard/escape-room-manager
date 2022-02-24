@@ -3,7 +3,7 @@ package mongellaz.communication;
 import com.fazecast.jSerialComm.SerialPort;
 
 @SuppressWarnings("ClassCanBeRecord")
-public class SerialCommunicationManager implements AutoCloseable, ByteArrayWriter {
+public class SerialCommunicationManager implements AutoCloseable, ByteArrayObserver {
 
     public SerialCommunicationManager(SerialPort serialPort) {
         this.serialPort = serialPort;
@@ -15,7 +15,7 @@ public class SerialCommunicationManager implements AutoCloseable, ByteArrayWrite
     }
 
     @Override
-    public void write(byte[] data) {
+    public void update(byte[] data) {
         serialPort.writeBytes(data, data.length);
     }
 
