@@ -6,6 +6,7 @@ import mongellaz.commands.PiccReaderStatusesObserver;
 import mongellaz.commands.ResponseProcessor;
 import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
+import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,10 +14,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StatusRequestResponseProcessor implements ResponseProcessor {
+public class StatusRequestResponseProcessor implements ByteArrayObserver {
     //TODO this method is too big
     @Override
-    public void process(final byte[] response) {
+    public void update(final byte[] response) {
         final byte commandCode = 0x20;
         final byte piccReadersStatusCode = 0x01;
         final byte configurationModeStatusCode = 0x02;

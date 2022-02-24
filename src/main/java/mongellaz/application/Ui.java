@@ -1,10 +1,7 @@
 package mongellaz.application;
 
 import mongellaz.bookpuzzle.BookPuzzleDeviceController;
-import mongellaz.commands.ConfigurationModeStateObserver;
-import mongellaz.commands.HandshakeResultObserver;
-import mongellaz.commands.LockStateObserver;
-import mongellaz.commands.PiccReaderStatusesObserver;
+import mongellaz.commands.*;
 import mongellaz.commands.handshake.HandshakeResult;
 import mongellaz.commands.statusrequest.PiccReaderStatus;
 import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
@@ -17,7 +14,7 @@ import java.awt.*;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
-public class Ui implements LockStateObserver, ConfigurationModeStateObserver, HandshakeResultObserver, PiccReaderStatusesObserver {
+public class Ui implements BookPuzzleDeviceStateObserver {
     public Ui(BookPuzzleDeviceController bookPuzzleBoardController) {
         toggleLockButton.addActionListener(e -> {
             bookPuzzleBoardController.sendToggleLockCommand();

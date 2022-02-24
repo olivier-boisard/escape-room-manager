@@ -1,7 +1,7 @@
 package mongellaz.commands.togglelock;
 
 import mongellaz.commands.LockStateObserver;
-import mongellaz.commands.ResponseProcessor;
+import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,13 +10,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ToggleLockResponseProcessor implements ResponseProcessor {
+public class ToggleLockResponseProcessor implements ByteArrayObserver {
     @Override
-    public void process(final byte[] response) {
-        processResponse(response);
-    }
-
-    private void processResponse(byte[] response) {
+    public void update(final byte[] response) {
         final byte commandCode = 0x30;
 
         if (response[0] == commandCode) {

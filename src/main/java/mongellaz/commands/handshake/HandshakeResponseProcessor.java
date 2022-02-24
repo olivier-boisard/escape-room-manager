@@ -1,7 +1,7 @@
 package mongellaz.commands.handshake;
 
 import mongellaz.commands.HandshakeResultObserver;
-import mongellaz.commands.ResponseProcessor;
+import mongellaz.communication.ByteArrayObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class HandshakeResponseProcessor implements ResponseProcessor {
+public class HandshakeResponseProcessor implements ByteArrayObserver {
     @Override
-    public void process(final byte[] response) {
+    public void update(final byte[] response) {
         final byte commandCode = 0x10;
         if (response[0] == commandCode) {
             final byte[] expectedResponse = {commandCode, -123, -14, -98, -29, 67, 25, -22, -10};

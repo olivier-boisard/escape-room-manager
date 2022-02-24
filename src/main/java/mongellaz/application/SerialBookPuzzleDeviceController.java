@@ -2,11 +2,7 @@ package mongellaz.application;
 
 import com.fazecast.jSerialComm.SerialPort;
 import mongellaz.bookpuzzle.BookPuzzleDeviceController;
-import mongellaz.bookpuzzle.BookPuzzleDeviceStateObservable;
-import mongellaz.commands.ConfigurationModeStateObserver;
-import mongellaz.commands.HandshakeResultObserver;
-import mongellaz.commands.LockStateObserver;
-import mongellaz.commands.PiccReaderStatusesObserver;
+import mongellaz.commands.*;
 import mongellaz.commands.handshake.HandshakeFactory;
 import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
@@ -15,54 +11,31 @@ import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeCommand
 import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
 import mongellaz.commands.togglelock.ToggleLockCommandFactory;
 import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
-import mongellaz.communication.CommunicationException;
-import mongellaz.communication.SerialCommunicationManager;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import mongellaz.communication.ByteArrayObserver;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 //TODO refactor this class
-public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceController, BookPuzzleDeviceStateObservable, Closeable {
+public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceController {
 
-    public void start() throws CommunicationException {
-        try {
-            initializeCommunicationManager();
-            initializeCommandWriter();
-            startCommandWriterExecutorService();
-            startCommunicationWithBoard();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            commandWriterExecutorService.shutdown();
-            throw new CommunicationException(e);
-        }
+    public SerialBookPuzzleDeviceController(ByteArrayObserver commandHandler) {
+        this.commandHandler = commandHandler;
     }
 
-    @Override
-    public void addHandshakeResultObserver(HandshakeResultObserver handshakeResultObserver) {
-        handshakeResponseProcessor.addHandshakeResultObserver(handshakeResultObserver);
+    public void start() {
+        commandHandler.update(new HandshakeFactory().generate());
+        commandHandler.update(statusRequestFactory.generate());
     }
 
-    @Override
-    public void addLockStateObserver(LockStateObserver lockStateObserver) {
-        toggleLockResponseProcessor.addLockStateObserver(lockStateObserver);
-        statusRequestResponseProcessor.addLockStateObserver(lockStateObserver);
-    }
+    public void addBookPuzzleDeviceStateObserver(BookPuzzleDeviceStateObserver bookPuzzleDeviceStateObserver) {
+        handshakeResponseProcessor.addHandshakeResultObserver(bookPuzzleDeviceStateObserver);
+        toggleLockResponseProcessor.addLockStateObserver(bookPuzzleDeviceStateObserver);
+        toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(bookPuzzleDeviceStateObserver);
+        statusRequestResponseProcessor.addPiccReaderStatusesObserver(bookPuzzleDeviceStateObserver);
 
-    @Override
-    public void addConfigurationModeStateObserver(ConfigurationModeStateObserver configurationModeStateObserver) {
-        toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(configurationModeStateObserver);
-        statusRequestResponseProcessor.addConfigurationModeStateObserver(configurationModeStateObserver);
-    }
-
-    @Override
-    public void addPiccReaderStatusesObserver(PiccReaderStatusesObserver piccReaderStatusesObserver) {
-        statusRequestResponseProcessor.addPiccReaderStatusesObserver(piccReaderStatusesObserver);
+        statusRequestResponseProcessor.addLockStateObserver(bookPuzzleDeviceStateObserver);
+        statusRequestResponseProcessor.addConfigurationModeStateObserver(bookPuzzleDeviceStateObserver);
     }
 
     @Override
@@ -76,80 +49,37 @@ public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceControl
 
     @Override
     public void sendToggleLockCommand() {
-        commandsConsumer.addCommand(toggleLockCommandFactory.generate());
+        commandHandler.update(toggleLockCommandFactory.generate());
     }
 
     @Override
     public void sendToggleConfigurationModeCommand() {
-        commandsConsumer.addCommand(toggleConfigurationModeCommandFactory.generate());
+        commandHandler.update(toggleConfigurationModeCommandFactory.generate());
     }
 
-    @Override
-    public void close() {
-        if (commandWriterExecutorService != null) {
-            commandWriterExecutorService.shutdown();
-        }
-        if (communicationManager != null) {
-            communicationManager.close();
-        }
+    public void setHandshakeResponseProcessor(HandshakeResponseProcessor handshakeResponseProcessor) {
+        this.handshakeResponseProcessor = handshakeResponseProcessor;
     }
 
-    private void initializeCommunicationManager() throws CommunicationException, InterruptedException {
-        SerialPort serialPort = createSerialPortHandler();
-        serialPort.addDataListener(createArduinoSerialPortMessageListener());
-        communicationManager = new SerialCommunicationManager(serialPort);
+    public void setToggleLockResponseProcessor(ToggleLockResponseProcessor toggleLockResponseProcessor) {
+        this.toggleLockResponseProcessor = toggleLockResponseProcessor;
     }
 
-    private void initializeCommandWriter() {
-        commandsConsumer = new ByteArrayConsumer(communicationManager);
+    public void setToggleConfigurationModeResponseProcessor(ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor) {
+        this.toggleConfigurationModeResponseProcessor = toggleConfigurationModeResponseProcessor;
     }
 
-    private void startCommandWriterExecutorService() {
-        final int commandReadRateTimeMs = 100;
-        commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
-        commandWriterExecutorService.scheduleAtFixedRate(
-                commandsConsumer::runNextCommand,
-                0,
-                commandReadRateTimeMs,
-                TimeUnit.MILLISECONDS
-        );
-    }
-
-    private void startCommunicationWithBoard() {
-        commandsConsumer.addCommand(new HandshakeFactory().generate());
-        commandsConsumer.addCommand(statusRequestFactory.generate());
-    }
-
-    private SerialPort createSerialPortHandler() throws CommunicationException, InterruptedException {
-        final int initialDelayTimeMs = 5000;
-        SerialPort serialPort = SerialPort.getCommPorts()[0];
-        if (!serialPort.openPort()) {
-            throw new CommunicationException("Could not open serial port");
-        }
-        Thread.sleep(initialDelayTimeMs);
-        logger.info("Initialization successful");
-        return serialPort;
-    }
-
-    private ResponseProcessorStackSerialPortMessageListener createArduinoSerialPortMessageListener() {
-        ResponseProcessorStackSerialPortMessageListener responseProcessorStackSerialPortMessageListener = new ResponseProcessorStackSerialPortMessageListener();
-        responseProcessorStackSerialPortMessageListener.addResponseProcessor(handshakeResponseProcessor);
-        responseProcessorStackSerialPortMessageListener.addResponseProcessor(statusRequestResponseProcessor);
-        responseProcessorStackSerialPortMessageListener.addResponseProcessor(toggleLockResponseProcessor);
-        responseProcessorStackSerialPortMessageListener.addResponseProcessor(toggleConfigurationModeResponseProcessor);
-        return responseProcessorStackSerialPortMessageListener;
+    public void setStatusRequestResponseProcessor(StatusRequestResponseProcessor statusRequestResponseProcessor) {
+        this.statusRequestResponseProcessor = statusRequestResponseProcessor;
     }
 
     private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
     private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();
-    private final HandshakeResponseProcessor handshakeResponseProcessor = new HandshakeResponseProcessor();
-    private final ToggleLockResponseProcessor toggleLockResponseProcessor = new ToggleLockResponseProcessor();
-    private final ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor = new ToggleConfigurationModeResponseProcessor();
-    private final StatusRequestResponseProcessor statusRequestResponseProcessor = new StatusRequestResponseProcessor();
-    private ByteArrayConsumer commandsConsumer;
-    private SerialCommunicationManager communicationManager;
-    private ScheduledExecutorService commandWriterExecutorService;
+    private HandshakeResponseProcessor handshakeResponseProcessor;
+    private ToggleLockResponseProcessor toggleLockResponseProcessor;
+    private ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor;
+    private StatusRequestResponseProcessor statusRequestResponseProcessor;
 
-    private static final Logger logger = LogManager.getLogger();
+    private final ByteArrayObserver commandHandler;
 }
