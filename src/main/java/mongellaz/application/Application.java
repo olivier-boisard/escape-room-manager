@@ -15,7 +15,7 @@ public class Application {
         logger.info("Application start");
 
         // Set up basic resources handles
-        SerialArduinoBoardController controller = new SerialArduinoBoardController();
+        SerialArduinoArduinoBoardController controller = new SerialArduinoArduinoBoardController();
         ResourcesCloser resourcesCloser = new ResourcesCloser();
         resourcesCloser.addCloseable(controller);
 
