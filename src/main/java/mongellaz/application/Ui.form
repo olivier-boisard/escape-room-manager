@@ -114,7 +114,7 @@
         <properties/>
         <border type="none" title="Status des lecteurs"/>
         <children>
-          <component id="6eaf7" class="javax.swing.JTable" binding="piccReaderStatusesTable">
+          <component id="6eaf7" class="javax.swing.JTable" binding="piccReaderStatusesTable" custom-create="true">
             <constraints/>
             <properties/>
           </component>

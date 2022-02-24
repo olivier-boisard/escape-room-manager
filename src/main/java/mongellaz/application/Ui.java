@@ -10,10 +10,9 @@ import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
@@ -64,15 +63,22 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver, Ha
 
     @Override
     public void update(Iterable<PiccReaderStatus> piccReaderStatuses) {
+        final String noChipString = "Aucune puce";
+        final String wrongChipString = "Mauvaise puce";
+        final String correctChipString = "Bonne puce";
+        final String newChipString = "Nouvelle puce";
+        final String readerLabelString = "Lecteur";
+        final String statusLabelString = "Status";
         int i = 0;
+
         Vector<Vector<String>> data = new Vector<>();
         DefaultTableModel tableModel = new DefaultTableModel();
         for (PiccReaderStatus piccReaderStatus : piccReaderStatuses) {
             String statusString = switch (piccReaderStatus) {
-                case NO_PICC -> "Aucune puce";
-                case WRONG_PICC -> "Mauvaise puce";
-                case CORRECT_PICC -> "Bonne puce";
-                case NEW_PICC -> "Nouvelle puce";
+                case NO_PICC -> noChipString;
+                case WRONG_PICC -> wrongChipString;
+                case CORRECT_PICC -> correctChipString;
+                case NEW_PICC -> newChipString;
             };
             Vector<String> row = new Vector<>();
             row.add("Lecteur " + ++i);
@@ -81,10 +87,24 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver, Ha
         }
 
         Vector<String> columnNames = new Vector<>();
-        columnNames.add("Lecteur");
-        columnNames.add("Status");
+        columnNames.add(readerLabelString);
+        columnNames.add(statusLabelString);
 
         piccReaderStatusesTable.setModel(new DefaultTableModel(data, columnNames));
+        piccReaderStatusesTable.getColumn(statusLabelString).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                Color textColor = switch ((String) value) {
+                    case wrongChipString -> Color.RED;
+                    case correctChipString -> Color.GREEN;
+                    case newChipString -> Color.BLUE;
+                    default -> Color.BLACK;
+                };
+                component.setForeground(textColor);
+                return component;
+            }
+        });
     }
 
     public void setConnectionStateToConnecting() {
@@ -155,4 +175,13 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver, Ha
     private JLabel configurationModeTextValue;
     private JTable piccReaderStatusesTable;
     private JScrollPane piccReadersStatusesScrollPane;
+
+    private void createUIComponents() {
+        piccReaderStatusesTable = new JTable() {
+            @Override
+            public Class<?> getColumnClass(int column) {
+                return convertColumnIndexToModel(column) == 0 ? String.class : super.getColumnClass(column);
+            }
+        };
+    }
 }
