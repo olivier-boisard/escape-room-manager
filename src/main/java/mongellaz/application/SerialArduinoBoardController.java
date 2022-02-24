@@ -26,7 +26,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 //TODO refactor this class
-public class SerialController implements Controller, Closeable, BoardStateObservable {
+public class SerialArduinoBoardController implements ArduinoBoardController, Closeable, BoardStateObservable {
 
     public void start() throws CommunicationException {
         try {

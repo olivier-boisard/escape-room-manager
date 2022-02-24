@@ -2,7 +2,7 @@ package mongellaz.application;
 
 import java.util.List;
 
-public interface Controller {
+public interface ArduinoBoardController {
     List<String> getConnectionOptions();
     void sendToggleLockCommand();
     void sendToggleConfigurationModeCommand();

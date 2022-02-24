@@ -17,18 +17,18 @@ import java.util.Vector;
 
 @SuppressWarnings("unused")
 public class Ui implements LockStateObserver, ConfigurationModeStateObserver, HandshakeResultObserver, PiccReaderStatusesObserver {
-    public Ui(Controller controller) {
+    public Ui(ArduinoBoardController arduinoBoardController) {
         toggleLockButton.addActionListener(e -> {
-            controller.sendToggleLockCommand();
+            arduinoBoardController.sendToggleLockCommand();
             toggleLockButton.setEnabled(false);
         });
 
         toggleConfigurationModeButton.addActionListener(e -> {
-            controller.sendToggleConfigurationModeCommand();
+            arduinoBoardController.sendToggleConfigurationModeCommand();
             toggleConfigurationModeButton.setEnabled(false);
         });
 
-        for (String connectionOption : controller.getConnectionOptions()) {
+        for (String connectionOption : arduinoBoardController.getConnectionOptions()) {
             serialPortComboBox.addItem(connectionOption);
         }
     }
