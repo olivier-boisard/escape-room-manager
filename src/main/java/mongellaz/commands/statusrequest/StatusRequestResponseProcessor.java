@@ -2,6 +2,7 @@ package mongellaz.commands.statusrequest;
 
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.LockStateObserver;
+import mongellaz.commands.PiccReaderStatusesObserver;
 import mongellaz.commands.ResponseProcessor;
 import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
@@ -37,17 +38,32 @@ public class StatusRequestResponseProcessor implements ResponseProcessor {
                         case commandCode -> logger.info("Command is 'status request'");
                         case piccReadersStatusCode -> {
                             int nPiccReaders = response[index++];
+                            List<PiccReaderStatus> piccReaderStatuses = new LinkedList<>();
                             for (int i = 0; i < nPiccReaders; i++) {
                                 byte status = response[index++];
-                                String piccReaderStatusMsg = "PICC reader " + i + ": " + switch (status) {
-                                    case noPicc -> "No Picc";
-                                    case wrongPicc -> "Wrong PICC";
-                                    case correctPicc -> "Correct PICC";
-                                    case newPicc -> "New PICC";
+                                String piccReaderStatusMsg = "PICC reader " + i + ": ";
+                                switch (status) {
+                                    case noPicc -> {
+                                        piccReaderStatusMsg += "No Picc";
+                                        piccReaderStatuses.add(PiccReaderStatus.NO_PICC);
+                                    }
+                                    case wrongPicc -> {
+                                        piccReaderStatusMsg += "Wrong PICC";
+                                        piccReaderStatuses.add(PiccReaderStatus.WRONG_PICC);
+                                    }
+                                    case correctPicc -> {
+                                        piccReaderStatusMsg += "Correct PICC";
+                                        piccReaderStatuses.add(PiccReaderStatus.CORRECT_PICC);
+                                    }
+                                    case newPicc -> {
+                                        piccReaderStatusMsg += "New PICC";
+                                        piccReaderStatuses.add(PiccReaderStatus.NEW_PICC);
+                                    }
                                     default -> throw new CommunicationException("Unknown status: " + status);
-                                };
+                                }
                                 logger.info(piccReaderStatusMsg);
                             }
+                            notifyAllPiccReaderStatusesObservers(piccReaderStatuses);
                         }
                         case configurationModeStatusCode -> {
                             byte configurationStatus = response[index++];
@@ -107,9 +123,19 @@ public class StatusRequestResponseProcessor implements ResponseProcessor {
         configurationModeStateObservers.add(configurationModeStateObserver);
     }
 
+    public void addPiccReaderStatusesObserver(PiccReaderStatusesObserver piccReaderStatusesObserver) {
+        piccReaderStatusesObservers.add(piccReaderStatusesObserver);
+    }
+
     private void notifyAllLockStateObserver(LockState lockState) {
         for (LockStateObserver lockStateObserver : lockStateObservers) {
             lockStateObserver.update(lockState);
+        }
+    }
+
+    private void notifyAllPiccReaderStatusesObservers(Iterable<PiccReaderStatus> piccReaderStatuses) {
+        for (PiccReaderStatusesObserver piccReaderStatusesObserver : piccReaderStatusesObservers) {
+            piccReaderStatusesObserver.update(piccReaderStatuses);
         }
     }
 
@@ -119,8 +145,8 @@ public class StatusRequestResponseProcessor implements ResponseProcessor {
         }
     }
 
-
     private final Logger logger = LogManager.getLogger();
     private final List<LockStateObserver> lockStateObservers = new LinkedList<>();
     private final List<ConfigurationModeStateObserver> configurationModeStateObservers = new LinkedList<>();
+    private final List<PiccReaderStatusesObserver> piccReaderStatusesObservers = new LinkedList<>();
 }

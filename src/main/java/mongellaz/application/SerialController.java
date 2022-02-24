@@ -4,6 +4,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.LockStateObserver;
+import mongellaz.commands.PiccReaderStatusesObserver;
 import mongellaz.commands.handshake.HandshakeFactory;
 import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
@@ -53,6 +54,11 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     public void addConfigurationModeStateObserver(ConfigurationModeStateObserver configurationModeStateObserver) {
         toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(configurationModeStateObserver);
         statusRequestResponseProcessor.addConfigurationModeStateObserver(configurationModeStateObserver);
+    }
+
+    @Override
+    public void addPiccReaderStatusesObserver(PiccReaderStatusesObserver piccReaderStatusesObserver) {
+        statusRequestResponseProcessor.addPiccReaderStatusesObserver(piccReaderStatusesObserver);
     }
 
     @Override

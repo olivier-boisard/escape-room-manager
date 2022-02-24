@@ -26,6 +26,7 @@ public class Application {
             controller.addHandshakeResultObserver(ui);
             controller.addLockStateObserver(ui);
             controller.addConfigurationModeStateObserver(ui);
+            controller.addPiccReaderStatusesObserver(ui);
 
             // Set up UI
             JFrame frame = new JFrame("Ui");
