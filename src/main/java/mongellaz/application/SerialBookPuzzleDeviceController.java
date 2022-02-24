@@ -28,7 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 //TODO refactor this class
-public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceController, Closeable, BookPuzzleDeviceStateObservable {
+public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceController, BookPuzzleDeviceStateObservable, Closeable {
 
     public void start() throws CommunicationException {
         try {
@@ -98,7 +98,6 @@ public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceControl
         SerialPort serialPort = createSerialPortHandler();
         serialPort.addDataListener(createArduinoSerialPortMessageListener());
         communicationManager = new SerialCommunicationManager(serialPort);
-
     }
 
     private void initializeCommandWriter() {
