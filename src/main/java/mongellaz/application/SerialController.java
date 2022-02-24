@@ -19,6 +19,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -59,6 +61,15 @@ public class SerialController implements Controller, Closeable, BoardStateObserv
     @Override
     public void addPiccReaderStatusesObserver(PiccReaderStatusesObserver piccReaderStatusesObserver) {
         statusRequestResponseProcessor.addPiccReaderStatusesObserver(piccReaderStatusesObserver);
+    }
+
+    @Override
+    public List<String> getConnectionOptions() {
+        ArrayList<String> connectionOptions = new ArrayList<>();
+        for (SerialPort serialPort : SerialPort.getCommPorts()) {
+            connectionOptions.add(serialPort.getDescriptivePortName());
+        }
+        return connectionOptions;
     }
 
     @Override

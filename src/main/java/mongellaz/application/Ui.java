@@ -27,6 +27,10 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver, Ha
             controller.sendToggleConfigurationModeCommand();
             toggleConfigurationModeButton.setEnabled(false);
         });
+
+        for (String connectionOption : controller.getConnectionOptions()) {
+            serialPortComboBox.addItem(connectionOption);
+        }
     }
 
     @Override
@@ -175,6 +179,10 @@ public class Ui implements LockStateObserver, ConfigurationModeStateObserver, Ha
     private JLabel configurationModeTextValue;
     private JTable piccReaderStatusesTable;
     private JScrollPane piccReadersStatusesScrollPane;
+    private JPanel connectionPanel;
+    private JComboBox<String> serialPortComboBox;
+    private JLabel serialPortLabel;
+    private JButton connectionButton;
 
     private void createUIComponents() {
         piccReaderStatusesTable = new JTable() {
