@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class CommandsWriter {
 
     public CommandsWriter(ByteArrayWriter commandWriter) {
-        this.commands = new ConcurrentLinkedQueue<>();
         this.commandWriter = commandWriter;
     }
 
@@ -28,7 +27,7 @@ public class CommandsWriter {
         commands.add(command);
     }
 
-    private final Queue<byte[]> commands;
+    private final Queue<byte[]> commands = new ConcurrentLinkedQueue<>();
     ByteArrayWriter commandWriter;
 
 }
