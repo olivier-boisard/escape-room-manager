@@ -5,7 +5,7 @@ import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.LockStateObserver;
 import mongellaz.commands.PiccReaderStatusesObserver;
 
-public interface BoardStateObserver {
+public interface BoardStateObservable {
     void addHandshakeResultObserver(HandshakeResultObserver handshakeResultObserver);
     void addLockStateObserver(LockStateObserver lockStateObserver);
     void addConfigurationModeStateObserver(ConfigurationModeStateObserver configurationModeStateObserver);
