@@ -12,10 +12,9 @@ import mongellaz.commands.togglelock.ToggleLockCommandFactory;
 import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
 import mongellaz.communication.ByteArrayObserver;
 
-//TODO refactor this class
-public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceController {
+public class PuzzleDeviceControllerImpl implements BookPuzzleDeviceController {
 
-    public SerialBookPuzzleDeviceController(ByteArrayObserver commandHandler) {
+    public PuzzleDeviceControllerImpl(ByteArrayObserver commandHandler) {
         this.commandHandler = commandHandler;
     }
 

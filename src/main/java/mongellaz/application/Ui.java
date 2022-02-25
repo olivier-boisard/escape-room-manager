@@ -11,21 +11,34 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
 public class Ui implements BookPuzzleDeviceStateObserver {
-    public Ui(BookPuzzleDeviceController bookPuzzleBoardController, Iterable<String> connectionOptions) {
+
+    public void setBookPuzzleDeviceController(BookPuzzleDeviceController bookPuzzleDeviceController) {
         toggleLockButton.addActionListener(e -> {
-            bookPuzzleBoardController.sendToggleLockCommand();
+            bookPuzzleDeviceController.sendToggleLockCommand();
             toggleLockButton.setEnabled(false);
         });
 
         toggleConfigurationModeButton.addActionListener(e -> {
-            bookPuzzleBoardController.sendToggleConfigurationModeCommand();
+            bookPuzzleDeviceController.sendToggleConfigurationModeCommand();
             toggleConfigurationModeButton.setEnabled(false);
         });
+    }
 
+    public void addConnectionButtonActionListener(ActionListener actionListener) {
+        connectionButton.addActionListener(actionListener);
+    }
+
+    public String getSelectedConnectionOption() {
+        return (String) connectionOptionsComboBox.getSelectedItem();
+    }
+
+    public void setConnectionOptions(Iterable<String> connectionOptions) {
+        connectionOptionsComboBox.removeAllItems();
         for (String connectionOption : connectionOptions) {
             connectionOptionsComboBox.addItem(connectionOption);
         }
@@ -107,11 +120,6 @@ public class Ui implements BookPuzzleDeviceStateObserver {
                 return component;
             }
         });
-    }
-
-    public void setConnectionStateToConnecting() {
-        connectionStateTextValue.setText("Connection...");
-        connectionStateTextValue.setForeground(Color.GRAY);
     }
 
     public JPanel getMainPanel() {
