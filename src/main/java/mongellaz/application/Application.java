@@ -79,6 +79,7 @@ public class Application {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
+                logger.info("Closing resources");
                 resourcesCloser.closeResources();
             }
         });
