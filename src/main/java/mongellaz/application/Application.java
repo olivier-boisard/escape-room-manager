@@ -38,7 +38,7 @@ public class Application {
         // Set up basic resources handles
         final int commandReadRateTimeMs = 100;
         SerialPortByteArrayObserver serialPortCommandHandler = new SerialPortByteArrayObserver();
-        PuzzleDeviceControllerImpl controller = new PuzzleDeviceControllerImpl(serialPortCommandHandler);
+        ByteArrayControlledBookPuzzleDeviceController controller = new ByteArrayControlledBookPuzzleDeviceController(serialPortCommandHandler);
 
         // Set up communication with device
         logger.info("Initialization successful");

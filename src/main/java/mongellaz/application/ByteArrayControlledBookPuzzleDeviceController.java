@@ -7,9 +7,9 @@ import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeCommand
 import mongellaz.commands.togglelock.ToggleLockCommandFactory;
 import mongellaz.communication.ByteArrayObserver;
 
-public class PuzzleDeviceControllerImpl implements BookPuzzleDeviceController {
+public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzleDeviceController {
 
-    public PuzzleDeviceControllerImpl(ByteArrayObserver commandHandler) {
+    public ByteArrayControlledBookPuzzleDeviceController(ByteArrayObserver commandHandler) {
         this.commandHandler = commandHandler;
     }
 
