@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-//TODO refarctor this class and follow the SRP. There is duplicate code with XXXResponseProcessor.
 public class StatusRequestResponseProcessor implements ByteArrayObserver {
 
     @Override
@@ -48,10 +47,10 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
                 }
                 Thread.sleep(1000);
             } catch (CommunicationException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                e.printStackTrace();
+                logger.fatal("Thread error");
             }
         } else {
             logger.debug("Ignoring command with code {}", commandCode);
@@ -94,17 +93,18 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
         final byte disabledCode = 0x04;
         byte lockStatus = response[index++];
         LockState lockState;
-        String lockStatusMsg = "Lock is " + switch (lockStatus) {
+        String lockStatusMsg = "Lock is ";
+        switch (lockStatus) {
             case enabledCode -> {
                 lockState = LockState.CLOSED;
-                yield "locked";
+                lockStatusMsg += "locked";
             }
             case disabledCode -> {
                 lockState = LockState.OPEN;
-                yield "unlocked";
+                lockStatusMsg += "unlocked";
             }
             default -> throw new CommunicationException("Unknown status " + lockStatus);
-        };
+        }
         notifyAllLockStateObserver(lockState);
         logger.info(lockStatusMsg);
         return index;
@@ -116,17 +116,18 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
         final byte disabledCode = 0x04;
         byte configurationStatus = response[index++];
         ConfigurationModeState configurationModeState;
-        String configurationModeStatusMsg = "Configuration mode " + switch (configurationStatus) {
+        String configurationModeStatusMsg = "Configuration mode ";
+        switch (configurationStatus) {
             case enabledCode -> {
                 configurationModeState = ConfigurationModeState.ENABLED;
-                yield "enabled";
+                configurationModeStatusMsg += "enabled";
             }
             case disabledCode -> {
                 configurationModeState = ConfigurationModeState.DISABLED;
-                yield "disabled";
+                configurationModeStatusMsg += "disabled";
             }
             default -> throw new CommunicationException("Unknown status: " + configurationStatus);
-        };
+        }
         notifyAllConfigurationModeStateObservers(configurationModeState);
         logger.info(configurationModeStatusMsg);
         return index;
