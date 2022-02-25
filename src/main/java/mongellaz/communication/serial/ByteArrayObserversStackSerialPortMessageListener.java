@@ -1,4 +1,4 @@
-package mongellaz.application;
+package mongellaz.communication.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ByteArrayObserversStackSerialPortMessageListener implements SerialPortMessageListener {
 
-    void addByteArrayObserver(ByteArrayObserver byteArrayObserver) {
+    public void addByteArrayObserver(ByteArrayObserver byteArrayObserver) {
         byteArrayObservers.add(byteArrayObserver);
     }
 

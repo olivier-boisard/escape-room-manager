@@ -5,6 +5,7 @@ import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestResponseProcessor;
 import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
 import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
+import mongellaz.communication.serial.ByteArrayObserversStackSerialPortMessageListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
