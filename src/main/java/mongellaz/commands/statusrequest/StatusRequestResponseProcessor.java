@@ -3,7 +3,6 @@ package mongellaz.commands.statusrequest;
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.LockStateObserver;
 import mongellaz.commands.PiccReaderStatusesObserver;
-import mongellaz.commands.ResponseProcessor;
 import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
 import mongellaz.communication.ByteArrayObserver;
@@ -11,11 +10,13 @@ import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+//TODO refarctor this class and follow the SRP. There is duplicate code with XXXResponseProcessor.
 public class StatusRequestResponseProcessor implements ByteArrayObserver {
-    //TODO this method is too big
+
     @Override
     public void update(final byte[] response) {
         final byte commandCode = 0x20;
@@ -23,86 +24,27 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
         final byte configurationModeStatusCode = 0x02;
         final byte lockStatusCode = 0x03;
         final byte errorCode = (byte) 0xFF;
-        final byte enabledCode = 0x03;
-        final byte disabledCode = 0x04;
-        final byte noPicc = 0x01;
-        final byte wrongPicc = 0x02;
-        final byte correctPicc = 0x03;
-        final byte newPicc = 0x04;
         int index = 0;
 
         if (response[0] == commandCode) {
             try {
                 while (index < response.length) {
                     byte responseByte = response[index++];
-                    switch (responseByte) {
-                        case commandCode -> logger.info("Command is 'status request'");
-                        case piccReadersStatusCode -> {
-                            int nPiccReaders = response[index++];
-                            List<PiccReaderStatus> piccReaderStatuses = new LinkedList<>();
-                            for (int i = 0; i < nPiccReaders; i++) {
-                                byte status = response[index++];
-                                String piccReaderStatusMsg = "PICC reader " + i + ": ";
-                                switch (status) {
-                                    case noPicc -> {
-                                        piccReaderStatusMsg += "No Picc";
-                                        piccReaderStatuses.add(PiccReaderStatus.NO_PICC);
-                                    }
-                                    case wrongPicc -> {
-                                        piccReaderStatusMsg += "Wrong PICC";
-                                        piccReaderStatuses.add(PiccReaderStatus.WRONG_PICC);
-                                    }
-                                    case correctPicc -> {
-                                        piccReaderStatusMsg += "Correct PICC";
-                                        piccReaderStatuses.add(PiccReaderStatus.CORRECT_PICC);
-                                    }
-                                    case newPicc -> {
-                                        piccReaderStatusMsg += "New PICC";
-                                        piccReaderStatuses.add(PiccReaderStatus.NEW_PICC);
-                                    }
-                                    default -> throw new CommunicationException("Unknown status: " + status);
-                                }
-                                logger.info(piccReaderStatusMsg);
-                            }
-                            notifyAllPiccReaderStatusesObservers(piccReaderStatuses);
+                    final byte[] unprocessedResponse = Arrays.copyOfRange(response, index, response.length);
+                    index += switch (responseByte) {
+                        case commandCode -> {
+                            logger.info("Command is 'status request'");
+                            yield 0;
                         }
-                        case configurationModeStatusCode -> {
-                            byte configurationStatus = response[index++];
-                            ConfigurationModeState configurationModeState;
-                            String configurationModeStatusMsg = "Configuration mode " + switch (configurationStatus) {
-                                case enabledCode -> {
-                                    configurationModeState = ConfigurationModeState.ENABLED;
-                                    yield "enabled";
-                                }
-                                case disabledCode -> {
-                                    configurationModeState = ConfigurationModeState.DISABLED;
-                                    yield "disabled";
-                                }
-                                default -> throw new CommunicationException("Unknown status: " + configurationStatus);
-                            };
-                            notifyAllConfigurationModeStateObservers(configurationModeState);
-                            logger.info(configurationModeStatusMsg);
+                        case piccReadersStatusCode -> processPiccReaderStatus(unprocessedResponse);
+                        case configurationModeStatusCode -> processConfigurationModeStatus(unprocessedResponse);
+                        case lockStatusCode -> processLockStatus(unprocessedResponse);
+                        case errorCode -> {
+                            logger.error("Received error code");
+                            yield 0;
                         }
-                        case lockStatusCode -> {
-                            byte lockStatus = response[index++];
-                            LockState lockState;
-                            String lockStatusMsg = "Lock is " + switch (lockStatus) {
-                                case enabledCode -> {
-                                    lockState = LockState.CLOSED;
-                                    yield "locked";
-                                }
-                                case disabledCode -> {
-                                    lockState = LockState.OPEN;
-                                    yield "unlocked";
-                                }
-                                default -> throw new CommunicationException("Unknown status " + lockStatus);
-                            };
-                            notifyAllLockStateObserver(lockState);
-                            logger.info(lockStatusMsg);
-                        }
-                        case errorCode -> logger.error("Error");
                         default -> throw new CommunicationException("Unexpected byte: " + responseByte);
-                    }
+                    };
                 }
                 Thread.sleep(1000);
             } catch (CommunicationException e) {
@@ -144,6 +86,87 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
         for (ConfigurationModeStateObserver configurationModeStateObserver : configurationModeStateObservers) {
             configurationModeStateObserver.update(newConfigurationModeState);
         }
+    }
+
+    private int processLockStatus(byte[] response) throws CommunicationException {
+        int index = 0;
+        final byte enabledCode = 0x03;
+        final byte disabledCode = 0x04;
+        byte lockStatus = response[index++];
+        LockState lockState;
+        String lockStatusMsg = "Lock is " + switch (lockStatus) {
+            case enabledCode -> {
+                lockState = LockState.CLOSED;
+                yield "locked";
+            }
+            case disabledCode -> {
+                lockState = LockState.OPEN;
+                yield "unlocked";
+            }
+            default -> throw new CommunicationException("Unknown status " + lockStatus);
+        };
+        notifyAllLockStateObserver(lockState);
+        logger.info(lockStatusMsg);
+        return index;
+    }
+
+    private int processConfigurationModeStatus(byte[] response) throws CommunicationException {
+        int index = 0;
+        final byte enabledCode = 0x03;
+        final byte disabledCode = 0x04;
+        byte configurationStatus = response[index++];
+        ConfigurationModeState configurationModeState;
+        String configurationModeStatusMsg = "Configuration mode " + switch (configurationStatus) {
+            case enabledCode -> {
+                configurationModeState = ConfigurationModeState.ENABLED;
+                yield "enabled";
+            }
+            case disabledCode -> {
+                configurationModeState = ConfigurationModeState.DISABLED;
+                yield "disabled";
+            }
+            default -> throw new CommunicationException("Unknown status: " + configurationStatus);
+        };
+        notifyAllConfigurationModeStateObservers(configurationModeState);
+        logger.info(configurationModeStatusMsg);
+        return index;
+    }
+
+    private int processPiccReaderStatus(byte[] response) throws CommunicationException {
+        final byte noPicc = 0x01;
+        final byte wrongPicc = 0x02;
+        final byte correctPicc = 0x03;
+        final byte newPicc = 0x04;
+
+        int index = 0;
+        int nPiccReaders = response[index++];
+        List<PiccReaderStatus> piccReaderStatuses = new LinkedList<>();
+        for (int i = 0; i < nPiccReaders; i++) {
+            byte status = response[index++];
+            String piccReaderStatusMsg = "PICC reader " + i + ": ";
+            switch (status) {
+                case noPicc -> {
+                    piccReaderStatusMsg += "No Picc";
+                    piccReaderStatuses.add(PiccReaderStatus.NO_PICC);
+                }
+                case wrongPicc -> {
+                    piccReaderStatusMsg += "Wrong PICC";
+                    piccReaderStatuses.add(PiccReaderStatus.WRONG_PICC);
+                }
+                case correctPicc -> {
+                    piccReaderStatusMsg += "Correct PICC";
+                    piccReaderStatuses.add(PiccReaderStatus.CORRECT_PICC);
+                }
+                case newPicc -> {
+                    piccReaderStatusMsg += "New PICC";
+                    piccReaderStatuses.add(PiccReaderStatus.NEW_PICC);
+                }
+                default -> throw new CommunicationException("Unknown status: " + status);
+            }
+            logger.info(piccReaderStatusMsg);
+        }
+        notifyAllPiccReaderStatusesObservers(piccReaderStatuses);
+        return index;
     }
 
     private final Logger logger = LogManager.getLogger();
