@@ -157,6 +157,30 @@ public class Ui implements HandshakeResultObserver, LockStateObserver, Configura
         configurationModeTextValue.setForeground(textColor);
     }
 
+    private void createUIComponents() {
+        piccReaderStatusesTable = new JTable() {
+            @Override
+            public Class<?> getColumnClass(int column) {
+                return convertColumnIndexToModel(column) == 0 ? String.class : super.getColumnClass(column);
+            }
+        };
+    }
+
+    private static class StatusStringTableCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            Color textColor = switch ((String) value) {
+                case WRONG_CHIP_STRING -> Color.RED;
+                case CORRECT_CHIP_STRING -> Color.GREEN;
+                case NEW_CHIP_STRING -> Color.BLUE;
+                default -> Color.BLACK;
+            };
+            component.setForeground(textColor);
+            return component;
+        }
+    }
+
     private JPanel mainPanel;
     private JButton toggleLockButton;
     private JButton toggleConfigurationModeButton;
@@ -183,28 +207,4 @@ public class Ui implements HandshakeResultObserver, LockStateObserver, Configura
     private static final String CORRECT_CHIP_STRING = "Bonne puce";
     private static final String NEW_CHIP_STRING = "Nouvelle puce";
     private final StatusStringTableCellRenderer statusStringTableCellRenderer = new StatusStringTableCellRenderer();
-
-    private void createUIComponents() {
-        piccReaderStatusesTable = new JTable() {
-            @Override
-            public Class<?> getColumnClass(int column) {
-                return convertColumnIndexToModel(column) == 0 ? String.class : super.getColumnClass(column);
-            }
-        };
-    }
-
-    private static class StatusStringTableCellRenderer extends DefaultTableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            Color textColor = switch ((String) value) {
-                case WRONG_CHIP_STRING -> Color.RED;
-                case CORRECT_CHIP_STRING -> Color.GREEN;
-                case NEW_CHIP_STRING -> Color.BLUE;
-                default -> Color.BLACK;
-            };
-            component.setForeground(textColor);
-            return component;
-        }
-    }
 }
