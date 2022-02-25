@@ -21,88 +21,84 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Application {
+
     public static void main(String[] args) {
-        //Set up logger
-        Logger logger = LogManager.getLogger();
+        // Set up logger
         logger.info("Application start");
 
-        // Open serial port
-        ArrayList<String> connectionOptions = new ArrayList<>();
-        for (SerialPort serialPort : SerialPort.getCommPorts()) {
-            connectionOptions.add(serialPort.getDescriptivePortName());
-        }
-
-        // Create UI
+        // Create objects
         Ui ui = new Ui();
-
-        // Set up basic resources handles
-        final int commandReadRateTimeMs = 100;
         SerialPortByteArrayObserver serialPortCommandHandler = new SerialPortByteArrayObserver();
         ByteArrayControlledBookPuzzleDeviceController controller = new ByteArrayControlledBookPuzzleDeviceController(serialPortCommandHandler);
-
-        // Set up communication with device
-        logger.info("Initialization successful");
         ByteArrayObserversStackSerialPortMessageListener byteArrayObserversStackSerialPortMessageListener = new ByteArrayObserversStackSerialPortMessageListener();
         HandshakeResponseProcessor handshakeResponseProcessor = new HandshakeResponseProcessor();
         StatusRequestResponseProcessor statusRequestResponseProcessor = new StatusRequestResponseProcessor();
         ToggleLockResponseProcessor toggleLockResponseProcessor = new ToggleLockResponseProcessor();
         ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor = new ToggleConfigurationModeResponseProcessor();
+        ResourcesCloser resourcesCloser = new ResourcesCloser();
+
+        // Wiring
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(handshakeResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(statusRequestResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(toggleLockResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(toggleConfigurationModeResponseProcessor);
-
         handshakeResponseProcessor.addHandshakeResultObserver(ui);
         toggleLockResponseProcessor.addLockStateObserver(ui);
         toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(ui);
         statusRequestResponseProcessor.addPiccReaderStatusesObserver(ui);
-
         statusRequestResponseProcessor.addLockStateObserver(ui);
         statusRequestResponseProcessor.addConfigurationModeStateObserver(ui);
-
-        // Set up UI
         ui.setBookPuzzleDeviceController(controller);
-        ui.setConnectionOptions(connectionOptions);
-
-        ResourcesCloser resourcesCloser = new ResourcesCloser();
-
+        ui.setConnectionOptions(getConnectionOptions());
         ui.addConnectionButtonActionListener(e -> {
-            SerialPort selectedSerialPort = null;
             String selectedConnectionOption = ui.getSelectedConnectionOption();
-            for (SerialPort serialPort : SerialPort.getCommPorts()) {
-                if (Objects.equals(serialPort.getDescriptivePortName(), selectedConnectionOption)) {
-                    selectedSerialPort = serialPort;
-                    break;
-                }
-            }
-            if (selectedSerialPort == null) {
-                throw new SerialPortCommunicationRuntimeException("Unknown serial port " + selectedConnectionOption);
-            }
-            if (!selectedSerialPort.openPort()) {
-                throw new SerialPortCommunicationRuntimeException("Could not open serial port");
-            }
-
-            try {
-                final int initialDelayTimeMs = 5000;
-                Thread.sleep(initialDelayTimeMs);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                logger.fatal("Interrupted thread");
-                return;
-            }
+            SerialPort selectedSerialPort = establishSerialPortConnection(selectedConnectionOption);
             serialPortCommandHandler.setSerialPort(selectedSerialPort);
             selectedSerialPort.addDataListener(byteArrayObserversStackSerialPortMessageListener);
             ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
-            commandWriterExecutorService.scheduleAtFixedRate(
-                    serialPortCommandHandler::writeNextCommandInSerialPort,
-                    0,
-                    commandReadRateTimeMs,
-                    TimeUnit.MILLISECONDS
-            );
+            startScheduledCommandWriter(serialPortCommandHandler, commandWriterExecutorService);
             resourcesCloser.addCloseable(selectedSerialPort::closePort);
             resourcesCloser.addCloseable(commandWriterExecutorService::shutdown);
         });
 
+        // Start
+        setupMainFrame(ui, resourcesCloser);
+        controller.start();
+        logger.info("Application started");
+    }
+
+    private static void startScheduledCommandWriter(
+            SerialPortByteArrayObserver serialPortCommandHandler,
+            ScheduledExecutorService commandWriterExecutorService
+    ) {
+        final int initialDelayMs = 5000;
+        final int commandReadRateTimeMs = 100;
+        commandWriterExecutorService.scheduleAtFixedRate(
+                serialPortCommandHandler::writeNextCommandInSerialPort,
+                initialDelayMs,
+                commandReadRateTimeMs,
+                TimeUnit.MILLISECONDS
+        );
+    }
+
+    private static SerialPort establishSerialPortConnection(String selectedConnectionOption) {
+        SerialPort selectedSerialPort = null;
+        for (SerialPort serialPort : SerialPort.getCommPorts()) {
+            if (Objects.equals(serialPort.getDescriptivePortName(), selectedConnectionOption)) {
+                selectedSerialPort = serialPort;
+                break;
+            }
+        }
+        if (selectedSerialPort == null) {
+            throw new SerialPortCommunicationRuntimeException("Unknown serial port " + selectedConnectionOption);
+        }
+        if (!selectedSerialPort.openPort()) {
+            throw new SerialPortCommunicationRuntimeException("Could not open serial port");
+        }
+        return selectedSerialPort;
+    }
+
+    private static void setupMainFrame(Ui ui, ResourcesCloser resourcesCloser) {
         JFrame frame = new JFrame("Ui");
         frame.setContentPane(ui.getMainPanel());
         frame.addWindowListener(new WindowAdapter() {
@@ -115,13 +111,17 @@ public class Application {
         });
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
-
-        // Start UI
         frame.setVisible(true);
-
-        // Start controller
-        controller.start();
-        logger.info("Controller started");
     }
+
+    private static ArrayList<String> getConnectionOptions() {
+        ArrayList<String> connectionOptions = new ArrayList<>();
+        for (SerialPort serialPort : SerialPort.getCommPorts()) {
+            connectionOptions.add(serialPort.getDescriptivePortName());
+        }
+        return connectionOptions;
+    }
+
+    private static final Logger logger = LogManager.getLogger();
 
 }
