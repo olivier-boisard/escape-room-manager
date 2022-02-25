@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +24,10 @@ public class Application {
         logger.info("Application start");
 
         // Open serial port
+        ArrayList<String> connectionOptions = new ArrayList<>();
+        for (SerialPort serialPort : SerialPort.getCommPorts()) {
+            connectionOptions.add(serialPort.getDescriptivePortName());
+        }
         SerialPort serialPort = SerialPort.getCommPorts()[0];
         if (!serialPort.openPort()) {
             logger.fatal("Could not open serial port");
@@ -62,7 +67,7 @@ public class Application {
         controller.setToggleConfigurationModeResponseProcessor(toggleConfigurationModeResponseProcessor);
 
         // Create UI
-        Ui ui = new Ui(controller);
+        Ui ui = new Ui(controller, connectionOptions);
         ui.setConnectionStateToConnecting();
         controller.addBookPuzzleDeviceStateObserver(ui);
 

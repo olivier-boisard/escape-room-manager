@@ -15,7 +15,7 @@ import java.util.Vector;
 
 @SuppressWarnings("unused")
 public class Ui implements BookPuzzleDeviceStateObserver {
-    public Ui(BookPuzzleDeviceController bookPuzzleBoardController) {
+    public Ui(BookPuzzleDeviceController bookPuzzleBoardController, Iterable<String> connectionOptions) {
         toggleLockButton.addActionListener(e -> {
             bookPuzzleBoardController.sendToggleLockCommand();
             toggleLockButton.setEnabled(false);
@@ -26,7 +26,7 @@ public class Ui implements BookPuzzleDeviceStateObserver {
             toggleConfigurationModeButton.setEnabled(false);
         });
 
-        for (String connectionOption : bookPuzzleBoardController.getConnectionOptions()) {
+        for (String connectionOption : connectionOptions) {
             serialPortComboBox.addItem(connectionOption);
         }
     }

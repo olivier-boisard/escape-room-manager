@@ -1,8 +1,7 @@
 package mongellaz.application;
 
-import com.fazecast.jSerialComm.SerialPort;
 import mongellaz.bookpuzzle.BookPuzzleDeviceController;
-import mongellaz.commands.*;
+import mongellaz.commands.BookPuzzleDeviceStateObserver;
 import mongellaz.commands.handshake.HandshakeFactory;
 import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
@@ -12,9 +11,6 @@ import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeRespons
 import mongellaz.commands.togglelock.ToggleLockCommandFactory;
 import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
 import mongellaz.communication.ByteArrayObserver;
-
-import java.util.ArrayList;
-import java.util.List;
 
 //TODO refactor this class
 public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceController {
@@ -36,15 +32,6 @@ public class SerialBookPuzzleDeviceController implements BookPuzzleDeviceControl
 
         statusRequestResponseProcessor.addLockStateObserver(bookPuzzleDeviceStateObserver);
         statusRequestResponseProcessor.addConfigurationModeStateObserver(bookPuzzleDeviceStateObserver);
-    }
-
-    @Override
-    public List<String> getConnectionOptions() {
-        ArrayList<String> connectionOptions = new ArrayList<>();
-        for (SerialPort serialPort : SerialPort.getCommPorts()) {
-            connectionOptions.add(serialPort.getDescriptivePortName());
-        }
-        return connectionOptions;
     }
 
     @Override
