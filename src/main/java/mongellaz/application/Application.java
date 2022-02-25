@@ -48,6 +48,7 @@ public class Application {
         SerialBookPuzzleDeviceController controller = new SerialBookPuzzleDeviceController(serialPortCommandHandler);
         ResourcesCloser resourcesCloser = new ResourcesCloser();
         resourcesCloser.addCloseable(commandWriterExecutorService::shutdown);
+        resourcesCloser.addCloseable(serialPort::closePort);
 
         // Set up communication with device
         logger.info("Initialization successful");
