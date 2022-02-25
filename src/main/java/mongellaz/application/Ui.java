@@ -27,7 +27,7 @@ public class Ui implements BookPuzzleDeviceStateObserver {
         });
 
         for (String connectionOption : connectionOptions) {
-            serialPortComboBox.addItem(connectionOption);
+            connectionOptionsComboBox.addItem(connectionOption);
         }
     }
 
@@ -178,8 +178,8 @@ public class Ui implements BookPuzzleDeviceStateObserver {
     private JTable piccReaderStatusesTable;
     private JScrollPane piccReadersStatusesScrollPane;
     private JPanel connectionPanel;
-    private JComboBox<String> serialPortComboBox;
-    private JLabel serialPortLabel;
+    private JComboBox<String> connectionOptionsComboBox;
+    private JLabel connectionOptionLabel;
     private JButton connectionButton;
 
     private void createUIComponents() {
