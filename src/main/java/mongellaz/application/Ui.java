@@ -181,7 +181,7 @@ public class Ui implements BookPuzzleDeviceStateObserver {
     private JComboBox<String> connectionOptionsComboBox;
     private JLabel connectionOptionLabel;
     private JButton connectionButton;
-    private JSeparator connectionOptionsSeperator;
+    private JSeparator connectionOptionsSeparator;
 
     private void createUIComponents() {
         piccReaderStatusesTable = new JTable() {
