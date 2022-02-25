@@ -99,7 +99,7 @@ public class Application {
     }
 
     private static void setupMainFrame(Ui ui, ResourcesCloser resourcesCloser) {
-        JFrame frame = new JFrame("Ui");
+        JFrame frame = new JFrame("Puzzle des livres");
         frame.setContentPane(ui.getMainPanel());
         frame.addWindowListener(new WindowAdapter() {
             @Override
