@@ -24,7 +24,7 @@ public class Application {
 
     public static void main(String[] args) {
         // Set up logger
-        logger.info("Application start");
+        logger.info("Starting application");
 
         // Create objects
         Ui ui = new Ui();
