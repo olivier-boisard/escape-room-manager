@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
-public class Ui implements BookPuzzleDeviceStateObserver {
+public class Ui implements HandshakeResultObserver, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
 
     public void setBookPuzzleDeviceController(BookPuzzleDeviceController bookPuzzleDeviceController) {
         toggleLockButton.addActionListener(e -> {

@@ -1,15 +1,10 @@
 package mongellaz.application;
 
 import mongellaz.bookpuzzle.BookPuzzleDeviceController;
-import mongellaz.commands.BookPuzzleDeviceStateObserver;
 import mongellaz.commands.handshake.HandshakeFactory;
-import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
-import mongellaz.commands.statusrequest.StatusRequestResponseProcessor;
 import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
-import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
 import mongellaz.commands.togglelock.ToggleLockCommandFactory;
-import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
 import mongellaz.communication.ByteArrayObserver;
 
 public class PuzzleDeviceControllerImpl implements BookPuzzleDeviceController {
@@ -19,18 +14,8 @@ public class PuzzleDeviceControllerImpl implements BookPuzzleDeviceController {
     }
 
     public void start() {
-        commandHandler.update(new HandshakeFactory().generate());
+        commandHandler.update(handshakeFactory.generate());
         commandHandler.update(statusRequestFactory.generate());
-    }
-
-    public void addBookPuzzleDeviceStateObserver(BookPuzzleDeviceStateObserver bookPuzzleDeviceStateObserver) {
-        handshakeResponseProcessor.addHandshakeResultObserver(bookPuzzleDeviceStateObserver);
-        toggleLockResponseProcessor.addLockStateObserver(bookPuzzleDeviceStateObserver);
-        toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(bookPuzzleDeviceStateObserver);
-        statusRequestResponseProcessor.addPiccReaderStatusesObserver(bookPuzzleDeviceStateObserver);
-
-        statusRequestResponseProcessor.addLockStateObserver(bookPuzzleDeviceStateObserver);
-        statusRequestResponseProcessor.addConfigurationModeStateObserver(bookPuzzleDeviceStateObserver);
     }
 
     @Override
@@ -43,29 +28,9 @@ public class PuzzleDeviceControllerImpl implements BookPuzzleDeviceController {
         commandHandler.update(toggleConfigurationModeCommandFactory.generate());
     }
 
-    public void setHandshakeResponseProcessor(HandshakeResponseProcessor handshakeResponseProcessor) {
-        this.handshakeResponseProcessor = handshakeResponseProcessor;
-    }
-
-    public void setToggleLockResponseProcessor(ToggleLockResponseProcessor toggleLockResponseProcessor) {
-        this.toggleLockResponseProcessor = toggleLockResponseProcessor;
-    }
-
-    public void setToggleConfigurationModeResponseProcessor(ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor) {
-        this.toggleConfigurationModeResponseProcessor = toggleConfigurationModeResponseProcessor;
-    }
-
-    public void setStatusRequestResponseProcessor(StatusRequestResponseProcessor statusRequestResponseProcessor) {
-        this.statusRequestResponseProcessor = statusRequestResponseProcessor;
-    }
-
+    private final HandshakeFactory handshakeFactory = new HandshakeFactory();
     private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
     private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();
-    private HandshakeResponseProcessor handshakeResponseProcessor;
-    private ToggleLockResponseProcessor toggleLockResponseProcessor;
-    private ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor;
-    private StatusRequestResponseProcessor statusRequestResponseProcessor;
-
     private final ByteArrayObserver commandHandler;
 }

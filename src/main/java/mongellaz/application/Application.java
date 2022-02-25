@@ -51,13 +51,14 @@ public class Application {
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(statusRequestResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(toggleLockResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(toggleConfigurationModeResponseProcessor);
-        controller.setHandshakeResponseProcessor(handshakeResponseProcessor);
-        controller.setStatusRequestResponseProcessor(statusRequestResponseProcessor);
-        controller.setToggleLockResponseProcessor(toggleLockResponseProcessor);
-        controller.setToggleConfigurationModeResponseProcessor(toggleConfigurationModeResponseProcessor);
 
-        // Create UI
-        controller.addBookPuzzleDeviceStateObserver(ui);
+        handshakeResponseProcessor.addHandshakeResultObserver(ui);
+        toggleLockResponseProcessor.addLockStateObserver(ui);
+        toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(ui);
+        statusRequestResponseProcessor.addPiccReaderStatusesObserver(ui);
+
+        statusRequestResponseProcessor.addLockStateObserver(ui);
+        statusRequestResponseProcessor.addConfigurationModeStateObserver(ui);
 
         // Set up UI
         ui.setBookPuzzleDeviceController(controller);
