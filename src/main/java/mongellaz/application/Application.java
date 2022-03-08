@@ -8,6 +8,7 @@ import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
 import mongellaz.communication.serial.ByteArrayObserversStackSerialPortMessageListener;
 import mongellaz.communication.serial.SerialPortByteArrayObserver;
 import mongellaz.communication.serial.SerialPortCommunicationRuntimeException;
+import mongellaz.userinterface.BookPuzzleUi;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

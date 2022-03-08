@@ -1,4 +1,4 @@
-package mongellaz.application;
+package mongellaz.userinterface;
 
 import mongellaz.bookpuzzle.BookPuzzleDeviceController;
 import mongellaz.commands.*;
