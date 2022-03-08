@@ -27,7 +27,7 @@ public class Application {
         logger.info("Starting application");
 
         // Create objects
-        Ui ui = new Ui();
+        BookPuzzleUi bookPuzzleUi = new BookPuzzleUi();
         SerialPortByteArrayObserver serialPortCommandHandler = new SerialPortByteArrayObserver();
         ByteArrayControlledBookPuzzleDeviceController controller = new ByteArrayControlledBookPuzzleDeviceController(serialPortCommandHandler);
         ByteArrayObserversStackSerialPortMessageListener byteArrayObserversStackSerialPortMessageListener = new ByteArrayObserversStackSerialPortMessageListener();
@@ -42,16 +42,16 @@ public class Application {
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(statusRequestResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(toggleLockResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(toggleConfigurationModeResponseProcessor);
-        handshakeResponseProcessor.addHandshakeResultObserver(ui);
-        toggleLockResponseProcessor.addLockStateObserver(ui);
-        toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(ui);
-        statusRequestResponseProcessor.addPiccReaderStatusesObserver(ui);
-        statusRequestResponseProcessor.addLockStateObserver(ui);
-        statusRequestResponseProcessor.addConfigurationModeStateObserver(ui);
-        ui.setBookPuzzleDeviceController(controller);
-        ui.setConnectionOptions(getConnectionOptions());
-        ui.addConnectionButtonActionListener(e -> {
-            String selectedConnectionOption = ui.getSelectedConnectionOption();
+        handshakeResponseProcessor.addHandshakeResultObserver(bookPuzzleUi);
+        toggleLockResponseProcessor.addLockStateObserver(bookPuzzleUi);
+        toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(bookPuzzleUi);
+        statusRequestResponseProcessor.addPiccReaderStatusesObserver(bookPuzzleUi);
+        statusRequestResponseProcessor.addLockStateObserver(bookPuzzleUi);
+        statusRequestResponseProcessor.addConfigurationModeStateObserver(bookPuzzleUi);
+        bookPuzzleUi.setBookPuzzleDeviceController(controller);
+        bookPuzzleUi.setConnectionOptions(getConnectionOptions());
+        bookPuzzleUi.addConnectionButtonActionListener(e -> {
+            String selectedConnectionOption = bookPuzzleUi.getSelectedConnectionOption();
             SerialPort selectedSerialPort = establishSerialPortConnection(selectedConnectionOption);
             serialPortCommandHandler.setSerialPort(selectedSerialPort);
             selectedSerialPort.addDataListener(byteArrayObserversStackSerialPortMessageListener);
@@ -62,7 +62,7 @@ public class Application {
         });
 
         // Start
-        setupMainFrame(ui, resourcesCloser);
+        setupMainFrame(bookPuzzleUi, resourcesCloser);
         controller.start();
         logger.info("Application started");
     }
@@ -98,9 +98,9 @@ public class Application {
         return selectedSerialPort;
     }
 
-    private static void setupMainFrame(Ui ui, ResourcesCloser resourcesCloser) {
+    private static void setupMainFrame(BookPuzzleUi bookPuzzleUi, ResourcesCloser resourcesCloser) {
         JFrame frame = new JFrame("Puzzle des livres");
-        frame.setContentPane(ui.getMainPanel());
+        frame.setContentPane(bookPuzzleUi.getMainPanel());
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {

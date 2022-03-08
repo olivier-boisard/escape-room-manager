@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
-public class Ui implements HandshakeResultObserver, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
+public class BookPuzzleUi implements HandshakeResultObserver, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
 
     public void setConnectionOptions(Iterable<String> connectionOptions) {
         connectionOptionsComboBox.removeAllItems();
