@@ -9,6 +9,7 @@ import mongellaz.communication.serial.ByteArrayObserversStackSerialPortMessageLi
 import mongellaz.communication.serial.SerialPortByteArrayObserver;
 import mongellaz.communication.serial.SerialPortCommunicationRuntimeException;
 import mongellaz.userinterface.BookPuzzleUi;
+import mongellaz.userinterface.SerialPortConnectionUi;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,21 +39,23 @@ public class Application {
         ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor = new ToggleConfigurationModeResponseProcessor();
         ResourcesCloser resourcesCloser = new ResourcesCloser();
 
+        SerialPortConnectionUi serialPortConnectionUi = new SerialPortConnectionUi();
+
         // Wiring
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(handshakeResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(statusRequestResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(toggleLockResponseProcessor);
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(toggleConfigurationModeResponseProcessor);
-        handshakeResponseProcessor.addHandshakeResultObserver(bookPuzzleUi);
+        handshakeResponseProcessor.addHandshakeResultObserver(serialPortConnectionUi);
         toggleLockResponseProcessor.addLockStateObserver(bookPuzzleUi);
         toggleConfigurationModeResponseProcessor.addConfigurationModeStateObserver(bookPuzzleUi);
         statusRequestResponseProcessor.addPiccReaderStatusesObserver(bookPuzzleUi);
         statusRequestResponseProcessor.addLockStateObserver(bookPuzzleUi);
         statusRequestResponseProcessor.addConfigurationModeStateObserver(bookPuzzleUi);
         bookPuzzleUi.setBookPuzzleDeviceController(controller);
-        bookPuzzleUi.setConnectionOptions(getConnectionOptions());
-        bookPuzzleUi.addConnectionButtonActionListener(e -> {
-            String selectedConnectionOption = bookPuzzleUi.getSelectedConnectionOption();
+        serialPortConnectionUi.setConnectionOptions(getConnectionOptions());
+        serialPortConnectionUi.addConnectionButtonActionListener(e -> {
+            String selectedConnectionOption = serialPortConnectionUi.getSelectedConnectionOption();
             SerialPort selectedSerialPort = establishSerialPortConnection(selectedConnectionOption);
             serialPortCommandHandler.setSerialPort(selectedSerialPort);
             selectedSerialPort.addDataListener(byteArrayObserversStackSerialPortMessageListener);

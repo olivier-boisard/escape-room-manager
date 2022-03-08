@@ -1,8 +1,9 @@
 package mongellaz.userinterface;
 
 import mongellaz.bookpuzzle.BookPuzzleDeviceController;
-import mongellaz.commands.*;
-import mongellaz.commands.handshake.HandshakeResult;
+import mongellaz.commands.ConfigurationModeStateObserver;
+import mongellaz.commands.LockStateObserver;
+import mongellaz.commands.PiccReaderStatusesObserver;
 import mongellaz.commands.statusrequest.PiccReaderStatus;
 import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
@@ -11,26 +12,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
-public class BookPuzzleUi implements HandshakeResultObserver, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
-
-    public void setConnectionOptions(Iterable<String> connectionOptions) {
-        connectionOptionsComboBox.removeAllItems();
-        for (String connectionOption : connectionOptions) {
-            connectionOptionsComboBox.addItem(connectionOption);
-        }
-    }
-
-    public String getSelectedConnectionOption() {
-        return (String) connectionOptionsComboBox.getSelectedItem();
-    }
-
-    public void addConnectionButtonActionListener(ActionListener actionListener) {
-        connectionButton.addActionListener(actionListener);
-    }
+public class BookPuzzleUi implements LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
 
     public void setBookPuzzleDeviceController(BookPuzzleDeviceController bookPuzzleDeviceController) {
         toggleLockButton.addActionListener(e -> {
@@ -58,26 +43,6 @@ public class BookPuzzleUi implements HandshakeResultObserver, LockStateObserver,
     public void update(ConfigurationModeState configurationModeState) {
         updateConfigurationModeButton(configurationModeState);
         updateConfigurationModeState(configurationModeState);
-    }
-
-    @Override
-    public void update(HandshakeResult handshakeResult) {
-        String connectionStatusString = null;
-        Color textColor = null;
-        if (handshakeResult == HandshakeResult.SUCCESS) {
-            connectionStatusString = "Connecté";
-            textColor = Color.GREEN;
-        } else if (handshakeResult == HandshakeResult.FAILURE) {
-            connectionStatusString = "Non connecté";
-            textColor = Color.RED;
-        }
-
-        if (connectionStatusString != null) {
-            connectionStateTextValue.setText(connectionStatusString);
-        }
-        if (textColor != null) {
-            connectionStateTextValue.setForeground(textColor);
-        }
     }
 
     @Override
@@ -184,8 +149,6 @@ public class BookPuzzleUi implements HandshakeResultObserver, LockStateObserver,
     private JPanel mainPanel;
     private JButton toggleLockButton;
     private JButton toggleConfigurationModeButton;
-    private JLabel connectionStateText;
-    private JLabel connectionStateTextValue;
     private JPanel buttonPanel;
     private JPanel statusPanel;
     private JLabel lockStateText;
@@ -194,11 +157,6 @@ public class BookPuzzleUi implements HandshakeResultObserver, LockStateObserver,
     private JLabel configurationModeTextValue;
     private JTable piccReaderStatusesTable;
     private JScrollPane piccReadersStatusesScrollPane;
-    private JPanel connectionPanel;
-    private JComboBox<String> connectionOptionsComboBox;
-    private JLabel connectionOptionLabel;
-    private JButton connectionButton;
-    private JSeparator connectionOptionsSeparator;
 
     private static final String READER_LABEL_STRING = "Lecteur";
     private static final String STATUS_LABEL_STRING = "Status";
