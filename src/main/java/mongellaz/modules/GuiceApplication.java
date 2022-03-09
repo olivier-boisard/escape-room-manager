@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 public class GuiceApplication {
     public static void main(String[] args) {
         Injector injector = Guice.createInjector(new BookPuzzleModule());
-        PuzzleUi puzzleUi = injector.getInstance(PuzzleUi.class);
-        puzzleUi.start();
+        MainFrame mainFrame = injector.getInstance(MainFrame.class);
+        mainFrame.start();
     }
 }
