@@ -1,15 +1,22 @@
 package mongellaz.modules;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import javax.swing.*;
 
 public class PuzzleUiImpl implements PuzzleUi {
     @Inject
-    public PuzzleUiImpl(PuzzleConnectionUi puzzleConnectionUi, PuzzleControlUi puzzleControlUi, PuzzleUiPanel puzzleUiPanel) {
+    public PuzzleUiImpl(
+            PuzzleConnectionUi puzzleConnectionUi,
+            PuzzleControlUi puzzleControlUi,
+            PuzzleUiPanel puzzleUiPanel,
+            @Named("PuzzleName") String puzzleName
+    ) {
         this.puzzleConnectionUi = puzzleConnectionUi;
         this.puzzleControlUi = puzzleControlUi;
         this.puzzleUiPanel = puzzleUiPanel;
+        frame = new JFrame(puzzleName);
     }
 
     @Override
@@ -25,5 +32,5 @@ public class PuzzleUiImpl implements PuzzleUi {
     private final PuzzleConnectionUi puzzleConnectionUi;
     private final PuzzleControlUi puzzleControlUi;
     private final PuzzleUiPanel puzzleUiPanel;
-    private final JFrame frame = new JFrame("Puzzle des livres");
+    private final JFrame frame;
 }
