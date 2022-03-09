@@ -10,7 +10,7 @@ import java.awt.*;
 public class VerticalLayoutContainerProvider implements Provider<Container> {
 
     @Inject
-    public VerticalLayoutContainerProvider(Iterable<Component> components) {
+    VerticalLayoutContainerProvider(Iterable<Component> components) {
         this.components = components;
     }
 

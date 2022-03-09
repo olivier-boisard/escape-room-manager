@@ -9,7 +9,7 @@ import java.awt.*;
 public class GraphicalUserInterface implements UserInterface {
 
     @Inject
-    public GraphicalUserInterface(Container container, @Named("MainFrameName") String name) {
+    GraphicalUserInterface(Container container, @Named("MainFrameName") String name) {
         this.container = container;
         this.frame = new JFrame(name);
         // Using JFrame directly here seems to break the DIP, however implementing it blindly here would not help.
