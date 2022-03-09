@@ -14,9 +14,9 @@ public class BookPuzzleModule extends AbstractModule {
     protected void configure() {
         bind(UserInterface.class).to(GraphicalUserInterface.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
-        bind(String.class)
+        bindConstant()
                 .annotatedWith(Names.named("MainFrameName"))
-                .toInstance("Puzzle des livres");
+                .to("Puzzle des livres");
     }
 
     @SuppressWarnings("unused")
