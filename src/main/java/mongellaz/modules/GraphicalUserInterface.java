@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GraphicalUserInterface implements UserInterface {
+
     @Inject
     public GraphicalUserInterface(Container container, @Named("MainFrameName") String name) {
         this.container = container;
