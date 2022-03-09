@@ -94,8 +94,8 @@ public class Application {
         JFrame frame = new JFrame("Puzzle des livres");
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(serialPortConnectionUi.get());
-        panel.add(bookPuzzleUi.get());
+        panel.add(serialPortConnectionUi.getMainPanel());
+        panel.add(bookPuzzleUi.getMainPanel());
         frame.setContentPane(panel);
         frame.addWindowListener(new WindowAdapter() {
             @Override
