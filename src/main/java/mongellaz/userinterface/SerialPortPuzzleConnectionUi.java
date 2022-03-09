@@ -11,7 +11,8 @@ import java.awt.event.ActionListener;
 @SuppressWarnings("unused")
 public class SerialPortPuzzleConnectionUi implements PuzzleConnectionUi, HandshakeResultObserver {
 
-    public JPanel getMainPanel() {
+    @Override
+    public Component getComponent() {
         return mainPanel;
     }
 

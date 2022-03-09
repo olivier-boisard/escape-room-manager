@@ -30,7 +30,8 @@ public class BookPuzzleControlUi implements PuzzleControlUi, LockStateObserver, 
         });
     }
 
-    public JPanel getMainPanel() {
+    @Override
+    public Component getComponent() {
         return mainPanel;
     }
 
