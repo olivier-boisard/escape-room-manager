@@ -26,6 +26,7 @@ public class Application {
 
     public static void main(String[] args) {
         // Set up logger
+        Logger logger = LogManager.getLogger();
         logger.info("Starting application");
 
         // Create objects
@@ -113,7 +114,5 @@ public class Application {
 
         logger.info("Application started");
     }
-
-    private static final Logger logger = LogManager.getLogger();
 
 }
