@@ -65,9 +65,28 @@ public class Application {
             resourcesCloser.addCloseable(commandWriterExecutorService::shutdown);
         });
 
+        // Build UI
+        JFrame frame = new JFrame("Puzzle des livres");
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(serialPortConnectionUi.getMainPanel());
+        panel.add(bookPuzzleUi.getMainPanel());
+        frame.setContentPane(panel);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                logger.info("Closing resources");
+                resourcesCloser.closeResources();
+            }
+        });
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.pack();
+
         // Start
-        setupMainFrame(bookPuzzleUi, resourcesCloser);
+        frame.setVisible(true);
         controller.start();
+
         logger.info("Application started");
     }
 
@@ -100,22 +119,6 @@ public class Application {
             throw new SerialPortCommunicationRuntimeException("Could not open serial port");
         }
         return selectedSerialPort;
-    }
-
-    private static void setupMainFrame(BookPuzzleUi bookPuzzleUi, ResourcesCloser resourcesCloser) {
-        JFrame frame = new JFrame("Puzzle des livres");
-        frame.setContentPane(bookPuzzleUi.getMainPanel());
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                logger.info("Closing resources");
-                resourcesCloser.closeResources();
-            }
-        });
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
     }
 
     private static ArrayList<String> getConnectionOptions() {

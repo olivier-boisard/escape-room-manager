@@ -10,6 +10,10 @@ import java.awt.event.ActionListener;
 @SuppressWarnings("unused")
 public class SerialPortConnectionUi implements HandshakeResultObserver {
 
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
     public void setConnectionOptions(Iterable<String> connectionOptions) {
         connectionOptionsComboBox.removeAllItems();
         for (String connectionOption : connectionOptions) {
