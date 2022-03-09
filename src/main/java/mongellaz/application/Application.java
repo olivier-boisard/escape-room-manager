@@ -53,14 +53,38 @@ public class Application {
         statusRequestResponseProcessor.addLockStateObserver(bookPuzzleUi);
         statusRequestResponseProcessor.addConfigurationModeStateObserver(bookPuzzleUi);
         bookPuzzleUi.setBookPuzzleDeviceController(controller);
-        serialPortConnectionUi.setConnectionOptions(getConnectionOptions());
+        ArrayList<String> connectionOptions = new ArrayList<>();
+        for (SerialPort serialPort1 : SerialPort.getCommPorts()) {
+            connectionOptions.add(serialPort1.getDescriptivePortName());
+        }
+        serialPortConnectionUi.setConnectionOptions(connectionOptions);
         serialPortConnectionUi.addConnectionButtonActionListener(e -> {
             String selectedConnectionOption = serialPortConnectionUi.getSelectedConnectionOption();
-            SerialPort selectedSerialPort = establishSerialPortConnection(selectedConnectionOption);
+            SerialPort selectedSerialPort1 = null;
+            for (SerialPort serialPort : SerialPort.getCommPorts()) {
+                if (Objects.equals(serialPort.getDescriptivePortName(), selectedConnectionOption)) {
+                    selectedSerialPort1 = serialPort;
+                    break;
+                }
+            }
+            if (selectedSerialPort1 == null) {
+                throw new SerialPortCommunicationRuntimeException("Unknown serial port " + selectedConnectionOption);
+            }
+            if (!selectedSerialPort1.openPort()) {
+                throw new SerialPortCommunicationRuntimeException("Could not open serial port");
+            }
+            SerialPort selectedSerialPort = selectedSerialPort1;
             serialPortCommandHandler.setSerialPort(selectedSerialPort);
             selectedSerialPort.addDataListener(byteArrayObserversStackSerialPortMessageListener);
             ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
-            startScheduledCommandWriter(serialPortCommandHandler, commandWriterExecutorService);
+            final int initialDelayMs = 5000;
+            final int commandReadRateTimeMs = 100;
+            commandWriterExecutorService.scheduleAtFixedRate(
+                    serialPortCommandHandler::writeNextCommandInSerialPort,
+                    initialDelayMs,
+                    commandReadRateTimeMs,
+                    TimeUnit.MILLISECONDS
+            );
             resourcesCloser.addCloseable(selectedSerialPort::closePort);
             resourcesCloser.addCloseable(commandWriterExecutorService::shutdown);
         });
@@ -88,45 +112,6 @@ public class Application {
         controller.start();
 
         logger.info("Application started");
-    }
-
-    private static void startScheduledCommandWriter(
-            SerialPortByteArrayObserver serialPortCommandHandler,
-            ScheduledExecutorService commandWriterExecutorService
-    ) {
-        final int initialDelayMs = 5000;
-        final int commandReadRateTimeMs = 100;
-        commandWriterExecutorService.scheduleAtFixedRate(
-                serialPortCommandHandler::writeNextCommandInSerialPort,
-                initialDelayMs,
-                commandReadRateTimeMs,
-                TimeUnit.MILLISECONDS
-        );
-    }
-
-    private static SerialPort establishSerialPortConnection(String selectedConnectionOption) {
-        SerialPort selectedSerialPort = null;
-        for (SerialPort serialPort : SerialPort.getCommPorts()) {
-            if (Objects.equals(serialPort.getDescriptivePortName(), selectedConnectionOption)) {
-                selectedSerialPort = serialPort;
-                break;
-            }
-        }
-        if (selectedSerialPort == null) {
-            throw new SerialPortCommunicationRuntimeException("Unknown serial port " + selectedConnectionOption);
-        }
-        if (!selectedSerialPort.openPort()) {
-            throw new SerialPortCommunicationRuntimeException("Could not open serial port");
-        }
-        return selectedSerialPort;
-    }
-
-    private static ArrayList<String> getConnectionOptions() {
-        ArrayList<String> connectionOptions = new ArrayList<>();
-        for (SerialPort serialPort : SerialPort.getCommPorts()) {
-            connectionOptions.add(serialPort.getDescriptivePortName());
-        }
-        return connectionOptions;
     }
 
     private static final Logger logger = LogManager.getLogger();
