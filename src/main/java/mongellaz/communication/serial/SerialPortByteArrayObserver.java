@@ -6,18 +6,18 @@ import mongellaz.communication.ByteArrayObserver;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class SerialPortByteArrayObserver implements ByteArrayObserver {
+public class SerialPortByteArrayObserver implements ByteArrayObserver, Runnable {
 
-    public void writeNextCommandInSerialPort() {
-        if (serialPort != null) {
-            byte[] command = commands.poll();
-            if (command != null) {
-                serialPort.writeBytes(command, command.length);
-            }
-        } else {
-            throw new SerialPortCommunicationRuntimeException("Serial port must be set with setSerialPort()");
+    public SerialPortByteArrayObserver(SerialPort serialPort) {
+        this.serialPort = serialPort;
+    }
+
+    @Override
+    public void run() {
+        byte[] command = commands.poll();
+        if (command != null) {
+            serialPort.writeBytes(command, command.length);
         }
-
     }
 
     @Override
@@ -25,11 +25,7 @@ public class SerialPortByteArrayObserver implements ByteArrayObserver {
         commands.add(data);
     }
 
-    public void setSerialPort(SerialPort serialPort) {
-        this.serialPort = serialPort;
-    }
-
     private final Queue<byte[]> commands = new ConcurrentLinkedQueue<>();
-    private SerialPort serialPort;
+    private final SerialPort serialPort;
 
 }
