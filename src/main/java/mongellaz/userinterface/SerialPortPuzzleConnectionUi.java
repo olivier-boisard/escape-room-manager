@@ -3,11 +3,16 @@ package mongellaz.userinterface;
 import com.fazecast.jSerialComm.SerialPort;
 import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.handshake.HandshakeResult;
+import mongellaz.communication.CommunicationManager;
+import mongellaz.communication.NewCommunicationManagerObserver;
+import mongellaz.communication.serial.SerialPortByteArrayObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -21,11 +26,17 @@ public class SerialPortPuzzleConnectionUi implements HandshakeResultObserver {
             Object selectedItem = getSelectedItem();
             updateSelectedSerialPort(selectedItem);
             establishConnection(selectedItem);
+
+            notifyNewCommunicationManagerObservers();
         });
     }
 
     public Component getMainPanel() {
         return mainPanel;
+    }
+
+    public void addNewCommunicationManagerObserver(NewCommunicationManagerObserver newCommunicationManagerObserver) {
+        newCommunicationManagerObservers.add(newCommunicationManagerObserver);
     }
 
     @Override
@@ -74,6 +85,13 @@ public class SerialPortPuzzleConnectionUi implements HandshakeResultObserver {
         }
     }
 
+    private void notifyNewCommunicationManagerObservers() {
+        SerialPortByteArrayObserver serialPortByteArrayObserver = new SerialPortByteArrayObserver(selectedSerialPort);
+        for (NewCommunicationManagerObserver observer : newCommunicationManagerObservers) {
+            observer.update(serialPortByteArrayObserver);
+        }
+    }
+
     private JComboBox<String> connectionOptionsComboBox;
     private JLabel connectionOptionLabel;
     private JButton connectionButton;
@@ -81,4 +99,5 @@ public class SerialPortPuzzleConnectionUi implements HandshakeResultObserver {
     private JLabel connectionStatus;
     private SerialPort selectedSerialPort;
     private final Logger logger = LogManager.getLogger();
+    private final List<NewCommunicationManagerObserver> newCommunicationManagerObservers = new LinkedList<>();
 }

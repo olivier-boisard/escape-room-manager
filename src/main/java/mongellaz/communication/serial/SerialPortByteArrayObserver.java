@@ -1,12 +1,12 @@
 package mongellaz.communication.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
-import mongellaz.communication.ByteArrayObserver;
+import mongellaz.communication.CommunicationManager;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class SerialPortByteArrayObserver implements ByteArrayObserver, Runnable {
+public class SerialPortByteArrayObserver implements CommunicationManager {
 
     public SerialPortByteArrayObserver(SerialPort serialPort) {
         this.serialPort = serialPort;
