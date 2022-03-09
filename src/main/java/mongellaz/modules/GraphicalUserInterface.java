@@ -12,6 +12,8 @@ public class GraphicalUserInterface implements UserInterface {
     public GraphicalUserInterface(Container container, @Named("MainFrameName") String name) {
         this.container = container;
         this.frame = new JFrame(name);
+        // Using JFrame directly here seems to break the DIP, however implementing it blindly here would not help.
+        // This class is self-contained - if JFrame is not the right choice anymore, it only needs to be changed here.
     }
 
     @Override
