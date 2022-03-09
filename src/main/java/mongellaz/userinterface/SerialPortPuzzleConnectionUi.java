@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 @SuppressWarnings("unused")
 public class SerialPortPuzzleConnectionUi implements HandshakeResultObserver {
