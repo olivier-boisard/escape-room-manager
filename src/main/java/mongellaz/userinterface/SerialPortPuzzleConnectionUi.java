@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @SuppressWarnings("unused")
 public class SerialPortPuzzleConnectionUi implements HandshakeResultObserver {
@@ -48,18 +50,6 @@ public class SerialPortPuzzleConnectionUi implements HandshakeResultObserver {
         }
     }
 
-    private void establishConnection(Object selectedItem) {
-        if (selectedSerialPort == null) {
-            logger.error("Invalid serial port {}", selectedItem);
-        } else {
-            logger.info("Establishing connection with serial port: {}", selectedItem);
-            if (!selectedSerialPort.openPort()) {
-                logger.error("Could not connect to {}", selectedItem);
-                update(HandshakeResult.FAILURE);
-            }
-        }
-    }
-
     private Object getSelectedItem() {
         return connectionOptionsComboBox.getSelectedItem();
     }
@@ -70,6 +60,18 @@ public class SerialPortPuzzleConnectionUi implements HandshakeResultObserver {
             if (Objects.equals(serialPort.getDescriptivePortName(), selectedItem)) {
                 selectedSerialPort = serialPort;
                 break;
+            }
+        }
+    }
+
+    private void establishConnection(Object selectedItem) {
+        if (selectedSerialPort == null) {
+            logger.error("Invalid serial port {}", selectedItem);
+        } else {
+            logger.info("Establishing connection with serial port: {}", selectedItem);
+            if (!selectedSerialPort.openPort()) {
+                logger.error("Could not connect to {}", selectedItem);
+                update(HandshakeResult.FAILURE);
             }
         }
     }
