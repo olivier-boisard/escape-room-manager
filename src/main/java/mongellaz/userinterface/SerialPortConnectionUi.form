@@ -25,20 +25,20 @@
           <text resource-bundle="connection_ui" key="SerialPortComboBoxLabel"/>
         </properties>
       </component>
-      <component id="50293" class="javax.swing.JButton" binding="connectionButton">
-        <constraints>
-          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text resource-bundle="connection_ui" key="ConnectionButtonText"/>
-        </properties>
-      </component>
       <component id="8949d" class="javax.swing.JLabel" binding="connectionStatus">
         <constraints>
           <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text resource-bundle="connection_ui" key="ConnectionStatusText"/>
+        </properties>
+      </component>
+      <component id="50293" class="javax.swing.JButton" binding="connectionButton">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="connection_ui" key="ConnectionButtonText"/>
         </properties>
       </component>
     </children>
