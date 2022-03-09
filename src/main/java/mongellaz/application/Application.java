@@ -8,8 +8,8 @@ import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
 import mongellaz.communication.serial.ByteArrayObserversStackSerialPortMessageListener;
 import mongellaz.communication.serial.SerialPortByteArrayObserver;
 import mongellaz.communication.serial.SerialPortCommunicationRuntimeException;
-import mongellaz.userinterface.BookPuzzleUi;
-import mongellaz.userinterface.SerialPortConnectionUi;
+import mongellaz.userinterface.BookPuzzleControlUi;
+import mongellaz.userinterface.SerialPortPuzzleConnectionUi;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,7 +30,7 @@ public class Application {
         logger.info("Starting application");
 
         // Create objects
-        BookPuzzleUi bookPuzzleUi = new BookPuzzleUi();
+        BookPuzzleControlUi bookPuzzleUi = new BookPuzzleControlUi();
         SerialPortByteArrayObserver serialPortCommandHandler = new SerialPortByteArrayObserver();
         ByteArrayControlledBookPuzzleDeviceController controller = new ByteArrayControlledBookPuzzleDeviceController(serialPortCommandHandler);
         ByteArrayObserversStackSerialPortMessageListener byteArrayObserversStackSerialPortMessageListener = new ByteArrayObserversStackSerialPortMessageListener();
@@ -40,7 +40,7 @@ public class Application {
         ToggleConfigurationModeResponseProcessor toggleConfigurationModeResponseProcessor = new ToggleConfigurationModeResponseProcessor();
         ResourcesCloser resourcesCloser = new ResourcesCloser();
 
-        SerialPortConnectionUi serialPortConnectionUi = new SerialPortConnectionUi();
+        SerialPortPuzzleConnectionUi serialPortConnectionUi = new SerialPortPuzzleConnectionUi();
 
         // Wiring
         byteArrayObserversStackSerialPortMessageListener.addByteArrayObserver(handshakeResponseProcessor);

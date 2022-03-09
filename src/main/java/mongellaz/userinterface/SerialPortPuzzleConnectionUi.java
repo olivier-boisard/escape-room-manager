@@ -2,13 +2,14 @@ package mongellaz.userinterface;
 
 import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.handshake.HandshakeResult;
+import mongellaz.modules.PuzzleConnectionUi;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 @SuppressWarnings("unused")
-public class SerialPortConnectionUi implements HandshakeResultObserver {
+public class SerialPortPuzzleConnectionUi implements PuzzleConnectionUi, HandshakeResultObserver {
 
     public JPanel getMainPanel() {
         return mainPanel;

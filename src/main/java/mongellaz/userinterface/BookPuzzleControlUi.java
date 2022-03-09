@@ -7,6 +7,7 @@ import mongellaz.commands.PiccReaderStatusesObserver;
 import mongellaz.commands.statusrequest.PiccReaderStatus;
 import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
+import mongellaz.modules.PuzzleControlUi;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -15,7 +16,7 @@ import java.awt.*;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
-public class BookPuzzleUi implements LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
+public class BookPuzzleControlUi implements PuzzleControlUi, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
 
     public void setBookPuzzleDeviceController(BookPuzzleDeviceController bookPuzzleDeviceController) {
         toggleLockButton.addActionListener(e -> {
