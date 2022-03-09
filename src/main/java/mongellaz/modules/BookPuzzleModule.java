@@ -6,13 +6,14 @@ import com.google.inject.name.Names;
 import mongellaz.userinterface.BookPuzzleControlUi;
 import mongellaz.userinterface.SerialPortPuzzleConnectionUi;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class BookPuzzleModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(UserInterface.class).to(GraphicalUserInterface.class);
+        bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(String.class)
                 .annotatedWith(Names.named("MainFrameName"))
                 .toInstance("Puzzle des livres");
@@ -27,14 +28,4 @@ public class BookPuzzleModule extends AbstractModule {
         return components;
     }
 
-    @SuppressWarnings("unused")
-    @Provides
-    private static Container provideVerticalLayoutContainer(Iterable<Component> components) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        for (Component component : components) {
-            panel.add(component);
-        }
-        return panel;
-    }
 }

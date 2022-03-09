@@ -6,9 +6,9 @@ import com.google.inject.name.Named;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrameImpl implements MainFrame {
+public class GraphicalUserInterface implements UserInterface {
     @Inject
-    public MainFrameImpl(Container container, @Named("MainFrameName") String name) {
+    public GraphicalUserInterface(Container container, @Named("MainFrameName") String name) {
         this.container = container;
         this.frame = new JFrame(name);
     }
