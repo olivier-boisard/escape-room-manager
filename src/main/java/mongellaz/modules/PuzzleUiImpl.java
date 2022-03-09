@@ -4,12 +4,13 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class PuzzleUiImpl implements PuzzleUi {
     @Inject
     public PuzzleUiImpl(
-            PuzzleConnectionUi puzzleConnectionUi,
-            PuzzleControlUi puzzleControlUi,
+            @Named("PuzzleConnectionUi") Component puzzleConnectionUi,
+            @Named("PuzzleControlUi") Component puzzleControlUi,
             PuzzleUiPanel puzzleUiPanel,
             @Named("PuzzleName") String puzzleName
     ) {
@@ -21,16 +22,16 @@ public class PuzzleUiImpl implements PuzzleUi {
 
     @Override
     public void start() {
-        puzzleUiPanel.add(puzzleConnectionUi.getComponent());
-        puzzleUiPanel.add(puzzleControlUi.getComponent());
+        puzzleUiPanel.add(puzzleConnectionUi);
+        puzzleUiPanel.add(puzzleControlUi);
         frame.setContentPane(puzzleUiPanel.getContentPane());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
 
-    private final PuzzleConnectionUi puzzleConnectionUi;
-    private final PuzzleControlUi puzzleControlUi;
+    private final Component puzzleConnectionUi;
+    private final Component puzzleControlUi;
     private final PuzzleUiPanel puzzleUiPanel;
     private final JFrame frame;
 }

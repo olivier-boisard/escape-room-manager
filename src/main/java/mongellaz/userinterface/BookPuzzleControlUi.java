@@ -1,5 +1,6 @@
 package mongellaz.userinterface;
 
+import com.google.inject.Provider;
 import mongellaz.bookpuzzle.BookPuzzleDeviceController;
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.LockStateObserver;
@@ -7,7 +8,6 @@ import mongellaz.commands.PiccReaderStatusesObserver;
 import mongellaz.commands.statusrequest.PiccReaderStatus;
 import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
-import mongellaz.modules.PuzzleControlUi;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -16,7 +16,7 @@ import java.awt.*;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
-public class BookPuzzleControlUi implements PuzzleControlUi, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
+public class BookPuzzleControlUi implements Provider<Component>, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
 
     public void setBookPuzzleDeviceController(BookPuzzleDeviceController bookPuzzleDeviceController) {
         toggleLockButton.addActionListener(e -> {
@@ -31,7 +31,7 @@ public class BookPuzzleControlUi implements PuzzleControlUi, LockStateObserver, 
     }
 
     @Override
-    public Component getComponent() {
+    public Component get() {
         return mainPanel;
     }
 

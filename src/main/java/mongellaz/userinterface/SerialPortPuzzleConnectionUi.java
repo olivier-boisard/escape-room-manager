@@ -1,18 +1,18 @@
 package mongellaz.userinterface;
 
+import com.google.inject.Provider;
 import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.handshake.HandshakeResult;
-import mongellaz.modules.PuzzleConnectionUi;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 @SuppressWarnings("unused")
-public class SerialPortPuzzleConnectionUi implements PuzzleConnectionUi, HandshakeResultObserver {
+public class SerialPortPuzzleConnectionUi implements Provider<Component>, HandshakeResultObserver {
 
     @Override
-    public Component getComponent() {
+    public Component get() {
         return mainPanel;
     }
 
