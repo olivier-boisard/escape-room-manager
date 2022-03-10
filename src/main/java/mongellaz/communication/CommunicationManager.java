@@ -1,4 +1,7 @@
 package mongellaz.communication;
 
-public interface CommunicationManager extends ByteArrayObserver, Runnable {
+public interface CommunicationManager {
+    void sendNextCommand();
+
+    void queueCommand(byte[] command);
 }

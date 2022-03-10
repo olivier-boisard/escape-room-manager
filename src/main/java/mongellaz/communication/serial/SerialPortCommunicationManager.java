@@ -13,7 +13,7 @@ public class SerialPortCommunicationManager implements CommunicationManager {
     }
 
     @Override
-    public void run() {
+    public void sendNextCommand() {
         byte[] command = commands.poll();
         if (command != null) {
             serialPort.writeBytes(command, command.length);
@@ -21,7 +21,7 @@ public class SerialPortCommunicationManager implements CommunicationManager {
     }
 
     @Override
-    public void update(byte[] data) {
+    public void queueCommand(byte[] data) {
         commands.add(data);
     }
 
