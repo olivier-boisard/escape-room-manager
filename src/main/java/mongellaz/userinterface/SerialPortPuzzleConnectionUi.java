@@ -26,7 +26,6 @@ public class SerialPortPuzzleConnectionUi implements HandshakeResultObserver {
             Object selectedItem = getSelectedItem();
             updateSelectedSerialPort(selectedItem);
             establishConnection(selectedItem);
-
             notifyNewCommunicationManagerObservers();
         });
     }
