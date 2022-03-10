@@ -3,6 +3,7 @@ package mongellaz.modules;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestResponseProcessor;
@@ -31,6 +32,7 @@ public class BookPuzzleModule extends AbstractModule {
                 .to("Puzzle des livres");
         bindConstant().annotatedWith(Names.named("CommunicationManagerInitialDelayMs")).to(5000);
         bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
+        bind(ByteArrayObserver.class).annotatedWith(Names.named("HandshakeResponseProcessor")).to(HandshakeResponseProcessor.class);
     }
 
     @SuppressWarnings("unused")
@@ -52,9 +54,9 @@ public class BookPuzzleModule extends AbstractModule {
     }
 
     @Provides
-    private static Iterable<ByteArrayObserver> provideResponseObservers() {
+    private static Iterable<ByteArrayObserver> provideResponseObservers(@Named("HandshakeResponseProcessor") ByteArrayObserver handshakeResponseProcessor) {
         ArrayList<ByteArrayObserver> byteArrayObservers = new ArrayList<>();
-        byteArrayObservers.add(new HandshakeResponseProcessor());
+        byteArrayObservers.add(handshakeResponseProcessor);
         byteArrayObservers.add(new StatusRequestResponseProcessor());
         byteArrayObservers.add(new ToggleLockResponseProcessor());
         byteArrayObservers.add(new ToggleConfigurationModeResponseProcessor());
