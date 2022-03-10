@@ -44,6 +44,7 @@ public class SerialPortPuzzleConnectionUi implements PuzzleConnectionUi, Handsha
                     update(HandshakeResult.FAILURE);
                 } else {
                     scheduledCommunicationManager.setCommunicationManager(new SerialPortCommunicationManager(selectedSerialPort));
+                    scheduledCommunicationManager.start();
                 }
             }
         });
