@@ -60,5 +60,4 @@ public class BookPuzzleModule extends AbstractModule {
         byteArrayObservers.add(new ToggleConfigurationModeResponseProcessor());
         return byteArrayObservers;
     }
-
 }
