@@ -1,3 +1,4 @@
 # Project exclude paths
 /.gradle/
 run-tests.bat
+/.idea/
