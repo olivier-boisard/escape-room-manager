@@ -6,9 +6,9 @@ import mongellaz.communication.CommunicationManager;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class SerialPortByteArrayObserver implements CommunicationManager {
+public class SerialPortCommunicationManager implements CommunicationManager {
 
-    public SerialPortByteArrayObserver(SerialPort serialPort) {
+    public SerialPortCommunicationManager(SerialPort serialPort) {
         this.serialPort = serialPort;
     }
 
