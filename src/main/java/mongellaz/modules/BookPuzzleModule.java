@@ -8,6 +8,7 @@ import mongellaz.commands.handshake.HandshakeResponseProcessor;
 import mongellaz.commands.statusrequest.StatusRequestResponseProcessor;
 import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
 import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
+import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.ScheduledCommunicationManager;
 import mongellaz.communication.ScheduledCommunicationManagerImpl;
 import mongellaz.communication.serial.ByteArrayObserversStackSerialPortMessageListener;
@@ -42,13 +43,22 @@ public class BookPuzzleModule extends AbstractModule {
     }
 
     @Provides
-    private static SerialPortMessageListener provideSerialPortMessageListener() {
+    private static SerialPortMessageListener provideSerialPortMessageListener(Iterable<ByteArrayObserver> responseObservers) {
         ByteArrayObserversStackSerialPortMessageListener serialPortMessageListener=new ByteArrayObserversStackSerialPortMessageListener();
-        serialPortMessageListener.addByteArrayObserver(new HandshakeResponseProcessor());
-        serialPortMessageListener.addByteArrayObserver(new StatusRequestResponseProcessor());
-        serialPortMessageListener.addByteArrayObserver(new ToggleLockResponseProcessor());
-        serialPortMessageListener.addByteArrayObserver(new ToggleConfigurationModeResponseProcessor());
+        for (ByteArrayObserver responseObserver : responseObservers) {
+            serialPortMessageListener.addByteArrayObserver(responseObserver);
+        }
         return serialPortMessageListener;
+    }
+
+    @Provides
+    private static Iterable<ByteArrayObserver> provideResponseObservers() {
+        ArrayList<ByteArrayObserver> byteArrayObservers = new ArrayList<>();
+        byteArrayObservers.add(new HandshakeResponseProcessor());
+        byteArrayObservers.add(new StatusRequestResponseProcessor());
+        byteArrayObservers.add(new ToggleLockResponseProcessor());
+        byteArrayObservers.add(new ToggleConfigurationModeResponseProcessor());
+        return byteArrayObservers;
     }
 
 }
