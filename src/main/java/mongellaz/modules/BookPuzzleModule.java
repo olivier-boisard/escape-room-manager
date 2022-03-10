@@ -44,7 +44,7 @@ public class BookPuzzleModule extends AbstractModule {
 
     @Provides
     private static SerialPortMessageListener provideSerialPortMessageListener(Iterable<ByteArrayObserver> responseObservers) {
-        ByteArrayObserversStackSerialPortMessageListener serialPortMessageListener=new ByteArrayObserversStackSerialPortMessageListener();
+        ByteArrayObserversStackSerialPortMessageListener serialPortMessageListener = new ByteArrayObserversStackSerialPortMessageListener();
         for (ByteArrayObserver responseObserver : responseObservers) {
             serialPortMessageListener.addByteArrayObserver(responseObserver);
         }
