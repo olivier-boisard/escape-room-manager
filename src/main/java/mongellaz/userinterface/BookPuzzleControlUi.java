@@ -7,6 +7,8 @@ import mongellaz.commands.PiccReaderStatusesObserver;
 import mongellaz.commands.statusrequest.PiccReaderStatus;
 import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.commands.togglelock.LockState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -84,6 +86,7 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
         };
         toggleLockButton.setText(lockButtonNewText);
         toggleLockButton.setEnabled(true);
+        logger.info("Enabled lock button");
     }
 
     private void updateLockStatus(LockState lockState) {
@@ -98,6 +101,7 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
         }
         lockStateTextValue.setText(lockStateTextValueText);
         lockStateTextValue.setForeground(textColor);
+        logger.info("Set lock status text to '{}'", lockStateTextValueText);
     }
 
     private void updateConfigurationModeButton(ConfigurationModeState configurationModeState) {
@@ -107,6 +111,7 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
         };
         toggleConfigurationModeButton.setText(toggleConfigurationModeButtonNewText);
         toggleConfigurationModeButton.setEnabled(true);
+        logger.info("Enable configuration mode button");
     }
 
     private void updateConfigurationModeState(ConfigurationModeState configurationModeState) {
@@ -121,6 +126,7 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
         }
         configurationModeTextValue.setText(configurationModeTextValueText);
         configurationModeTextValue.setForeground(textColor);
+        logger.info("Set configuration mode status text to '{}'", configurationModeTextValueText);
     }
 
     private void createUIComponents() {
@@ -166,4 +172,5 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
     private static final String CORRECT_CHIP_STRING = "Bonne puce";
     private static final String NEW_CHIP_STRING = "Nouvelle puce";
     private final StatusStringTableCellRenderer statusStringTableCellRenderer = new StatusStringTableCellRenderer();
+    private final Logger logger = LogManager.getLogger();
 }
