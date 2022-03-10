@@ -3,9 +3,7 @@ package mongellaz.userinterface;
 import com.fazecast.jSerialComm.SerialPort;
 import com.google.inject.Inject;
 import mongellaz.commands.HandshakeResultObserver;
-import mongellaz.commands.handshake.HandshakeFactory;
 import mongellaz.commands.handshake.HandshakeResult;
-import mongellaz.commands.statusrequest.StatusRequestFactory;
 import mongellaz.communication.ScheduledCommunicationManager;
 import mongellaz.communication.serial.SerialPortCommunicationManager;
 import org.apache.logging.log4j.LogManager;
@@ -45,11 +43,7 @@ public class SerialPortPuzzleConnectionUi implements PuzzleConnectionUi, Handsha
                     logger.error("Could not connect to {}", selectedItem);
                     update(HandshakeResult.FAILURE);
                 } else {
-                    SerialPortCommunicationManager communicationManager = new SerialPortCommunicationManager(selectedSerialPort);
-                    communicationManager.queueCommand(new HandshakeFactory().generate());
-                    communicationManager.queueCommand(new StatusRequestFactory().generate());
-                    scheduledCommunicationManager.setCommunicationManager(communicationManager);
-                    scheduledCommunicationManager.start();
+                    scheduledCommunicationManager.updateCommunicationManager(new SerialPortCommunicationManager(selectedSerialPort));
                 }
             }
         });
