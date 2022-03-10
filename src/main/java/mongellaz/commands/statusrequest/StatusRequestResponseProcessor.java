@@ -1,5 +1,6 @@
 package mongellaz.commands.statusrequest;
 
+import com.google.inject.Inject;
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.LockStateObserver;
 import mongellaz.commands.PiccReaderStatusesObserver;
@@ -15,6 +16,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class StatusRequestResponseProcessor implements ByteArrayObserver {
+
+    @Inject
+    StatusRequestResponseProcessor(
+            LockStateObserver lockStateObserver,
+            ConfigurationModeStateObserver configurationModeStateObserver,
+            PiccReaderStatusesObserver piccReaderStatusesObserver
+    ) {
+        this.lockStateObserver = lockStateObserver;
+        this.configurationModeStateObserver = configurationModeStateObserver;
+        this.piccReaderStatusesObserver = piccReaderStatusesObserver;
+    }
 
     @Override
     public void update(final byte[] response) {
@@ -57,34 +69,16 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
         }
     }
 
-    public void addLockStateObserver(LockStateObserver lockStateObserver) {
-        lockStateObservers.add(lockStateObserver);
+    private void notifyLockStateObserver(LockState lockState) {
+        lockStateObserver.update(lockState);
     }
 
-    public void addConfigurationModeStateObserver(ConfigurationModeStateObserver configurationModeStateObserver) {
-        configurationModeStateObservers.add(configurationModeStateObserver);
+    private void notifyPiccReaderStatusesObservers(Iterable<PiccReaderStatus> piccReaderStatuses) {
+        piccReaderStatusesObserver.update(piccReaderStatuses);
     }
 
-    public void addPiccReaderStatusesObserver(PiccReaderStatusesObserver piccReaderStatusesObserver) {
-        piccReaderStatusesObservers.add(piccReaderStatusesObserver);
-    }
-
-    private void notifyAllLockStateObserver(LockState lockState) {
-        for (LockStateObserver lockStateObserver : lockStateObservers) {
-            lockStateObserver.update(lockState);
-        }
-    }
-
-    private void notifyAllPiccReaderStatusesObservers(Iterable<PiccReaderStatus> piccReaderStatuses) {
-        for (PiccReaderStatusesObserver piccReaderStatusesObserver : piccReaderStatusesObservers) {
-            piccReaderStatusesObserver.update(piccReaderStatuses);
-        }
-    }
-
-    private void notifyAllConfigurationModeStateObservers(ConfigurationModeState newConfigurationModeState) {
-        for (ConfigurationModeStateObserver configurationModeStateObserver : configurationModeStateObservers) {
-            configurationModeStateObserver.update(newConfigurationModeState);
-        }
+    private void notifyConfigurationModeStateObservers(ConfigurationModeState newConfigurationModeState) {
+        configurationModeStateObserver.update(newConfigurationModeState);
     }
 
     private int processLockStatus(byte[] response) throws CommunicationException {
@@ -105,7 +99,7 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
             }
             default -> throw new CommunicationException("Unknown status " + lockStatus);
         }
-        notifyAllLockStateObserver(lockState);
+        notifyLockStateObserver(lockState);
         logger.info(lockStatusMsg);
         return index;
     }
@@ -128,7 +122,7 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
             }
             default -> throw new CommunicationException("Unknown status: " + configurationStatus);
         }
-        notifyAllConfigurationModeStateObservers(configurationModeState);
+        notifyConfigurationModeStateObservers(configurationModeState);
         logger.info(configurationModeStatusMsg);
         return index;
     }
@@ -166,12 +160,12 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
             }
             logger.info(piccReaderStatusMsg);
         }
-        notifyAllPiccReaderStatusesObservers(piccReaderStatuses);
+        notifyPiccReaderStatusesObservers(piccReaderStatuses);
         return index;
     }
 
     private final Logger logger = LogManager.getLogger();
-    private final List<LockStateObserver> lockStateObservers = new LinkedList<>();
-    private final List<ConfigurationModeStateObserver> configurationModeStateObservers = new LinkedList<>();
-    private final List<PiccReaderStatusesObserver> piccReaderStatusesObservers = new LinkedList<>();
+    private final LockStateObserver lockStateObserver;
+    private final ConfigurationModeStateObserver configurationModeStateObserver;
+    private final PiccReaderStatusesObserver piccReaderStatusesObserver;
 }

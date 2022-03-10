@@ -15,7 +15,7 @@ import java.awt.*;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
-public class BookPuzzleControlUi implements LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
+public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
 
     public void setBookPuzzleDeviceController(BookPuzzleDeviceController bookPuzzleDeviceController) {
         toggleLockButton.addActionListener(e -> {
@@ -29,6 +29,7 @@ public class BookPuzzleControlUi implements LockStateObserver, ConfigurationMode
         });
     }
 
+    @Override
     public Component getMainPanel() {
         return mainPanel;
     }

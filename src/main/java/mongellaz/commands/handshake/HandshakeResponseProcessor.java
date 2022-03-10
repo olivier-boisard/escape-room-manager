@@ -1,15 +1,20 @@
 package mongellaz.commands.handshake;
 
+import com.google.inject.Inject;
 import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.communication.ByteArrayObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class HandshakeResponseProcessor implements ByteArrayObserver {
+
+    @Inject
+    HandshakeResponseProcessor(HandshakeResultObserver handshakeResultObserver) {
+        this.handshakeResultObserver = handshakeResultObserver;
+    }
+
     @Override
     public void update(final byte[] response) {
         final byte commandCode = 0x10;
@@ -25,22 +30,16 @@ public class HandshakeResponseProcessor implements ByteArrayObserver {
                     logger.error("Invalid response: {}", Arrays.toString(response));
                 }
             }
-            notifyAllHandshakeResultObserver(handshakeResult);
+            notifyHandshakeResultObserver(handshakeResult);
         } else {
             logger.debug("Ignoring command with code {}", commandCode);
         }
     }
 
-    public void addHandshakeResultObserver(HandshakeResultObserver handshakeResultObserver) {
-        handshakeResultObservers.add(handshakeResultObserver);
-    }
-
-    private void notifyAllHandshakeResultObserver(HandshakeResult handshakeResult) {
-        for (HandshakeResultObserver handshakeResultObserver : handshakeResultObservers) {
-            handshakeResultObserver.update(handshakeResult);
-        }
+    private void notifyHandshakeResultObserver(HandshakeResult handshakeResult) {
+        handshakeResultObserver.update(handshakeResult);
     }
 
     private final Logger logger = LogManager.getLogger();
-    private final List<HandshakeResultObserver> handshakeResultObservers = new LinkedList<>();
+    private final HandshakeResultObserver handshakeResultObserver;
 }

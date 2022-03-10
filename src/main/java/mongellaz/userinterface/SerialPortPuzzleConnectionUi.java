@@ -15,7 +15,7 @@ import java.awt.*;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class SerialPortPuzzleConnectionUi implements PuzzleConnectionUi, HandshakeResultObserver {
+public class SerialPortPuzzleConnectionUi implements ComponentHandler, HandshakeResultObserver {
 
     @Inject
     SerialPortPuzzleConnectionUi(ScheduledCommunicationManager scheduledCommunicationManager, SerialPortMessageListener serialPortMessageListener) {

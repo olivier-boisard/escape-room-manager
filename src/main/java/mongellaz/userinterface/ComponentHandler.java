@@ -2,6 +2,6 @@ package mongellaz.userinterface;
 
 import java.awt.*;
 
-public interface PuzzleConnectionUi {
+public interface ComponentHandler {
     Component getMainPanel();
 }
