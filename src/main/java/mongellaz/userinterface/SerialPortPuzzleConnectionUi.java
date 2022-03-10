@@ -18,9 +18,28 @@ public class SerialPortPuzzleConnectionUi implements PuzzleConnectionUi, Handsha
             connectionOptionsComboBox.addItem(serialPort.getDescriptivePortName());
         }
         connectionButton.addActionListener(e -> {
-            Object selectedItem = getSelectedItem();
-            updateSelectedSerialPort(selectedItem);
-            establishConnection(selectedItem);
+            // Inline method
+            Object selectedItem = connectionOptionsComboBox.getSelectedItem();
+
+            // Get selected serial port
+            SerialPort selectedSerialPort = null;
+            for (SerialPort serialPort : SerialPort.getCommPorts()) {
+                if (Objects.equals(serialPort.getDescriptivePortName(), selectedItem)) {
+                    selectedSerialPort = serialPort;
+                    break;
+                }
+            }
+
+            // Establish connection
+            if (selectedSerialPort == null) {
+                logger.error("Invalid serial port {}", selectedItem);
+            } else {
+                logger.info("Establishing connection with serial port: {}", selectedItem);
+                if (!selectedSerialPort.openPort()) {
+                    logger.error("Could not connect to {}", selectedItem);
+                    update(HandshakeResult.FAILURE);
+                }
+            }
         });
     }
 
@@ -48,36 +67,10 @@ public class SerialPortPuzzleConnectionUi implements PuzzleConnectionUi, Handsha
         }
     }
 
-    private Object getSelectedItem() {
-        return connectionOptionsComboBox.getSelectedItem();
-    }
-
-    private void updateSelectedSerialPort(Object selectedItem) {
-        selectedSerialPort = null;
-        for (SerialPort serialPort : SerialPort.getCommPorts()) {
-            if (Objects.equals(serialPort.getDescriptivePortName(), selectedItem)) {
-                selectedSerialPort = serialPort;
-                break;
-            }
-        }
-    }
-
-    private void establishConnection(Object selectedItem) {
-        if (selectedSerialPort == null) {
-            logger.error("Invalid serial port {}", selectedItem);
-        } else {
-            logger.info("Establishing connection with serial port: {}", selectedItem);
-            if (!selectedSerialPort.openPort()) {
-                logger.error("Could not connect to {}", selectedItem);
-                update(HandshakeResult.FAILURE);
-            }
-        }
-    }
     private JComboBox<String> connectionOptionsComboBox;
     private JLabel connectionOptionLabel;
     private JButton connectionButton;
     private JPanel mainPanel;
     private JLabel connectionStatus;
-    private SerialPort selectedSerialPort;
     private final Logger logger = LogManager.getLogger();
 }
