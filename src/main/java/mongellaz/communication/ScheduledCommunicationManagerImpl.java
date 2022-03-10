@@ -43,7 +43,6 @@ public class ScheduledCommunicationManagerImpl implements ScheduledCommunication
     @Override
     public void updateCommunicationManager(CommunicationManager newCommunicationManager) {
         communicationManager = newCommunicationManager;
-        commandWriterExecutorService.shutdown();
         queueCommand(new HandshakeFactory().generate());
         queueCommand(new StatusRequestFactory().generate());
         start();
