@@ -19,6 +19,11 @@ public class ScheduledCommunicationManagerImpl implements ScheduledCommunication
     }
 
     @Override
+    public void queueCommand(byte[] command) {
+        communicationManager.queueCommand(command);
+    }
+
+    @Override
     public void start() {
         commandWriterExecutorService.scheduleAtFixedRate(
                 communicationManager::sendNextCommand,
