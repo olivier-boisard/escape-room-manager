@@ -3,7 +3,6 @@ package mongellaz.modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
-import mongellaz.communication.NewCommunicationManagerObserver;
 import mongellaz.userinterface.BookPuzzleControlUi;
 import mongellaz.userinterface.PuzzleConnectionUi;
 import mongellaz.userinterface.SerialPortPuzzleConnectionUi;

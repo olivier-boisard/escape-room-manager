@@ -1,5 +1,5 @@
 package mongellaz.communication;
 
-public interface NewCommunicationManagerObserver {
+public interface CommunicationManagerObserver {
     void update(CommunicationManager communicationManager);
 }
