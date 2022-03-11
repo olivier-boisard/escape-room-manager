@@ -19,6 +19,8 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
     testImplementation 'com.google.inject:guice:5.1.0'
     implementation 'com.google.inject:guice:5.1.0'
+    testImplementation 'com.google.inject.extensions:guice-grapher:5.1.0'
+    implementation 'com.google.inject.extensions:guice-grapher:5.1.0'
 }
 
 test {
