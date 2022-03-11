@@ -3,6 +3,7 @@ package mongellaz.modules;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import mongellaz.commands.ConfigurationModeStateObserver;
@@ -27,15 +28,16 @@ import java.util.ArrayList;
 public class BookPuzzleModule extends AbstractModule {
     @Override
     protected void configure() {
-        BookPuzzleControlUi bookPuzzleControlUi = new BookPuzzleControlUi();
+        bind(SerialPortPuzzleConnectionUi.class).in(Singleton.class);
+        bind(BookPuzzleControlUi.class).in(Singleton.class);
         bind(UserInterface.class).to(GraphicalUserInterface.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleConnectionUi")).to(SerialPortPuzzleConnectionUi.class);
-        bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleControlUi")).toInstance(bookPuzzleControlUi);
+        bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleControlUi")).to(BookPuzzleControlUi.class);
         bind(HandshakeResultObserver.class).to(SerialPortPuzzleConnectionUi.class);
-        bind(ConfigurationModeStateObserver.class).toInstance(bookPuzzleControlUi);
-        bind(LockStateObserver.class).toInstance(bookPuzzleControlUi);
-        bind(PiccReaderStatusesObserver.class).toInstance(bookPuzzleControlUi);
+        bind(ConfigurationModeStateObserver.class).to(BookPuzzleControlUi.class);
+        bind(LockStateObserver.class).to(BookPuzzleControlUi.class);
+        bind(PiccReaderStatusesObserver.class).to(BookPuzzleControlUi.class);
         bind(ScheduledCommunicationManager.class).to(ScheduledCommunicationManagerImpl.class);
         bindConstant()
                 .annotatedWith(Names.named("MainFrameName"))
