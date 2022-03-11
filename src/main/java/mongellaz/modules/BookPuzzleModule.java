@@ -21,23 +21,21 @@ import mongellaz.userinterface.BookPuzzleControlUi;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.SerialPortPuzzleConnectionUi;
 
-import javax.inject.Singleton;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class BookPuzzleModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(SerialPortPuzzleConnectionUi.class).in(Singleton.class);
-        bind(BookPuzzleControlUi.class).in(Singleton.class);
+        BookPuzzleControlUi bookPuzzleControlUi = new BookPuzzleControlUi();
         bind(UserInterface.class).to(GraphicalUserInterface.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleConnectionUi")).to(SerialPortPuzzleConnectionUi.class);
-        bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleControlUi")).to(BookPuzzleControlUi.class);
+        bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleControlUi")).toInstance(bookPuzzleControlUi);
         bind(HandshakeResultObserver.class).to(SerialPortPuzzleConnectionUi.class);
-        bind(ConfigurationModeStateObserver.class).to(BookPuzzleControlUi.class);
-        bind(LockStateObserver.class).to(BookPuzzleControlUi.class);
-        bind(PiccReaderStatusesObserver.class).to(BookPuzzleControlUi.class);
+        bind(ConfigurationModeStateObserver.class).toInstance(bookPuzzleControlUi);
+        bind(LockStateObserver.class).toInstance(bookPuzzleControlUi);
+        bind(PiccReaderStatusesObserver.class).toInstance(bookPuzzleControlUi);
         bind(ScheduledCommunicationManager.class).to(ScheduledCommunicationManagerImpl.class);
         bindConstant()
                 .annotatedWith(Names.named("MainFrameName"))
