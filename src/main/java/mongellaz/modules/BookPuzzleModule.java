@@ -21,12 +21,15 @@ import mongellaz.userinterface.BookPuzzleControlUi;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.SerialPortPuzzleConnectionUi;
 
+import javax.inject.Singleton;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class BookPuzzleModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(SerialPortPuzzleConnectionUi.class).in(Singleton.class);
+        bind(BookPuzzleControlUi.class).in(Singleton.class);
         bind(UserInterface.class).to(GraphicalUserInterface.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleConnectionUi")).to(SerialPortPuzzleConnectionUi.class);
