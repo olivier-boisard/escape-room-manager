@@ -1,7 +1,9 @@
 package mongellaz.bookpuzzle.devicecontroller;
 
 
-public interface BookPuzzleDeviceController {
+import mongellaz.devicecontroller.PuzzleDeviceController;
+
+public interface BookPuzzleDeviceController extends PuzzleDeviceController {
     void sendToggleLockCommand();
     void sendToggleConfigurationModeCommand();
 }

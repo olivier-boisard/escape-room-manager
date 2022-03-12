@@ -14,6 +14,7 @@ public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzle
         this.scheduledCommunicationManager = scheduledCommunicationManager;
     }
 
+    @Override
     public void start() {
         scheduledCommunicationManager.queueCommand(handshakeFactory.generate());
         scheduledCommunicationManager.queueCommand(statusRequestFactory.generate());

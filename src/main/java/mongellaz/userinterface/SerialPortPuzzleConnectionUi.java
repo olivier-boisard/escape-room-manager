@@ -7,6 +7,7 @@ import mongellaz.bookpuzzle.commands.handshake.HandshakeResultObserver;
 import mongellaz.bookpuzzle.commands.handshake.HandshakeResult;
 import mongellaz.communication.manager.ScheduledCommunicationManager;
 import mongellaz.communication.serial.SerialPortCommunicationManager;
+import mongellaz.devicecontroller.PuzzleDeviceController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +19,11 @@ import java.util.Objects;
 public class SerialPortPuzzleConnectionUi implements ComponentHandler, HandshakeResultObserver {
 
     @Inject
-    SerialPortPuzzleConnectionUi(ScheduledCommunicationManager scheduledCommunicationManager, SerialPortMessageListener serialPortMessageListener) {
+    SerialPortPuzzleConnectionUi(
+            ScheduledCommunicationManager scheduledCommunicationManager,
+            SerialPortMessageListener serialPortMessageListener,
+            PuzzleDeviceController puzzleDeviceController
+    ) {
         for (SerialPort serialPort : SerialPort.getCommPorts()) {
             connectionOptionsComboBox.addItem(serialPort.getDescriptivePortName());
         }
@@ -46,6 +51,7 @@ public class SerialPortPuzzleConnectionUi implements ComponentHandler, Handshake
                 } else {
                     selectedSerialPort.addDataListener(serialPortMessageListener);
                     scheduledCommunicationManager.updateCommunicationManager(new SerialPortCommunicationManager(selectedSerialPort));
+                    puzzleDeviceController.start();
                 }
             }
         });
