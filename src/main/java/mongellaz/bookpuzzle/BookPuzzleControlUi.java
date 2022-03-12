@@ -1,4 +1,4 @@
-package mongellaz.userinterface;
+package mongellaz.bookpuzzle;
 
 import com.google.inject.Inject;
 import mongellaz.bookpuzzle.devicecontroller.BookPuzzleDeviceController;
@@ -8,6 +8,7 @@ import mongellaz.bookpuzzle.commands.statusrequest.PiccReaderStatusesObserver;
 import mongellaz.bookpuzzle.commands.statusrequest.PiccReaderStatus;
 import mongellaz.bookpuzzle.commands.toggleconfigurationmode.ConfigurationModeState;
 import mongellaz.bookpuzzle.commands.togglelock.LockState;
+import mongellaz.userinterface.ComponentHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

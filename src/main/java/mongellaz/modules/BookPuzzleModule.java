@@ -21,9 +21,9 @@ import mongellaz.communication.manager.ScheduledCommunicationManager;
 import mongellaz.communication.manager.ScheduledExecutorCommunicationManager;
 import mongellaz.communication.serial.ByteArrayObserversStackSerialPortMessageListener;
 import mongellaz.devicecontroller.PuzzleDeviceController;
-import mongellaz.userinterface.BookPuzzleControlUi;
+import mongellaz.bookpuzzle.BookPuzzleControlUi;
 import mongellaz.userinterface.ComponentHandler;
-import mongellaz.userinterface.SerialPortPuzzleConnectionUi;
+import mongellaz.communication.serial.SerialPortPuzzleConnectionUi;
 import mongellaz.userinterface.VerticalLayoutContainerProvider;
 
 import java.awt.*;
