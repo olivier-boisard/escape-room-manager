@@ -1,5 +1,6 @@
 package mongellaz.commands.togglelock;
 
+import com.google.inject.Inject;
 import mongellaz.commands.LockStateObserver;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.CommunicationException;
@@ -7,10 +8,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class ToggleLockResponseProcessor implements ByteArrayObserver {
+
+    @Inject
+    ToggleLockResponseProcessor(LockStateObserver lockStateObserver) {
+        this.lockStateObserver = lockStateObserver;
+    }
 
     @Override
     public void update(final byte[] response) {
@@ -54,17 +58,11 @@ public class ToggleLockResponseProcessor implements ByteArrayObserver {
         notifyAllLockStateObserver(lockState);
     }
 
-    public void addLockStateObserver(LockStateObserver lockStateObserver) {
-        lockStateObservers.add(lockStateObserver);
-    }
-
     private void notifyAllLockStateObserver(LockState lockState) {
-        for (LockStateObserver lockStateObserver : lockStateObservers) {
-            lockStateObserver.update(lockState);
-        }
+        lockStateObserver.update(lockState);
     }
 
     private final Logger logger = LogManager.getLogger();
-    private final List<LockStateObserver> lockStateObservers = new LinkedList<>();
+    private final LockStateObserver lockStateObserver;
     private static final byte COMMAND_CODE = 0x30;
 }

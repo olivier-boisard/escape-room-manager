@@ -1,5 +1,6 @@
 package mongellaz.commands.toggleconfigurationmode;
 
+import com.google.inject.Inject;
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.CommunicationException;
@@ -7,12 +8,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class ToggleConfigurationModeResponseProcessor implements ByteArrayObserver {
 
-    public static final byte COMMAND_CODE = 0x40;
+    @Inject
+    ToggleConfigurationModeResponseProcessor(ConfigurationModeStateObserver configurationModeStateObserver) {
+        this.configurationModeStateObserver = configurationModeStateObserver;
+    }
 
     @Override
     public void update(final byte[] response) {
@@ -52,19 +54,15 @@ public class ToggleConfigurationModeResponseProcessor implements ByteArrayObserv
             default -> throw new CommunicationException("Unknown status " + status);
         }
         logger.info("OK - {}", statusStr);
-        notifyAllConfigurationModeStateObservers(configurationModeState);
+        notifyConfigurationModeStateObserver(configurationModeState);
     }
 
-    public void addConfigurationModeStateObserver(ConfigurationModeStateObserver configurationModeStateObserver) {
-        configurationModeStateObservers.add(configurationModeStateObserver);
+    private void notifyConfigurationModeStateObserver(ConfigurationModeState newConfigurationModeState) {
+        configurationModeStateObserver.update(newConfigurationModeState);
     }
 
-    private void notifyAllConfigurationModeStateObservers(ConfigurationModeState newConfigurationModeState) {
-        for (ConfigurationModeStateObserver configurationModeStateObserver : configurationModeStateObservers) {
-            configurationModeStateObserver.update(newConfigurationModeState);
-        }
-    }
 
-    private final List<ConfigurationModeStateObserver> configurationModeStateObservers = new LinkedList<>();
+    public static final byte COMMAND_CODE = 0x40;
+    private final ConfigurationModeStateObserver configurationModeStateObserver;
     private final Logger logger = LogManager.getLogger();
 }
