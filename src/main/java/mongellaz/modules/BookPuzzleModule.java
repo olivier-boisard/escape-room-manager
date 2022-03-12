@@ -6,23 +6,24 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import mongellaz.application.ByteArrayControlledBookPuzzleDeviceController;
-import mongellaz.bookpuzzle.BookPuzzleDeviceController;
-import mongellaz.commands.ConfigurationModeStateObserver;
-import mongellaz.commands.HandshakeResultObserver;
-import mongellaz.commands.LockStateObserver;
-import mongellaz.commands.PiccReaderStatusesObserver;
-import mongellaz.commands.handshake.HandshakeResponseProcessor;
-import mongellaz.commands.statusrequest.StatusRequestResponseProcessor;
-import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
-import mongellaz.commands.togglelock.ToggleLockResponseProcessor;
+import mongellaz.bookpuzzle.devicecontroller.ByteArrayControlledBookPuzzleDeviceController;
+import mongellaz.bookpuzzle.devicecontroller.BookPuzzleDeviceController;
+import mongellaz.bookpuzzle.commands.toggleconfigurationmode.ConfigurationModeStateObserver;
+import mongellaz.bookpuzzle.commands.handshake.HandshakeResultObserver;
+import mongellaz.bookpuzzle.commands.togglelock.LockStateObserver;
+import mongellaz.bookpuzzle.commands.statusrequest.PiccReaderStatusesObserver;
+import mongellaz.bookpuzzle.commands.handshake.HandshakeResponseProcessor;
+import mongellaz.bookpuzzle.commands.statusrequest.StatusRequestResponseProcessor;
+import mongellaz.bookpuzzle.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
+import mongellaz.bookpuzzle.commands.togglelock.ToggleLockResponseProcessor;
 import mongellaz.communication.ByteArrayObserver;
-import mongellaz.communication.ScheduledCommunicationManager;
-import mongellaz.communication.ScheduledCommunicationManagerImpl;
+import mongellaz.communication.manager.ScheduledCommunicationManager;
+import mongellaz.communication.manager.ScheduledExecutorCommunicationManager;
 import mongellaz.communication.serial.ByteArrayObserversStackSerialPortMessageListener;
 import mongellaz.userinterface.BookPuzzleControlUi;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.SerialPortPuzzleConnectionUi;
+import mongellaz.userinterface.VerticalLayoutContainerProvider;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class BookPuzzleModule extends AbstractModule {
     protected void configure() {
         bind(SerialPortPuzzleConnectionUi.class).in(Singleton.class);
         bind(BookPuzzleControlUi.class).in(Singleton.class);
-        bind(ScheduledCommunicationManagerImpl.class).in(Singleton.class);
+        bind(ScheduledExecutorCommunicationManager.class).in(Singleton.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleConnectionUi")).to(SerialPortPuzzleConnectionUi.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleControlUi")).to(BookPuzzleControlUi.class);
@@ -41,7 +42,7 @@ public class BookPuzzleModule extends AbstractModule {
         bind(LockStateObserver.class).to(BookPuzzleControlUi.class);
         bind(PiccReaderStatusesObserver.class).to(BookPuzzleControlUi.class);
         bind(BookPuzzleDeviceController.class).to(ByteArrayControlledBookPuzzleDeviceController.class);
-        bind(ScheduledCommunicationManager.class).to(ScheduledCommunicationManagerImpl.class);
+        bind(ScheduledCommunicationManager.class).to(ScheduledExecutorCommunicationManager.class);
         bindConstant()
                 .annotatedWith(Names.named("MainFrameName"))
                 .to("Puzzle des livres");

@@ -1,7 +1,6 @@
-package mongellaz.commands.toggleconfigurationmode;
+package mongellaz.bookpuzzle.commands.toggleconfigurationmode;
 
 import com.google.inject.Inject;
-import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;

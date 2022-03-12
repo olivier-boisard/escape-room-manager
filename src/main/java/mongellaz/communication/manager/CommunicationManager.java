@@ -1,4 +1,4 @@
-package mongellaz.communication;
+package mongellaz.communication.manager;
 
 public interface CommunicationManager {
     void sendNextCommand();

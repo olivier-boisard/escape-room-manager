@@ -1,4 +1,4 @@
-package mongellaz.commands.statusrequest;
+package mongellaz.bookpuzzle.commands.statusrequest;
 
 public class StatusRequestFactory {
     public byte[] generate() {

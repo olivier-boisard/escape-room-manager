@@ -1,13 +1,13 @@
 package mongellaz.userinterface;
 
 import com.google.inject.Inject;
-import mongellaz.bookpuzzle.BookPuzzleDeviceController;
-import mongellaz.commands.ConfigurationModeStateObserver;
-import mongellaz.commands.LockStateObserver;
-import mongellaz.commands.PiccReaderStatusesObserver;
-import mongellaz.commands.statusrequest.PiccReaderStatus;
-import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
-import mongellaz.commands.togglelock.LockState;
+import mongellaz.bookpuzzle.devicecontroller.BookPuzzleDeviceController;
+import mongellaz.bookpuzzle.commands.toggleconfigurationmode.ConfigurationModeStateObserver;
+import mongellaz.bookpuzzle.commands.togglelock.LockStateObserver;
+import mongellaz.bookpuzzle.commands.statusrequest.PiccReaderStatusesObserver;
+import mongellaz.bookpuzzle.commands.statusrequest.PiccReaderStatus;
+import mongellaz.bookpuzzle.commands.toggleconfigurationmode.ConfigurationModeState;
+import mongellaz.bookpuzzle.commands.togglelock.LockState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

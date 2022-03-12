@@ -1,7 +1,6 @@
-package mongellaz.commands.togglelock;
+package mongellaz.bookpuzzle.commands.togglelock;
 
 import com.google.inject.Inject;
-import mongellaz.commands.LockStateObserver;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;

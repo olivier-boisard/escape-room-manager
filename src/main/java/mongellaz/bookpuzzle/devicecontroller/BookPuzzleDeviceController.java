@@ -1,4 +1,4 @@
-package mongellaz.bookpuzzle;
+package mongellaz.bookpuzzle.devicecontroller;
 
 
 public interface BookPuzzleDeviceController {

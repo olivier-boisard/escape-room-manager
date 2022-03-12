@@ -1,7 +1,4 @@
-package mongellaz.commands;
-
-
-import mongellaz.commands.handshake.HandshakeResult;
+package mongellaz.bookpuzzle.commands.handshake;
 
 @FunctionalInterface
 public interface HandshakeResultObserver {

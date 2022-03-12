@@ -1,7 +1,7 @@
 package mongellaz.communication.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
-import mongellaz.communication.CommunicationManager;
+import mongellaz.communication.manager.CommunicationManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

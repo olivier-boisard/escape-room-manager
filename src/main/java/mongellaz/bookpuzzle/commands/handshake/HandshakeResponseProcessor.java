@@ -1,7 +1,6 @@
-package mongellaz.commands.handshake;
+package mongellaz.bookpuzzle.commands.handshake;
 
 import com.google.inject.Inject;
-import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.communication.ByteArrayObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

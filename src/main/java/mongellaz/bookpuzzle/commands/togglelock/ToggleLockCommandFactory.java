@@ -1,4 +1,4 @@
-package mongellaz.commands.togglelock;
+package mongellaz.bookpuzzle.commands.togglelock;
 
 public class ToggleLockCommandFactory {
     public byte[] generate() {

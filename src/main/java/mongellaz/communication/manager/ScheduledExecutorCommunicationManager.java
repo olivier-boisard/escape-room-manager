@@ -1,9 +1,7 @@
-package mongellaz.communication;
+package mongellaz.communication.manager;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import mongellaz.commands.handshake.HandshakeFactory;
-import mongellaz.commands.statusrequest.StatusRequestFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,10 +9,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ScheduledCommunicationManagerImpl implements ScheduledCommunicationManager {
+public class ScheduledExecutorCommunicationManager implements ScheduledCommunicationManager {
 
     @Inject
-    ScheduledCommunicationManagerImpl(
+    ScheduledExecutorCommunicationManager(
             @Named("CommunicationManagerInitialDelayMs") int initialDelayMs,
             @Named("CommunicationManagerRateMs") int rateMs
     ) {
@@ -47,8 +45,6 @@ public class ScheduledCommunicationManagerImpl implements ScheduledCommunication
     @Override
     public void updateCommunicationManager(CommunicationManager newCommunicationManager) {
         communicationManager = newCommunicationManager;
-        queueCommand(new HandshakeFactory().generate());
-        queueCommand(new StatusRequestFactory().generate());
         start();
     }
 

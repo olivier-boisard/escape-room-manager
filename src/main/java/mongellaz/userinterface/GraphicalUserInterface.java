@@ -1,6 +1,5 @@
-package mongellaz.modules;
+package mongellaz.userinterface;
 
-import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import javax.swing.*;
@@ -9,8 +8,7 @@ import java.awt.event.WindowAdapter;
 
 public class GraphicalUserInterface implements UserInterface {
 
-    @Inject
-    GraphicalUserInterface(Container container, @Named("MainFrameName") String name) {
+    public GraphicalUserInterface(Container container, @Named("MainFrameName") String name) {
         this.container = container;
         this.frame = new JFrame(name);
         // Using JFrame directly here seems to break the DIP, however implementing it blindly here would not help.

@@ -1,4 +1,4 @@
-package mongellaz.modules;
+package mongellaz.userinterface;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;

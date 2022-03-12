@@ -1,4 +1,4 @@
-package mongellaz.commands.toggleconfigurationmode;
+package mongellaz.bookpuzzle.commands.toggleconfigurationmode;
 
 public class ToggleConfigurationModeCommandFactory {
     public byte[] generate() {

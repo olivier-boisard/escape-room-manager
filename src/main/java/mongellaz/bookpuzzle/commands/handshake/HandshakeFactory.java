@@ -1,4 +1,4 @@
-package mongellaz.commands.handshake;
+package mongellaz.bookpuzzle.commands.handshake;
 
 public class HandshakeFactory {
     public byte[] generate() {

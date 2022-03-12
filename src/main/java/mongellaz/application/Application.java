@@ -1,8 +1,10 @@
-package mongellaz.modules;
+package mongellaz.application;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import mongellaz.communication.ScheduledCommunicationManager;
+import mongellaz.communication.manager.ScheduledCommunicationManager;
+import mongellaz.modules.BookPuzzleModule;
+import mongellaz.userinterface.GraphicalUserInterface;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;

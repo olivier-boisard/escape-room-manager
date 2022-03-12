@@ -1,4 +1,4 @@
-package mongellaz.commands.statusrequest;
+package mongellaz.bookpuzzle.commands.statusrequest;
 
 public enum PiccReaderStatus {
     NO_PICC,

@@ -1,6 +1,4 @@
-package mongellaz.commands;
-
-import mongellaz.commands.togglelock.LockState;
+package mongellaz.bookpuzzle.commands.togglelock;
 
 @FunctionalInterface
 public interface LockStateObserver {

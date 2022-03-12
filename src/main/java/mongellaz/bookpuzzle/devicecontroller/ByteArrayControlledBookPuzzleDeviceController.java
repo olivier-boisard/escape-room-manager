@@ -1,12 +1,11 @@
-package mongellaz.application;
+package mongellaz.bookpuzzle.devicecontroller;
 
 import com.google.inject.Inject;
-import mongellaz.bookpuzzle.BookPuzzleDeviceController;
-import mongellaz.commands.handshake.HandshakeFactory;
-import mongellaz.commands.statusrequest.StatusRequestFactory;
-import mongellaz.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
-import mongellaz.commands.togglelock.ToggleLockCommandFactory;
-import mongellaz.communication.ScheduledCommunicationManager;
+import mongellaz.bookpuzzle.commands.handshake.HandshakeFactory;
+import mongellaz.bookpuzzle.commands.statusrequest.StatusRequestFactory;
+import mongellaz.bookpuzzle.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
+import mongellaz.bookpuzzle.commands.togglelock.ToggleLockCommandFactory;
+import mongellaz.communication.manager.ScheduledCommunicationManager;
 
 public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzleDeviceController {
 

@@ -1,6 +1,4 @@
-package mongellaz.commands;
-
-import mongellaz.commands.toggleconfigurationmode.ConfigurationModeState;
+package mongellaz.bookpuzzle.commands.toggleconfigurationmode;
 
 @FunctionalInterface
 public interface ConfigurationModeStateObserver {
