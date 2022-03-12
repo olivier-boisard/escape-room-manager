@@ -6,6 +6,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
+import mongellaz.application.ByteArrayControlledBookPuzzleDeviceController;
+import mongellaz.bookpuzzle.BookPuzzleDeviceController;
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.HandshakeResultObserver;
 import mongellaz.commands.LockStateObserver;
@@ -30,6 +32,7 @@ public class BookPuzzleModule extends AbstractModule {
     protected void configure() {
         bind(SerialPortPuzzleConnectionUi.class).in(Singleton.class);
         bind(BookPuzzleControlUi.class).in(Singleton.class);
+        bind(ScheduledCommunicationManagerImpl.class).in(Singleton.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleConnectionUi")).to(SerialPortPuzzleConnectionUi.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleControlUi")).to(BookPuzzleControlUi.class);
@@ -37,6 +40,7 @@ public class BookPuzzleModule extends AbstractModule {
         bind(ConfigurationModeStateObserver.class).to(BookPuzzleControlUi.class);
         bind(LockStateObserver.class).to(BookPuzzleControlUi.class);
         bind(PiccReaderStatusesObserver.class).to(BookPuzzleControlUi.class);
+        bind(BookPuzzleDeviceController.class).to(ByteArrayControlledBookPuzzleDeviceController.class);
         bind(ScheduledCommunicationManager.class).to(ScheduledCommunicationManagerImpl.class);
         bindConstant()
                 .annotatedWith(Names.named("MainFrameName"))

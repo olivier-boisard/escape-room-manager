@@ -1,5 +1,6 @@
 package mongellaz.userinterface;
 
+import com.google.inject.Inject;
 import mongellaz.bookpuzzle.BookPuzzleDeviceController;
 import mongellaz.commands.ConfigurationModeStateObserver;
 import mongellaz.commands.LockStateObserver;
@@ -19,7 +20,8 @@ import java.util.Vector;
 @SuppressWarnings("unused")
 public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
 
-    public void setBookPuzzleDeviceController(BookPuzzleDeviceController bookPuzzleDeviceController) {
+    @Inject
+    BookPuzzleControlUi(BookPuzzleDeviceController bookPuzzleDeviceController) {
         toggleLockButton.addActionListener(e -> {
             bookPuzzleDeviceController.sendToggleLockCommand();
             toggleLockButton.setEnabled(false);
