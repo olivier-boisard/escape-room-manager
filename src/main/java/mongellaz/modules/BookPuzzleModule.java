@@ -30,7 +30,6 @@ public class BookPuzzleModule extends AbstractModule {
     protected void configure() {
         bind(SerialPortPuzzleConnectionUi.class).in(Singleton.class);
         bind(BookPuzzleControlUi.class).in(Singleton.class);
-        bind(UserInterface.class).to(GraphicalUserInterface.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleConnectionUi")).to(SerialPortPuzzleConnectionUi.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleControlUi")).to(BookPuzzleControlUi.class);
