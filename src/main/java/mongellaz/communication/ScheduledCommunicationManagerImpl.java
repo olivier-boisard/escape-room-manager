@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import mongellaz.commands.handshake.HandshakeFactory;
 import mongellaz.commands.statusrequest.StatusRequestFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,7 +39,9 @@ public class ScheduledCommunicationManagerImpl implements ScheduledCommunication
 
     @Override
     public void shutdown() {
+        logger.info("Shutting down resources");
         commandWriterExecutorService.shutdown();
+        communicationManager.shutdown();
     }
 
     @Override
@@ -52,4 +56,5 @@ public class ScheduledCommunicationManagerImpl implements ScheduledCommunication
     final int rateMs;
     private CommunicationManager communicationManager;
     private final ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private final Logger logger = LogManager.getLogger();
 }

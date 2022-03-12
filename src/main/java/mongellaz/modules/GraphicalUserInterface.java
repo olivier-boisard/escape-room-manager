@@ -5,6 +5,7 @@ import com.google.inject.name.Named;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 
 public class GraphicalUserInterface implements UserInterface {
 
@@ -22,6 +23,10 @@ public class GraphicalUserInterface implements UserInterface {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public void addWindowListener(WindowAdapter event) {
+        frame.addWindowListener(event);
     }
 
     private final Container container;

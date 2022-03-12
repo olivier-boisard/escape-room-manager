@@ -56,7 +56,8 @@ public class BookPuzzleModule extends AbstractModule {
     @SuppressWarnings("unused")
     @Provides
     private static Iterable<Component> provideComponents(
-            @Named("PuzzleConnectionUi") ComponentHandler puzzleConnectionUi,
+            @Named("PuzzleConnect" +
+                    "ionUi") ComponentHandler puzzleConnectionUi,
             @Named("PuzzleControlUi") ComponentHandler puzzleControlUi
     ) {
         ArrayList<Component> components = new ArrayList<>();
