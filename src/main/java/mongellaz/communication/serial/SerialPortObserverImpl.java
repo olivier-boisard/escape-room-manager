@@ -23,8 +23,8 @@ public class SerialPortObserverImpl implements SerialPortObserver {
         if (!serialPort.openPort()) {
             logger.error("Could not connect to serial port");
         } else {
-            serialPort.addDataListener(serialPortCommunicationManager.getSerialPortMessageListener());
-            serialPortCommunicationManager.getScheduledQueuedCommandSender().updateQueuedCommandSender(new SerialPortQueuedCommandSender(serialPort));
+            serialPort.addDataListener(serialPortCommunicationManager.serialPortMessageListener);
+            serialPortCommunicationManager.scheduledQueuedCommandSender.updateQueuedCommandSender(new SerialPortQueuedCommandSender(serialPort));
             puzzleDeviceController.start();
         }
     }

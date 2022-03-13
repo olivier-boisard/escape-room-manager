@@ -13,14 +13,6 @@ public class SerialPortCommunicationManager {
         this.serialPortMessageListener = serialPortMessageListener;
     }
 
-    public ScheduledQueuedCommandSender getScheduledQueuedCommandSender() {
-        return scheduledQueuedCommandSender;
-    }
-
-    public SerialPortMessageListener getSerialPortMessageListener() {
-        return serialPortMessageListener;
-    }
-
-    private final ScheduledQueuedCommandSender scheduledQueuedCommandSender;
-    private final SerialPortMessageListener serialPortMessageListener;
+    public final ScheduledQueuedCommandSender scheduledQueuedCommandSender;
+    public final SerialPortMessageListener serialPortMessageListener;
 }
