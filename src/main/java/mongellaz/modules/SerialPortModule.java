@@ -10,8 +10,8 @@ import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.manager.ScheduledQueuedCommandSender;
 import mongellaz.communication.manager.ScheduledExecutorQueuedCommandSender;
 import mongellaz.communication.serial.ByteArrayObserversStackSerialPortMessageListener;
+import mongellaz.communication.serial.SerialPortConnector;
 import mongellaz.communication.serial.SerialPortObserver;
-import mongellaz.communication.serial.SerialPortObserverImpl;
 import mongellaz.communication.serial.SerialPortPuzzleConnectionUi;
 import mongellaz.userinterface.ComponentHandler;
 
@@ -25,7 +25,7 @@ public class SerialPortModule extends AbstractModule {
         bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
         bind(HandshakeResultObserver.class).to(SerialPortPuzzleConnectionUi.class);
         bind(ScheduledQueuedCommandSender.class).to(ScheduledExecutorQueuedCommandSender.class);
-        bind(SerialPortObserver.class).to(SerialPortObserverImpl.class);
+        bind(SerialPortObserver.class).to(SerialPortConnector.class);
     }
 
     @Provides

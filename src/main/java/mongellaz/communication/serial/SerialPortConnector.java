@@ -6,10 +6,10 @@ import mongellaz.devicecontroller.PuzzleDeviceController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class SerialPortObserverImpl implements SerialPortObserver {
+public class SerialPortConnector implements SerialPortObserver {
 
     @Inject
-    SerialPortObserverImpl(
+    SerialPortConnector(
             SerialPortCommunicationManager serialPortCommunicationManager,
             PuzzleDeviceController puzzleDeviceController
     ) {
