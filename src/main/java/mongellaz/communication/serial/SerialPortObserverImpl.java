@@ -3,7 +3,7 @@ package mongellaz.communication.serial;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 import com.google.inject.Inject;
-import mongellaz.communication.manager.ScheduledCommunicationManager;
+import mongellaz.communication.manager.ScheduledQueuedCommandSender;
 import mongellaz.devicecontroller.PuzzleDeviceController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,11 +12,11 @@ public class SerialPortObserverImpl implements SerialPortObserver {
 
     @Inject
     SerialPortObserverImpl(
-            ScheduledCommunicationManager scheduledCommunicationManager,
+            ScheduledQueuedCommandSender scheduledQueuedCommandSender,
             SerialPortMessageListener serialPortMessageListener,
             PuzzleDeviceController puzzleDeviceController
     ) {
-        this.scheduledCommunicationManager = scheduledCommunicationManager;
+        this.scheduledQueuedCommandSender = scheduledQueuedCommandSender;
         this.serialPortMessageListener = serialPortMessageListener;
         this.puzzleDeviceController = puzzleDeviceController;
     }
@@ -28,12 +28,12 @@ public class SerialPortObserverImpl implements SerialPortObserver {
             logger.error("Could not connect to serial port");
         } else {
             serialPort.addDataListener(serialPortMessageListener);
-            scheduledCommunicationManager.updateCommunicationManager(new SerialPortCommunicationManager(serialPort));
+            scheduledQueuedCommandSender.updateQueuedCommandSender(new SerialPortQueuedCommandSender(serialPort));
             puzzleDeviceController.start();
         }
     }
 
-    private final ScheduledCommunicationManager scheduledCommunicationManager;
+    private final ScheduledQueuedCommandSender scheduledQueuedCommandSender;
     private final SerialPortMessageListener serialPortMessageListener;
     private final PuzzleDeviceController puzzleDeviceController;
     private final Logger logger = LogManager.getLogger();

@@ -2,7 +2,7 @@ package mongellaz.application;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import mongellaz.communication.manager.ScheduledCommunicationManager;
+import mongellaz.communication.manager.ScheduledQueuedCommandSender;
 import mongellaz.modules.BookPuzzleModule;
 import mongellaz.modules.SerialPortModule;
 import mongellaz.userinterface.GraphicalUserInterface;
@@ -20,7 +20,7 @@ public class Application {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
-                injector.getInstance(ScheduledCommunicationManager.class).shutdown();
+                injector.getInstance(ScheduledQueuedCommandSender.class).shutdown();
             }
         });
         userInterface.start();

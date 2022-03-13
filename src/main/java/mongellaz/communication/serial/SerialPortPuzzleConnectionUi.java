@@ -1,13 +1,9 @@
 package mongellaz.communication.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortMessageListener;
 import com.google.inject.Inject;
 import mongellaz.bookpuzzle.commands.handshake.HandshakeResultObserver;
 import mongellaz.bookpuzzle.commands.handshake.HandshakeResult;
-import mongellaz.communication.manager.ScheduledCommunicationManager;
-import mongellaz.communication.serial.SerialPortCommunicationManager;
-import mongellaz.devicecontroller.PuzzleDeviceController;
 import mongellaz.userinterface.ComponentHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

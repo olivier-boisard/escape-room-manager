@@ -1,6 +1,6 @@
 package mongellaz.communication.manager;
 
-public interface CommunicationManager {
+public interface QueuedCommandSender {
     void sendNextCommand();
     void queueCommand(byte[] command);
     void shutdown();

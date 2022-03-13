@@ -9,10 +9,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ScheduledExecutorCommunicationManager implements ScheduledCommunicationManager {
+public class ScheduledExecutorQueuedCommandSender implements ScheduledQueuedCommandSender {
 
     @Inject
-    ScheduledExecutorCommunicationManager(
+    ScheduledExecutorQueuedCommandSender(
             @Named("CommunicationManagerInitialDelayMs") int initialDelayMs,
             @Named("CommunicationManagerRateMs") int rateMs
     ) {
@@ -22,13 +22,13 @@ public class ScheduledExecutorCommunicationManager implements ScheduledCommunica
 
     @Override
     public void queueCommand(byte[] command) {
-        communicationManager.queueCommand(command);
+        queuedCommandSender.queueCommand(command);
     }
 
     @Override
     public void start() {
         commandWriterExecutorService.scheduleAtFixedRate(
-                communicationManager::sendNextCommand,
+                queuedCommandSender::sendNextCommand,
                 initialDelayMs,
                 rateMs,
                 TimeUnit.MILLISECONDS
@@ -39,20 +39,20 @@ public class ScheduledExecutorCommunicationManager implements ScheduledCommunica
     public void shutdown() {
         logger.info("Shutting down resources");
         commandWriterExecutorService.shutdown();
-        if (communicationManager != null) {
-            communicationManager.shutdown();
+        if (queuedCommandSender != null) {
+            queuedCommandSender.shutdown();
         }
     }
 
     @Override
-    public void updateCommunicationManager(CommunicationManager newCommunicationManager) {
-        communicationManager = newCommunicationManager;
+    public void updateQueuedCommandSender(QueuedCommandSender newQueuedCommandSender) {
+        queuedCommandSender = newQueuedCommandSender;
         start();
     }
 
     final int initialDelayMs;
     final int rateMs;
-    private CommunicationManager communicationManager;
+    private QueuedCommandSender queuedCommandSender;
     private final ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
     private final Logger logger = LogManager.getLogger();
 }

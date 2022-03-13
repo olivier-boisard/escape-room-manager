@@ -1,16 +1,16 @@
 package mongellaz.communication.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
-import mongellaz.communication.manager.CommunicationManager;
+import mongellaz.communication.manager.QueuedCommandSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class SerialPortCommunicationManager implements CommunicationManager {
+public class SerialPortQueuedCommandSender implements QueuedCommandSender {
 
-    public SerialPortCommunicationManager(SerialPort serialPort) {
+    public SerialPortQueuedCommandSender(SerialPort serialPort) {
         this.serialPort = serialPort;
     }
 
