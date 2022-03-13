@@ -20,11 +20,7 @@ import java.util.Objects;
 public class SerialPortPuzzleConnectionUi implements ComponentHandler, HandshakeResultObserver {
 
     @Inject
-    SerialPortPuzzleConnectionUi(
-            ScheduledCommunicationManager scheduledCommunicationManager,
-            SerialPortMessageListener serialPortMessageListener,
-            PuzzleDeviceController puzzleDeviceController
-    ) {
+    SerialPortPuzzleConnectionUi(SerialPortObserver serialPortObserver) {
         for (SerialPort serialPort : SerialPort.getCommPorts()) {
             connectionOptionsComboBox.addItem(serialPort.getDescriptivePortName());
         }
@@ -45,15 +41,7 @@ public class SerialPortPuzzleConnectionUi implements ComponentHandler, Handshake
             if (selectedSerialPort == null) {
                 logger.error("Invalid serial port {}", selectedItem);
             } else {
-                logger.info("Establishing connection with serial port: {}", selectedItem);
-                if (!selectedSerialPort.openPort()) {
-                    logger.error("Could not connect to {}", selectedItem);
-                    update(HandshakeResult.FAILURE);
-                } else {
-                    selectedSerialPort.addDataListener(serialPortMessageListener);
-                    scheduledCommunicationManager.updateCommunicationManager(new SerialPortCommunicationManager(selectedSerialPort));
-                    puzzleDeviceController.start();
-                }
+                serialPortObserver.update(selectedSerialPort);
             }
         });
     }

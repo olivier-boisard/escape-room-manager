@@ -39,7 +39,9 @@ public class ScheduledExecutorCommunicationManager implements ScheduledCommunica
     public void shutdown() {
         logger.info("Shutting down resources");
         commandWriterExecutorService.shutdown();
-        communicationManager.shutdown();
+        if (communicationManager != null) {
+            communicationManager.shutdown();
+        }
     }
 
     @Override
