@@ -16,7 +16,7 @@ import mongellaz.bookpuzzle.commands.togglelock.ToggleLockResponseProcessor;
 import mongellaz.bookpuzzle.devicecontroller.BookPuzzleDeviceController;
 import mongellaz.bookpuzzle.devicecontroller.ByteArrayControlledBookPuzzleDeviceController;
 import mongellaz.communication.ByteArrayObserver;
-import mongellaz.devicecontroller.PuzzleDeviceController;
+import mongellaz.devicecontroller.DeviceController;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.VerticalLayoutContainerProvider;
 
@@ -29,8 +29,8 @@ public class BookPuzzleModule extends AbstractModule {
         bind(BookPuzzleControlUi.class).in(Singleton.class);
         bind(ByteArrayControlledBookPuzzleDeviceController.class).in(Singleton.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
-        bind(ComponentHandler.class).annotatedWith(Names.named("PuzzleControlUi")).to(BookPuzzleControlUi.class);
-        bind(PuzzleDeviceController.class).to(ByteArrayControlledBookPuzzleDeviceController.class);
+        bind(ComponentHandler.class).annotatedWith(Names.named("ControlUi")).to(BookPuzzleControlUi.class);
+        bind(DeviceController.class).to(ByteArrayControlledBookPuzzleDeviceController.class);
         bind(ConfigurationModeStateObserver.class).to(BookPuzzleControlUi.class);
         bind(LockStateObserver.class).to(BookPuzzleControlUi.class);
         bind(PiccReaderStatusesObserver.class).to(BookPuzzleControlUi.class);
@@ -47,12 +47,12 @@ public class BookPuzzleModule extends AbstractModule {
     @SuppressWarnings("unused")
     @Provides
     private static Iterable<Component> provideComponents(
-            @Named("PuzzleConnectionUi") ComponentHandler puzzleConnectionUi,
-            @Named("PuzzleControlUi") ComponentHandler puzzleControlUi
+            @Named("ConnectionUi") ComponentHandler connectionUi,
+            @Named("ControlUi") ComponentHandler controlUi
     ) {
         ArrayList<Component> components = new ArrayList<>();
-        components.add(puzzleConnectionUi.getMainPanel());
-        components.add(puzzleControlUi.getMainPanel());
+        components.add(connectionUi.getMainPanel());
+        components.add(controlUi.getMainPanel());
         return components;
     }
 

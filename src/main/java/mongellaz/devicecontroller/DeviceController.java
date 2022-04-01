@@ -1,5 +1,5 @@
 package mongellaz.devicecontroller;
 
-public interface PuzzleDeviceController {
+public interface DeviceController {
     void start();
 }
