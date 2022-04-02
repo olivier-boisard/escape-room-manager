@@ -5,7 +5,9 @@ import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import mongellaz.communication.ByteArrayObserver;
+import mongellaz.communication.wifi.WifiConfigurationObserver;
 import mongellaz.communication.wifi.WifiConfigurationUi;
+import mongellaz.communication.wifi.WifiConfigurator;
 import mongellaz.devicecontroller.DeviceController;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.VerticalLayoutContainerProvider;
@@ -18,6 +20,7 @@ public class WifiConfigurationModule extends AbstractModule {
     protected void configure() {
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("WifiConfigurationUi")).to(WifiConfigurationUi.class);
+        bind(WifiConfigurationObserver.class).to(WifiConfigurator.class);
     }
 
     @SuppressWarnings("unused")
