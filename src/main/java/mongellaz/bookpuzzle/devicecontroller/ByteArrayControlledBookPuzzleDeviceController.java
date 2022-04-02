@@ -10,29 +10,29 @@ import mongellaz.communication.manager.QueuedCommands;
 public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzleDeviceController {
 
     @Inject
-    ByteArrayControlledBookPuzzleDeviceController(QueuedCommands scheduledQueuedCommandSender) {
-        this.scheduledQueuedCommandSender = scheduledQueuedCommandSender;
+    ByteArrayControlledBookPuzzleDeviceController(QueuedCommands queuedCommands) {
+        this.queuedCommands = queuedCommands;
     }
 
     @Override
     public void start() {
-        scheduledQueuedCommandSender.queueCommand(bookPuzzleHandshakeFactory.generate());
-        scheduledQueuedCommandSender.queueCommand(statusRequestFactory.generate());
+        queuedCommands.queueCommand(bookPuzzleHandshakeFactory.generate());
+        queuedCommands.queueCommand(statusRequestFactory.generate());
     }
 
     @Override
     public void sendToggleLockCommand() {
-        scheduledQueuedCommandSender.queueCommand(toggleLockCommandFactory.generate());
+        queuedCommands.queueCommand(toggleLockCommandFactory.generate());
     }
 
     @Override
     public void sendToggleConfigurationModeCommand() {
-        scheduledQueuedCommandSender.queueCommand(toggleConfigurationModeCommandFactory.generate());
+        queuedCommands.queueCommand(toggleConfigurationModeCommandFactory.generate());
     }
 
     private final BookPuzzleHandshakeFactory bookPuzzleHandshakeFactory = new BookPuzzleHandshakeFactory();
     private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
     private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();
-    private final QueuedCommands scheduledQueuedCommandSender;
+    private final QueuedCommands queuedCommands;
 }
