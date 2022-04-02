@@ -5,12 +5,12 @@ import mongellaz.bookpuzzle.commands.handshake.HandshakeFactory;
 import mongellaz.bookpuzzle.commands.statusrequest.StatusRequestFactory;
 import mongellaz.bookpuzzle.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
 import mongellaz.bookpuzzle.commands.togglelock.ToggleLockCommandFactory;
-import mongellaz.communication.manager.ScheduledQueuedCommandSender;
+import mongellaz.communication.manager.QueuedCommands;
 
 public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzleDeviceController {
 
     @Inject
-    ByteArrayControlledBookPuzzleDeviceController(ScheduledQueuedCommandSender scheduledQueuedCommandSender) {
+    ByteArrayControlledBookPuzzleDeviceController(QueuedCommands scheduledQueuedCommandSender) {
         this.scheduledQueuedCommandSender = scheduledQueuedCommandSender;
     }
 
@@ -34,5 +34,5 @@ public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzle
     private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
     private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();
-    private final ScheduledQueuedCommandSender scheduledQueuedCommandSender;
+    private final QueuedCommands scheduledQueuedCommandSender;
 }

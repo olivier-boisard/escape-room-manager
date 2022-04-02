@@ -1,8 +1,7 @@
 package mongellaz.communication.manager;
 
-public interface ScheduledQueuedCommandSender {
+public interface ScheduledQueuedCommandSender extends QueuedCommands {
     void updateQueuedCommandSender(QueuedCommandSender queuedCommandSender);
-    void queueCommand(byte[] command);
     void start();
     void shutdown();
 }
