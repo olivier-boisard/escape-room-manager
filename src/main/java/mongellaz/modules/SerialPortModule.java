@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import mongellaz.bookpuzzle.commands.handshake.HandshakeResultObserver;
 import mongellaz.communication.ByteArrayObserver;
+import mongellaz.communication.manager.QueuedCommands;
 import mongellaz.communication.manager.ScheduledExecutorQueuedCommandSender;
 import mongellaz.communication.manager.ScheduledQueuedCommandSender;
 import mongellaz.communication.serial.ByteArrayObserversStackSerialPortMessageListener;
@@ -25,6 +26,7 @@ public class SerialPortModule extends AbstractModule {
         bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
         bind(HandshakeResultObserver.class).to(SerialPortPuzzleConnectionUi.class);
         bind(ScheduledQueuedCommandSender.class).to(ScheduledExecutorQueuedCommandSender.class);
+        bind(QueuedCommands.class).to(ScheduledExecutorQueuedCommandSender.class);
         bind(SerialPortObserver.class).to(SerialPortConnector.class);
     }
 
