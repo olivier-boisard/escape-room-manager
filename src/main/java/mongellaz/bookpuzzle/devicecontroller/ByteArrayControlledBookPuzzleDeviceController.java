@@ -1,7 +1,7 @@
 package mongellaz.bookpuzzle.devicecontroller;
 
 import com.google.inject.Inject;
-import mongellaz.bookpuzzle.commands.handshake.HandshakeFactory;
+import mongellaz.bookpuzzle.commands.handshake.BookPuzzleHandshakeFactory;
 import mongellaz.bookpuzzle.commands.statusrequest.StatusRequestFactory;
 import mongellaz.bookpuzzle.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
 import mongellaz.bookpuzzle.commands.togglelock.ToggleLockCommandFactory;
@@ -16,7 +16,7 @@ public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzle
 
     @Override
     public void start() {
-        scheduledQueuedCommandSender.queueCommand(handshakeFactory.generate());
+        scheduledQueuedCommandSender.queueCommand(bookPuzzleHandshakeFactory.generate());
         scheduledQueuedCommandSender.queueCommand(statusRequestFactory.generate());
     }
 
@@ -30,7 +30,7 @@ public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzle
         scheduledQueuedCommandSender.queueCommand(toggleConfigurationModeCommandFactory.generate());
     }
 
-    private final HandshakeFactory handshakeFactory = new HandshakeFactory();
+    private final BookPuzzleHandshakeFactory bookPuzzleHandshakeFactory = new BookPuzzleHandshakeFactory();
     private final StatusRequestFactory statusRequestFactory = new StatusRequestFactory();
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
     private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();

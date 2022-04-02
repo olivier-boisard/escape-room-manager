@@ -1,6 +1,6 @@
 package mongellaz.bookpuzzle.commands.handshake;
 
-public enum HandshakeResult {
+public enum BookPuzzleHandshakeResult {
     SUCCESS,
     FAILURE
 }

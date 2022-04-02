@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import mongellaz.bookpuzzle.BookPuzzleControlUi;
-import mongellaz.bookpuzzle.commands.handshake.HandshakeResponseProcessor;
+import mongellaz.bookpuzzle.commands.handshake.BookPuzzleHandshakeResponseProcessor;
 import mongellaz.bookpuzzle.commands.statusrequest.PiccReaderStatusesObserver;
 import mongellaz.bookpuzzle.commands.statusrequest.StatusRequestResponseProcessor;
 import mongellaz.bookpuzzle.commands.toggleconfigurationmode.ConfigurationModeStateObserver;
@@ -38,7 +38,7 @@ public class BookPuzzleModule extends AbstractModule {
         bindConstant()
                 .annotatedWith(Names.named("MainFrameName"))
                 .to("Puzzle des livres");
-        bind(ByteArrayObserver.class).annotatedWith(Names.named("HandshakeResponseProcessor")).to(HandshakeResponseProcessor.class);
+        bind(ByteArrayObserver.class).annotatedWith(Names.named("HandshakeResponseProcessor")).to(BookPuzzleHandshakeResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("StatusRequestResponseProcessor")).to(StatusRequestResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("ToggleLockResponseProcessor")).to(ToggleLockResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("ToggleConfigurationModeResponseProcessor")).to(ToggleConfigurationModeResponseProcessor.class);

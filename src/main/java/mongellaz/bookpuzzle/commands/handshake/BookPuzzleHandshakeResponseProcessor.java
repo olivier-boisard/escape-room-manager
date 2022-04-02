@@ -7,11 +7,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 
-public class HandshakeResponseProcessor implements ByteArrayObserver {
+public class BookPuzzleHandshakeResponseProcessor implements ByteArrayObserver {
 
     @Inject
-    HandshakeResponseProcessor(HandshakeResultObserver handshakeResultObserver) {
-        this.handshakeResultObserver = handshakeResultObserver;
+    BookPuzzleHandshakeResponseProcessor(BookPuzzleHandshakeResultObserver bookPuzzleHandshakeResultObserver) {
+        this.bookPuzzleHandshakeResultObserver = bookPuzzleHandshakeResultObserver;
     }
 
     @Override
@@ -19,26 +19,26 @@ public class HandshakeResponseProcessor implements ByteArrayObserver {
         final byte commandCode = 0x10;
         if (response[0] == commandCode) {
             final byte[] expectedResponse = {commandCode, -123, -14, -98, -29, 67, 25, -22, -10};
-            HandshakeResult handshakeResult;
+            BookPuzzleHandshakeResult bookPuzzleHandshakeResult;
             if (Arrays.equals(response, expectedResponse)) {
-                handshakeResult = HandshakeResult.SUCCESS;
+                bookPuzzleHandshakeResult = BookPuzzleHandshakeResult.SUCCESS;
                 logger.info("Received expected response");
             } else {
-                handshakeResult = HandshakeResult.FAILURE;
+                bookPuzzleHandshakeResult = BookPuzzleHandshakeResult.FAILURE;
                 if (logger.isErrorEnabled()) {
                     logger.error("Invalid response: {}", Arrays.toString(response));
                 }
             }
-            notifyHandshakeResultObserver(handshakeResult);
+            notifyHandshakeResultObserver(bookPuzzleHandshakeResult);
         } else {
             logger.debug("Ignoring command with code {}", commandCode);
         }
     }
 
-    private void notifyHandshakeResultObserver(HandshakeResult handshakeResult) {
-        handshakeResultObserver.update(handshakeResult);
+    private void notifyHandshakeResultObserver(BookPuzzleHandshakeResult bookPuzzleHandshakeResult) {
+        bookPuzzleHandshakeResultObserver.update(bookPuzzleHandshakeResult);
     }
 
     private final Logger logger = LogManager.getLogger();
-    private final HandshakeResultObserver handshakeResultObserver;
+    private final BookPuzzleHandshakeResultObserver bookPuzzleHandshakeResultObserver;
 }

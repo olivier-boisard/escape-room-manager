@@ -2,8 +2,8 @@ package mongellaz.communication.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.google.inject.Inject;
-import mongellaz.bookpuzzle.commands.handshake.HandshakeResultObserver;
-import mongellaz.bookpuzzle.commands.handshake.HandshakeResult;
+import mongellaz.bookpuzzle.commands.handshake.BookPuzzleHandshakeResultObserver;
+import mongellaz.bookpuzzle.commands.handshake.BookPuzzleHandshakeResult;
 import mongellaz.userinterface.ComponentHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class SerialPortPuzzleConnectionUi implements ComponentHandler, HandshakeResultObserver {
+public class SerialPortPuzzleConnectionUi implements ComponentHandler, BookPuzzleHandshakeResultObserver {
 
     @Inject
     SerialPortPuzzleConnectionUi(SerialPortObserver serialPortObserver) {
@@ -47,13 +47,13 @@ public class SerialPortPuzzleConnectionUi implements ComponentHandler, Handshake
     }
 
     @Override
-    public void update(HandshakeResult handshakeResult) {
+    public void update(BookPuzzleHandshakeResult bookPuzzleHandshakeResult) {
         String connectionStatusString = null;
         Color textColor = null;
-        if (handshakeResult == HandshakeResult.SUCCESS) {
+        if (bookPuzzleHandshakeResult == BookPuzzleHandshakeResult.SUCCESS) {
             connectionStatusString = "Connecté";
             textColor = Color.GREEN;
-        } else if (handshakeResult == HandshakeResult.FAILURE) {
+        } else if (bookPuzzleHandshakeResult == BookPuzzleHandshakeResult.FAILURE) {
             connectionStatusString = "Non connecté";
             textColor = Color.RED;
         }

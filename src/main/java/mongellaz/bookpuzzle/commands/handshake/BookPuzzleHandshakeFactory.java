@@ -1,6 +1,6 @@
 package mongellaz.bookpuzzle.commands.handshake;
 
-public class HandshakeFactory {
+public class BookPuzzleHandshakeFactory {
     public byte[] generate() {
         // Variable declarations
         final byte handshakeCode = 0x10;
