@@ -5,6 +5,7 @@ import mongellaz.communication.manager.QueuedCommands;
 
 import java.nio.charset.StandardCharsets;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class WifiConfigurator implements WifiConfigurationObserver {
 
     @Inject
