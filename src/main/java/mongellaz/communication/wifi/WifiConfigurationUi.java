@@ -12,10 +12,7 @@ public class WifiConfigurationUi implements ComponentHandler {
     @Inject
     WifiConfigurationUi(WifiConfigurationObserver wifiConfigurationObserver) {
         wifiConfigurationButton.addActionListener(e -> wifiConfigurationObserver.update(
-                new WifiConfiguration(
-                        ssidTextField.getText(),
-                        passwordTextField.getPassword()
-                )
+                new WifiConfiguration(ssidTextField.getText(), passwordTextField.getPassword())
         ));
     }
 
