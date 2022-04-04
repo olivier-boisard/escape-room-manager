@@ -39,6 +39,9 @@ public class SerialPortConnectionUi implements ComponentHandler, HandshakeResult
             } else {
                 serialPortObserver.update(selectedSerialPort);
             }
+
+            connectionButton.setEnabled(false);
+            connectionStatus.setText("Connexion...");
         });
     }
 
@@ -64,6 +67,8 @@ public class SerialPortConnectionUi implements ComponentHandler, HandshakeResult
         if (textColor != null) {
             connectionStatus.setForeground(textColor);
         }
+
+        connectionButton.setEnabled(true);
     }
 
     private JComboBox<String> connectionOptionsComboBox;
