@@ -1,4 +1,4 @@
-package mongellaz.communication.implementations.wifi;
+package mongellaz.devices.wifi.commands.connection;
 
 import java.util.Arrays;
 import java.util.Objects;

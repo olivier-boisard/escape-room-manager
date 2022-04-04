@@ -3,6 +3,8 @@ package mongellaz.communication.implementations.wifi;
 import com.google.inject.Inject;
 import mongellaz.devices.wifi.commands.connection.ConnectionState;
 import mongellaz.devices.wifi.commands.connection.ConnectionStateObserver;
+import mongellaz.devices.wifi.commands.connection.WifiConfiguration;
+import mongellaz.devices.wifi.commands.connection.WifiConfigurationObserver;
 import mongellaz.userinterface.ComponentHandler;
 
 import javax.swing.*;

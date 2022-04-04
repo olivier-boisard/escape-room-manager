@@ -1,4 +1,4 @@
-package mongellaz.communication.implementations.wifi;
+package mongellaz.devices.wifi.commands.connection;
 
 import com.google.inject.Inject;
 import mongellaz.communication.manager.QueuedCommands;
@@ -22,8 +22,7 @@ public class WifiConfigurator implements WifiConfigurationObserver {
 
     private byte[] getStartCommand() {
         final byte configWifiCommand = 0x01;
-        final byte endMessageCommand = 0x00;
-        return new byte[]{configWifiCommand, endMessageCommand};
+        return new byte[]{configWifiCommand};
     }
 
     private byte[] extractSsid(WifiConfiguration wifiConfiguration) {
