@@ -30,6 +30,7 @@ public class Application {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
+                wifiConfigurationInjector.getInstance(ScheduledQueuedCommandSender.class).shutdown();
                 bookPuzzleInjector.getInstance(ScheduledQueuedCommandSender.class).shutdown();
             }
         });
