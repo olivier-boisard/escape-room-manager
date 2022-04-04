@@ -17,7 +17,8 @@ public class ToggleLockResponseProcessor implements ByteArrayObserver {
 
     @Override
     public void update(final byte[] response) {
-        if (response[0] == COMMAND_CODE) {
+        byte receivedCommandCode = response[0];
+        if (receivedCommandCode == EXPECTED_COMMAND_CODE) {
             try {
                 checkResponse(response);
                 runExpectedResponseProcess(response);
@@ -25,12 +26,12 @@ public class ToggleLockResponseProcessor implements ByteArrayObserver {
                 logger.error(e.getMessage());
             }
         } else {
-            logger.debug("Ignoring command with code {}", COMMAND_CODE);
+            logger.debug("Ignoring command with code {}", EXPECTED_COMMAND_CODE);
         }
     }
 
     private void checkResponse(byte[] response) throws CommunicationException {
-        final byte[] expectedResponse = {COMMAND_CODE, 0x03, (byte) 0xF1};
+        final byte[] expectedResponse = {EXPECTED_COMMAND_CODE, 0x03, (byte) 0xF1};
         if (!Arrays.equals(Arrays.copyOfRange(response, 0, expectedResponse.length), expectedResponse)) {
             throw new CommunicationException("Unexpected response");
         }
@@ -63,5 +64,5 @@ public class ToggleLockResponseProcessor implements ByteArrayObserver {
 
     private final Logger logger = LogManager.getLogger();
     private final LockStateObserver lockStateObserver;
-    private static final byte COMMAND_CODE = 0x30;
+    private static final byte EXPECTED_COMMAND_CODE = 0x30;
 }

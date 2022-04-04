@@ -17,7 +17,8 @@ public class ToggleConfigurationModeResponseProcessor implements ByteArrayObserv
 
     @Override
     public void update(final byte[] response) {
-        if (response[0] == COMMAND_CODE) {
+        byte receivedCommandCode = response[0];
+        if (receivedCommandCode == EXPECTED_COMMAND_CODE) {
             try {
                 checkResponse(response);
                 runResponseIsValidProcess(response[3]);
@@ -25,12 +26,12 @@ public class ToggleConfigurationModeResponseProcessor implements ByteArrayObserv
                 logger.error(e.getMessage());
             }
         } else {
-            logger.debug("Ignoring command with code {}", COMMAND_CODE);
+            logger.debug("Ignoring command with code {}", receivedCommandCode);
         }
     }
 
     private void checkResponse(byte[] response) throws CommunicationException {
-        final byte[] expectedResponse = {COMMAND_CODE, 0x03, (byte) 0xF1};
+        final byte[] expectedResponse = {EXPECTED_COMMAND_CODE, 0x03, (byte) 0xF1};
         if (!Arrays.equals(Arrays.copyOfRange(response, 0, expectedResponse.length), expectedResponse)) {
             throw new CommunicationException("Unexpected Response");
         }
@@ -61,7 +62,7 @@ public class ToggleConfigurationModeResponseProcessor implements ByteArrayObserv
     }
 
 
-    public static final byte COMMAND_CODE = 0x40;
+    public static final byte EXPECTED_COMMAND_CODE = 0x40;
     private final ConfigurationModeStateObserver configurationModeStateObserver;
     private final Logger logger = LogManager.getLogger();
 }

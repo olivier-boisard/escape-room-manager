@@ -29,20 +29,21 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
 
     @Override
     public void update(final byte[] response) {
-        final byte commandCode = 0x20;
+        final byte expectedCommandCode = 0x20;
         final byte piccReadersStatusCode = 0x01;
         final byte configurationModeStatusCode = 0x02;
         final byte lockStatusCode = 0x03;
         final byte errorCode = (byte) 0xFF;
         int index = 0;
 
-        if (response[0] == commandCode) {
+        byte receivedCommandCode = response[0];
+        if (receivedCommandCode == expectedCommandCode) {
             try {
                 while (index < response.length) {
                     byte responseByte = response[index++];
                     final byte[] unprocessedResponse = Arrays.copyOfRange(response, index, response.length);
                     index += switch (responseByte) {
-                        case commandCode -> {
+                        case expectedCommandCode -> {
                             logger.info("Command is 'status request'");
                             yield 0;
                         }
@@ -64,7 +65,7 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
                 logger.fatal("Thread error");
             }
         } else {
-            logger.debug("Ignoring command with code {}", commandCode);
+            logger.debug("Ignoring command with code {}", receivedCommandCode);
         }
     }
 
