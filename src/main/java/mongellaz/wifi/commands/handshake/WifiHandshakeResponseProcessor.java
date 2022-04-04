@@ -16,6 +16,7 @@ public class WifiHandshakeResponseProcessor implements ByteArrayObserver {
         this.handshakeResultObserver = handshakeResultObserver;
     }
 
+    //TODO refactor with BookPuzzleHandshakeResponseProcessor
     @Override
     public void update(final byte[] response) {
         final byte commandCode = 0x10;
