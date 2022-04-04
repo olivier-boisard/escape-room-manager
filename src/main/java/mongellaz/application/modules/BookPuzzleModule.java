@@ -3,10 +3,10 @@ package mongellaz.application.modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import mongellaz.devices.bookpuzzle.BookPuzzleControlUi;
-import mongellaz.devices.bookpuzzle.commands.handshake.BookPuzzleHandshakeResponseProcessor;
 import mongellaz.devices.bookpuzzle.commands.statusrequest.PiccReaderStatusesObserver;
 import mongellaz.devices.bookpuzzle.commands.statusrequest.StatusRequestResponseProcessor;
 import mongellaz.devices.bookpuzzle.commands.toggleconfigurationmode.ConfigurationModeStateObserver;
@@ -17,6 +17,7 @@ import mongellaz.devices.bookpuzzle.devicecontroller.BookPuzzleDeviceController;
 import mongellaz.devices.bookpuzzle.devicecontroller.ByteArrayControlledBookPuzzleDeviceController;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.DeviceController;
+import mongellaz.communication.handshake.HandshakeResponseProcessor;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.VerticalLayoutContainerProvider;
 
@@ -38,10 +39,13 @@ public class BookPuzzleModule extends AbstractModule {
         bindConstant()
                 .annotatedWith(Names.named("MainFrameName"))
                 .to("Puzzle des livres");
-        bind(ByteArrayObserver.class).annotatedWith(Names.named("HandshakeResponseProcessor")).to(BookPuzzleHandshakeResponseProcessor.class);
+        bind(ByteArrayObserver.class).annotatedWith(Names.named("HandshakeResponseProcessor")).to(HandshakeResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("StatusRequestResponseProcessor")).to(StatusRequestResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("ToggleLockResponseProcessor")).to(ToggleLockResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("ToggleConfigurationModeResponseProcessor")).to(ToggleConfigurationModeResponseProcessor.class);
+        bind(new TypeLiteral<byte[]>() {})
+                .annotatedWith(Names.named("ExpectedDeviceFirmwareId"))
+                .toInstance(new byte[]{-123, -14, -98, -29, 67, 25, -22, -10});
     }
 
     @SuppressWarnings("unused")
