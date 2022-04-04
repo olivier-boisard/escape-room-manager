@@ -3,9 +3,9 @@ package mongellaz.application;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import mongellaz.communication.manager.ScheduledQueuedCommandSender;
-import mongellaz.modules.BookPuzzleModule;
-import mongellaz.modules.SerialPortModule;
-import mongellaz.modules.WifiConfigurationModule;
+import mongellaz.application.modules.BookPuzzleModule;
+import mongellaz.application.modules.SerialPortModule;
+import mongellaz.application.modules.WifiConfigurationModule;
 import mongellaz.userinterface.GraphicalUserInterface;
 
 import javax.swing.*;
