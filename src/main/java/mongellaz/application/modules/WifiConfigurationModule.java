@@ -7,8 +7,10 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import mongellaz.communication.ByteArrayObserver;
+import mongellaz.devices.wifi.commands.connection.ConnectionStateObserver;
 import mongellaz.devices.wifi.commands.connection.WifiConfigurationObserver;
 import mongellaz.communication.implementations.wifi.WifiConfigurationUi;
+import mongellaz.devices.wifi.commands.connection.WifiConfigurationRequestResponseProcessor;
 import mongellaz.devices.wifi.commands.connection.WifiConfigurator;
 import mongellaz.communication.DeviceController;
 import mongellaz.userinterface.ComponentHandler;
@@ -31,6 +33,10 @@ public class WifiConfigurationModule extends AbstractModule {
         bind(ByteArrayObserver.class)
                 .annotatedWith(Names.named("HandshakeResponseProcessor"))
                 .to(HandshakeResponseProcessor.class);
+        bind(ByteArrayObserver.class)
+                .annotatedWith(Names.named("WifiConfigurationRequestResponseProcessor"))
+                .to(WifiConfigurationRequestResponseProcessor.class);
+        bind(ConnectionStateObserver.class).to(WifiConfigurationUi.class);
         bind(WifiConfigurationObserver.class).to(WifiConfigurator.class);
         bind(DeviceController.class).to(ByteArrayWifiDeviceController.class);
     }
@@ -49,10 +55,12 @@ public class WifiConfigurationModule extends AbstractModule {
 
     @Provides
     private static Iterable<ByteArrayObserver> provideResponseObservers(
-            @Named("HandshakeResponseProcessor") ByteArrayObserver handshakeResponseProcessor
+            @Named("HandshakeResponseProcessor") ByteArrayObserver handshakeResponseProcessor,
+            @Named("WifiConfigurationRequestResponseProcessor") ByteArrayObserver wifiConfigurationRequestResponseProcessor
     ) {
         ArrayList<ByteArrayObserver> byteArrayObservers = new ArrayList<>();
         byteArrayObservers.add(handshakeResponseProcessor);
+        byteArrayObservers.add(wifiConfigurationRequestResponseProcessor);
         return byteArrayObservers;
     }
 }
