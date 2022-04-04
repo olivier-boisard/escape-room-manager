@@ -22,9 +22,10 @@ public class WifiHandshakeResponseProcessor implements ByteArrayObserver {
         final byte commandCode = 0x10;
         byte receivedCommandCode = response[0];
         if (receivedCommandCode == commandCode) {
-            final byte[] expectedResponse = {commandCode, 0x7F, (byte) 0xE0, 0x04, (byte) 0xB2, 0x7C, (byte) 0xE1, 0x0A, 0x2A};
+            final byte[] expectedResponse = {0x7F, (byte) 0xE0, 0x04, (byte) 0xB2, 0x7C, (byte) 0xE1, 0x0A, 0x2A};
             HandshakeResult handshakeResult;
-            if (Arrays.equals(response, expectedResponse)) {
+            final byte[] receivedFirmwareId = Arrays.copyOfRange(response, 1, response.length);
+            if (Arrays.equals(receivedFirmwareId, expectedResponse)) {
                 handshakeResult = HandshakeResult.SUCCESS;
                 logger.info("Received expected response");
             } else {
