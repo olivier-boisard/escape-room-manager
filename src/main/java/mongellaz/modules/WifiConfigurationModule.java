@@ -13,6 +13,7 @@ import mongellaz.devicecontroller.DeviceController;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.VerticalLayoutContainerProvider;
 import mongellaz.wifi.commands.handshake.WifiHandshakeResponseProcessor;
+import mongellaz.wifi.devicecontroller.ByteArrayWifiDeviceController;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class WifiConfigurationModule extends AbstractModule {
                 .annotatedWith(Names.named("HandshakeResponseProcessor"))
                 .to(WifiHandshakeResponseProcessor.class);
         bind(WifiConfigurationObserver.class).to(WifiConfigurator.class);
+        bind(DeviceController.class).to(ByteArrayWifiDeviceController.class);
     }
 
     @SuppressWarnings("unused")
@@ -48,12 +50,5 @@ public class WifiConfigurationModule extends AbstractModule {
         ArrayList<ByteArrayObserver> byteArrayObservers = new ArrayList<>();
         byteArrayObservers.add(handshakeResponseProcessor);
         return byteArrayObservers;
-    }
-
-    @Provides
-    private static DeviceController providesDeviceController() {
-        //TODO
-        return () -> {
-        };
     }
 }
