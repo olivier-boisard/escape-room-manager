@@ -22,9 +22,18 @@ public class WifiConfigurationUi implements ComponentHandler, ConnectionStateObs
 
     @Override
     public void update(ConnectionState connectionState) {
-        int[] ipAddress = connectionState.ipAddress();
-        String ipAddressStr = ipAddress[0] + "." + ipAddress[1] + "." + ipAddress[2] + "." + ipAddress[3];
-        JOptionPane.showMessageDialog(mainPanel, "Addresse IP:" + ipAddressStr);
+        if (connectionState.success()) {
+            int[] ipAddress = connectionState.ipAddress();
+            String ipAddressStr = ipAddress[0] + "." + ipAddress[1] + "." + ipAddress[2] + "." + ipAddress[3];
+            JOptionPane.showMessageDialog(mainPanel, "Addresse IP:" + ipAddressStr);
+        } else {
+            JOptionPane.showMessageDialog(
+                    mainPanel,
+                    "La connection de la carte au réseau WiFi a échoué",
+                    "Erreur",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     @Override

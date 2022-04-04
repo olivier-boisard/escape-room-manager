@@ -2,7 +2,7 @@ package mongellaz.devices.wifi.commands.connection;
 
 import java.util.Arrays;
 
-public record ConnectionState(int[] ipAddress) {
+public record ConnectionState(boolean success, int[] ipAddress) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
