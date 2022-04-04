@@ -19,7 +19,8 @@ public class WifiHandshakeResponseProcessor implements ByteArrayObserver {
     @Override
     public void update(final byte[] response) {
         final byte commandCode = 0x10;
-        if (response[0] == commandCode) {
+        byte receivedCommandCode = response[0];
+        if (receivedCommandCode == commandCode) {
             final byte[] expectedResponse = {commandCode, 0x7F, (byte) 0xE0, 0x04, (byte) 0xB2, 0x7C, (byte) 0xE1, 0x0A, 0x2A};
             HandshakeResult handshakeResult;
             if (Arrays.equals(response, expectedResponse)) {
@@ -33,7 +34,7 @@ public class WifiHandshakeResponseProcessor implements ByteArrayObserver {
             }
             notifyHandshakeResultObserver(handshakeResult);
         } else {
-            logger.debug("Ignoring command with code {}", commandCode);
+            logger.debug("Ignoring command with code {}", receivedCommandCode);
         }
     }
 

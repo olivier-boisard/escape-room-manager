@@ -19,7 +19,8 @@ public class BookPuzzleHandshakeResponseProcessor implements ByteArrayObserver {
     @Override
     public void update(final byte[] response) {
         final byte commandCode = 0x10;
-        if (response[0] == commandCode) {
+        byte receivedCommandCode = response[0];
+        if (receivedCommandCode == commandCode) {
             final byte[] expectedResponse = {commandCode, -123, -14, -98, -29, 67, 25, -22, -10};
             HandshakeResult handshakeResult;
             if (Arrays.equals(response, expectedResponse)) {
