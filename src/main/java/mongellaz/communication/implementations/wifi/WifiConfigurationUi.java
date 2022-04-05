@@ -25,7 +25,12 @@ public class WifiConfigurationUi implements ComponentHandler, ConnectionStateObs
         if (connectionState.success()) {
             int[] ipAddress = connectionState.ipAddress();
             String ipAddressStr = ipAddress[0] + "." + ipAddress[1] + "." + ipAddress[2] + "." + ipAddress[3];
-            JOptionPane.showMessageDialog(mainPanel, "Addresse IP:" + ipAddressStr);
+            JOptionPane.showMessageDialog(
+                    mainPanel,
+                    "Addresse IP: " + ipAddressStr,
+                    "Connexion réussie",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         } else {
             JOptionPane.showMessageDialog(
                     mainPanel,
