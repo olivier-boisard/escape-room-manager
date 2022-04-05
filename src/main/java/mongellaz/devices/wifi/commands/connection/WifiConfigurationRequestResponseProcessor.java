@@ -24,7 +24,8 @@ public class WifiConfigurationRequestResponseProcessor implements ByteArrayObser
                 final int ipAddressLength = 4;
                 int[] ipAddress = new int[ipAddressLength];
                 for (int i = 0; i < ipAddressLength; i++) {
-                    ipAddress[i] = response[index++];
+                    int ipAddressComponent = response[index++];
+                    ipAddress[i] = ipAddressComponent >= 0 ? ipAddressComponent : 256 + ipAddressComponent;
                 }
                 connectionStateObserver.update(new ConnectionState(true, ipAddress));
             } else if (connectionStatus == connectionFailureCode) {
