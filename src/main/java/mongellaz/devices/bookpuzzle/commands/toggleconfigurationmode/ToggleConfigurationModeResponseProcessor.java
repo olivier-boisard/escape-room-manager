@@ -17,8 +17,7 @@ public class ToggleConfigurationModeResponseProcessor implements ByteArrayObserv
 
     @Override
     public void update(final byte[] response) {
-        byte receivedCommandCode = response[0];
-        if (receivedCommandCode == EXPECTED_COMMAND_CODE) {
+        if (response[0] == EXPECTED_COMMAND_CODE) {
             try {
                 checkResponse(response);
                 runResponseIsValidProcess(response[3]);
@@ -26,7 +25,7 @@ public class ToggleConfigurationModeResponseProcessor implements ByteArrayObserv
                 logger.error(e.getMessage());
             }
         } else {
-            logger.debug("Ignoring command with code {}", receivedCommandCode);
+            logger.debug("Ignoring command: {}", response);
         }
     }
 

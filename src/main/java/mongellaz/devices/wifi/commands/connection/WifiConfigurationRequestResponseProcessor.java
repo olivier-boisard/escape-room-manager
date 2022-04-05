@@ -18,8 +18,7 @@ public class WifiConfigurationRequestResponseProcessor implements ByteArrayObser
         final byte connectionSuccessCode = 0x02;
         final byte connectionFailureCode = 0x01;
         int index = 0;
-        byte receivedCommandCode = response[index++];
-        if (receivedCommandCode == expectedCommandCode) {
+        if (response[index++] == expectedCommandCode) {
             byte connectionStatus = response[index++];
             if (connectionStatus == connectionSuccessCode) {
                 final int ipAddressLength = 4;
@@ -34,7 +33,7 @@ public class WifiConfigurationRequestResponseProcessor implements ByteArrayObser
                 logger.error("Invalid code: {}", connectionStatus);
             }
         } else {
-            logger.debug("Ignoring command with code {}", receivedCommandCode);
+            logger.debug("Ignoring command: {}", response);
         }
     }
 

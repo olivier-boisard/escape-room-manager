@@ -36,8 +36,7 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
         final byte errorCode = (byte) 0xFF;
         int index = 0;
 
-        byte receivedCommandCode = response[0];
-        if (receivedCommandCode == expectedCommandCode) {
+        if (response[0] == expectedCommandCode) {
             try {
                 while (index < response.length) {
                     byte responseByte = response[index++];
@@ -65,7 +64,7 @@ public class StatusRequestResponseProcessor implements ByteArrayObserver {
                 logger.fatal("Thread error");
             }
         } else {
-            logger.debug("Ignoring command with code {}", receivedCommandCode);
+            logger.debug("Ignoring command: {}", response);
         }
     }
 

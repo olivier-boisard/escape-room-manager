@@ -22,8 +22,7 @@ public class HandshakeResponseProcessor implements ByteArrayObserver {
     @Override
     public void update(final byte[] response) {
         final byte commandCode = 0x10;
-        byte receivedCommandCode = response[0];
-        if (receivedCommandCode == commandCode) {
+        if (response[0] == commandCode) {
             HandshakeResult handshakeResult;
             final byte[] receivedFirmwareId = Arrays.copyOfRange(response, 1, response.length);
             if (Arrays.equals(receivedFirmwareId, expectedDeviceFirmwareId)) {
@@ -37,7 +36,7 @@ public class HandshakeResponseProcessor implements ByteArrayObserver {
             }
             notifyHandshakeResultObserver(handshakeResult);
         } else {
-            logger.debug("Ignoring command with code {}", receivedCommandCode);
+            logger.debug("Ignoring command: {}", response);
         }
     }
 
