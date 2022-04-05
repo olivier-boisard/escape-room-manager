@@ -1,4 +1,4 @@
-package mongellaz.communication.implementations.wifi;
+package mongellaz.communication.implementations.wifi.configuration;
 
 import com.google.inject.Inject;
 import mongellaz.devices.wifi.commands.connection.ConnectionState;

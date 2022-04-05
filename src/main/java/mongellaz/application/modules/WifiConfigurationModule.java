@@ -9,7 +9,7 @@ import com.google.inject.name.Names;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.devices.wifi.commands.connection.ConnectionStateObserver;
 import mongellaz.devices.wifi.commands.connection.WifiConfigurationObserver;
-import mongellaz.communication.implementations.wifi.WifiConfigurationUi;
+import mongellaz.communication.implementations.wifi.configuration.WifiConfigurationUi;
 import mongellaz.devices.wifi.commands.connection.WifiConfigurationRequestResponseProcessor;
 import mongellaz.devices.wifi.commands.connection.WifiConfigurator;
 import mongellaz.communication.DeviceController;
