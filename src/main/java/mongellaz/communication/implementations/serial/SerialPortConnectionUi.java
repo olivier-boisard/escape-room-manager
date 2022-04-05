@@ -21,7 +21,7 @@ public class SerialPortConnectionUi implements ComponentHandler, HandshakeResult
             connectionOptionsComboBox.addItem(serialPort.getDescriptivePortName());
         }
         connectionButton.addActionListener(e -> {
-            // Inline method
+            // Get selected item from combo box
             Object selectedItem = connectionOptionsComboBox.getSelectedItem();
 
             // Get selected serial port
