@@ -2,6 +2,7 @@ package mongellaz.application;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import mongellaz.application.modules.SocketModule;
 import mongellaz.communication.manager.ScheduledQueuedCommandSender;
 import mongellaz.application.modules.BookPuzzleModule;
 import mongellaz.application.modules.SerialPortModule;
@@ -17,7 +18,7 @@ public class Application {
     public static void main(String[] args) {
         // Get main UI components
         Injector wifiConfigurationInjector = Guice.createInjector(new WifiConfigurationModule(), new SerialPortModule());
-        Injector bookPuzzleInjector = Guice.createInjector(new BookPuzzleModule(), new SerialPortModule());
+        Injector bookPuzzleInjector = Guice.createInjector(new BookPuzzleModule(), new SocketModule());
 
         // Setup UI
         JTabbedPane tabbedPane = new JTabbedPane();

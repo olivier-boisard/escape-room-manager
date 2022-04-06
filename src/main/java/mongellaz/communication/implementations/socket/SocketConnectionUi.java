@@ -1,5 +1,6 @@
 package mongellaz.communication.implementations.socket;
 
+import com.google.inject.Inject;
 import mongellaz.communication.handshake.HandshakeResult;
 import mongellaz.communication.handshake.HandshakeResultObserver;
 import mongellaz.userinterface.ComponentHandler;
@@ -14,6 +15,7 @@ import java.net.Socket;
 @SuppressWarnings("unused")
 public class SocketConnectionUi implements ComponentHandler, HandshakeResultObserver {
 
+    @Inject
     SocketConnectionUi(SocketObserver socketObserver) {
         int serverPort = 165;
         connectionButton.addActionListener(e -> {
