@@ -23,8 +23,8 @@ public class SerialPortQueuedCommandSender implements QueuedCommandSender {
     }
 
     @Override
-    public void queueCommand(byte[] data) {
-        commands.add(data);
+    public void queueCommand(byte[] command) {
+        commands.add(command);
     }
 
     @Override
