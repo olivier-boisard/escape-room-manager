@@ -5,15 +5,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
-import mongellaz.communication.handshake.HandshakeResultObserver;
 import mongellaz.communication.ByteArrayObserver;
-import mongellaz.communication.manager.QueuedCommands;
-import mongellaz.communication.manager.ScheduledExecutorQueuedCommandSender;
-import mongellaz.communication.manager.ScheduledQueuedCommandSender;
+import mongellaz.communication.handshake.HandshakeResultObserver;
 import mongellaz.communication.implementations.serial.ByteArrayObserversStackSerialPortMessageListener;
 import mongellaz.communication.implementations.serial.SerialPortConnectionUi;
 import mongellaz.communication.implementations.serial.SerialPortConnector;
 import mongellaz.communication.implementations.serial.SerialPortObserver;
+import mongellaz.communication.manager.ScheduledExecutorQueuedCommandSender;
 import mongellaz.userinterface.ComponentHandler;
 
 public class SerialPortModule extends AbstractModule {
@@ -22,11 +20,7 @@ public class SerialPortModule extends AbstractModule {
         bind(SerialPortConnectionUi.class).in(Singleton.class);
         bind(ScheduledExecutorQueuedCommandSender.class).in(Singleton.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("ConnectionUi")).to(SerialPortConnectionUi.class);
-        bindConstant().annotatedWith(Names.named("CommunicationManagerInitialDelayMs")).to(5000);
-        bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
         bind(HandshakeResultObserver.class).to(SerialPortConnectionUi.class);
-        bind(ScheduledQueuedCommandSender.class).to(ScheduledExecutorQueuedCommandSender.class);
-        bind(QueuedCommands.class).to(ScheduledExecutorQueuedCommandSender.class);
         bind(SerialPortObserver.class).to(SerialPortConnector.class);
     }
 
