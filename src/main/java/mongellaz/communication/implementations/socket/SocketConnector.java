@@ -18,6 +18,7 @@ public class SocketConnector implements SocketObserver {
     @Override
     public void update(Socket socket) {
         //TODO start thread for listening to socket incoming data
+        logger.info("Starting socket connector");
         socketCommunicationManager.scheduledQueuedCommandSender.updateQueuedCommandSender(new SocketQueuedCommandSender(socket));
     }
 
