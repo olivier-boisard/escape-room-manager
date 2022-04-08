@@ -22,6 +22,7 @@ public class SocketQueuedCommandSender implements QueuedCommandSender {
         byte[] command = commands.poll();
         if (command != null) {
             try {
+                logger.info("Send command to socket: {}", command);
                 DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataOutputStream.write(command);
             } catch (IOException e) {
