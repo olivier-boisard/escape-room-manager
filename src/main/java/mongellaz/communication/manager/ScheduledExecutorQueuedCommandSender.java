@@ -22,7 +22,7 @@ public class ScheduledExecutorQueuedCommandSender implements ScheduledQueuedComm
 
     @Override
     public void queueCommand(byte[] command) {
-        logger.debug("Received command: {}", command);
+        logger.debug("Queueing command: {}", command);
         queuedCommandSender.queueCommand(command);
     }
 
