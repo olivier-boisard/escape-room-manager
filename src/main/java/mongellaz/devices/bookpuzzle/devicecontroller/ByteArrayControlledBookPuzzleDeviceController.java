@@ -6,6 +6,8 @@ import mongellaz.devices.bookpuzzle.commands.statusrequest.StatusRequestFactory;
 import mongellaz.devices.bookpuzzle.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
 import mongellaz.devices.bookpuzzle.commands.togglelock.ToggleLockCommandFactory;
 import mongellaz.communication.manager.QueuedCommands;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzleDeviceController {
 
@@ -16,6 +18,7 @@ public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzle
 
     @Override
     public void start() {
+        logger.debug("Starting byte device controller");
         queuedCommands.queueCommand(bookPuzzleHandshakeFactory.generate());
         queuedCommands.queueCommand(statusRequestFactory.generate());
     }
@@ -35,4 +38,5 @@ public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzle
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
     private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();
     private final QueuedCommands queuedCommands;
+    private final Logger logger = LogManager.getLogger();
 }
