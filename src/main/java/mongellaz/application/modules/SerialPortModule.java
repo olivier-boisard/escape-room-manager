@@ -11,14 +11,12 @@ import mongellaz.communication.implementations.serial.ByteArrayObserversStackSer
 import mongellaz.communication.implementations.serial.SerialPortConnectionUi;
 import mongellaz.communication.implementations.serial.SerialPortConnector;
 import mongellaz.communication.implementations.serial.SerialPortObserver;
-import mongellaz.communication.manager.ScheduledExecutorQueuedCommandSender;
 import mongellaz.userinterface.ComponentHandler;
 
 public class SerialPortModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(SerialPortConnectionUi.class).in(Singleton.class);
-        bind(ScheduledExecutorQueuedCommandSender.class).in(Singleton.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("ConnectionUi")).to(SerialPortConnectionUi.class);
         bind(HandshakeResultObserver.class).to(SerialPortConnectionUi.class);
         bind(SerialPortObserver.class).to(SerialPortConnector.class);
