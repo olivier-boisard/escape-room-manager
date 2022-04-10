@@ -37,7 +37,7 @@ public class ScheduledExecutorQueuedCommandSender implements ScheduledQueuedComm
     }
 
     @Override
-    public void shutdown() {
+    public void close() {
         logger.info("Shutting down resources");
         commandWriterExecutorService.shutdown();
         if (queuedCommandSender != null) {
@@ -46,8 +46,8 @@ public class ScheduledExecutorQueuedCommandSender implements ScheduledQueuedComm
     }
 
     @Override
-    public void updateQueuedCommandSender(QueuedCommandSender newQueuedCommandSender) {
-        queuedCommandSender = newQueuedCommandSender;
+    public void updateQueuedCommandSender(QueuedCommandSender queuedCommandSender) {
+        this.queuedCommandSender = queuedCommandSender;
         start();
     }
 

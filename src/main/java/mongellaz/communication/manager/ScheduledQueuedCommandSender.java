@@ -1,7 +1,8 @@
 package mongellaz.communication.manager;
 
-public interface ScheduledQueuedCommandSender extends QueuedCommands {
+import java.io.Closeable;
+
+public interface ScheduledQueuedCommandSender extends QueuedCommands, Closeable {
     void updateQueuedCommandSender(QueuedCommandSender queuedCommandSender);
     void start();
-    void shutdown();
 }

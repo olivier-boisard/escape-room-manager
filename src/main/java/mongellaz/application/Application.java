@@ -5,14 +5,19 @@ import com.google.inject.Injector;
 import mongellaz.application.modules.*;
 import mongellaz.communication.manager.ScheduledQueuedCommandSender;
 import mongellaz.userinterface.GraphicalUserInterface;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 public class Application {
     public static void main(String[] args) {
+        Logger logger = LogManager.getLogger();
+
         // Get main UI components
         Injector wifiConfigurationInjector = Guice.createInjector(
                 new WifiConfigurationModule(),
@@ -36,8 +41,12 @@ public class Application {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
-                wifiConfigurationInjector.getInstance(ScheduledQueuedCommandSender.class).shutdown();
-                bookPuzzleInjector.getInstance(ScheduledQueuedCommandSender.class).shutdown();
+                try {
+                    wifiConfigurationInjector.getInstance(ScheduledQueuedCommandSender.class).close();
+                    bookPuzzleInjector.getInstance(ScheduledQueuedCommandSender.class).close();
+                } catch (IOException ex) {
+                    logger.error("Could not stop resources: {}", ex.getMessage());
+                }
             }
         });
 
