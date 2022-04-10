@@ -1,9 +1,9 @@
 package mongellaz.application.modules;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
+import com.google.inject.*;
 import com.google.inject.name.Names;
 import mongellaz.communication.ByteArrayObserver;
+import mongellaz.communication.ByteArrayObserversStack;
 import mongellaz.communication.handshake.HandshakeResultObserver;
 import mongellaz.communication.implementations.socket.SocketConnectionUi;
 import mongellaz.communication.implementations.socket.SocketConnector;
@@ -20,11 +20,29 @@ public class SocketModule extends AbstractModule {
         bind(HandshakeResultObserver.class).to(SocketConnectionUi.class);
         bind(SocketObserver.class).to(SocketConnector.class);
         bind(QueuedCommands.class).to(ScheduledExecutorQueuedCommandSender.class);
-
-        //TODO
         bind(ByteArrayObserver.class)
                 .annotatedWith(Names.named("SocketCommunicationManagerReceivedMessageObserver"))
-                .toInstance(e -> {});
+                .toProvider(ByteArrayObserverProvider.class);
 
+    }
+
+    @SuppressWarnings("ClassCanBeRecord")
+    private static class ByteArrayObserverProvider implements Provider<ByteArrayObserver> {
+
+        @Inject
+        ByteArrayObserverProvider(Iterable<ByteArrayObserver> responseObservers) {
+            this.responseObservers = responseObservers;
+        }
+
+        @Override
+        public ByteArrayObserver get() {
+            ByteArrayObserversStack byteArrayObserversStack = new ByteArrayObserversStack();
+            for (ByteArrayObserver responseObserver : responseObservers) {
+                byteArrayObserversStack.addByteArrayObserver(responseObserver);
+            }
+            return byteArrayObserversStack;
+        }
+
+        private final Iterable<ByteArrayObserver> responseObservers;
     }
 }
