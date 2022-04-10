@@ -30,6 +30,10 @@ public class SocketConnector implements SocketObserver {
         startDeviceController();
     }
 
+    public void shutdown() {
+        dataReaderExecutorService.shutdown();
+    }
+
     private void startReader(Socket socket) {
         int initialDelayMs=0;
         int rateMs = 100;

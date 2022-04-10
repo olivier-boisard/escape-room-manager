@@ -3,6 +3,7 @@ package mongellaz.application;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import mongellaz.application.modules.*;
+import mongellaz.communication.implementations.socket.SocketConnector;
 import mongellaz.communication.manager.ScheduledQueuedCommandSender;
 import mongellaz.userinterface.GraphicalUserInterface;
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +45,7 @@ public class Application {
                 try {
                     wifiConfigurationInjector.getInstance(ScheduledQueuedCommandSender.class).close();
                     bookPuzzleInjector.getInstance(ScheduledQueuedCommandSender.class).close();
+                    bookPuzzleInjector.getInstance(SocketConnector.class).shutdown();
                 } catch (IOException ex) {
                     logger.error("Could not stop resources: {}", ex.getMessage());
                 }

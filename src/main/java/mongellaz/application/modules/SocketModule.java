@@ -16,6 +16,7 @@ public class SocketModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(SocketConnectionUi.class).in(Singleton.class);
+        bind(SocketConnector.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("ConnectionUi")).to(SocketConnectionUi.class);
         bind(HandshakeResultObserver.class).to(SocketConnectionUi.class);
         bind(SocketObserver.class).to(SocketConnector.class);
@@ -23,7 +24,6 @@ public class SocketModule extends AbstractModule {
         bind(ByteArrayObserver.class)
                 .annotatedWith(Names.named("SocketCommunicationManagerReceivedMessageObserver"))
                 .toProvider(ByteArrayObserverProvider.class);
-
     }
 
     @SuppressWarnings("ClassCanBeRecord")
