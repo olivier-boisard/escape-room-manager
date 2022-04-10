@@ -19,7 +19,15 @@ public class SocketConnector implements SocketObserver {
     public void update(Socket socket) {
         //TODO start thread for listening to socket incoming data
         logger.info("Starting socket connector");
+        updateCommandSender(socket);
+        startDeviceController();
+    }
+
+    private void updateCommandSender(Socket socket) {
         socketCommunicationManager.scheduledQueuedCommandSender.updateQueuedCommandSender(new SocketQueuedCommandSender(socket));
+    }
+
+    private void startDeviceController() {
         deviceController.start();
     }
 
