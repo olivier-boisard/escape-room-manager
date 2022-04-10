@@ -53,7 +53,12 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
 
     @Override
     public void update(Iterable<PiccReaderStatus> piccReaderStatuses) {
-        piccReaderStatusesTable.setModel(new DefaultTableModel(convertToRows(piccReaderStatuses), getColumnNames()));
+        piccReaderStatusesTable.setModel(new DefaultTableModel(convertToRows(piccReaderStatuses), getColumnNames()){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
         piccReaderStatusesTable.getColumn(STATUS_LABEL_STRING).setCellRenderer(statusStringTableCellRenderer);
     }
 
