@@ -23,11 +23,18 @@ dependencies {
     implementation 'com.google.inject.extensions:guice-grapher:5.1.0'
 }
 
-jar {
+task fatJar(type: Jar) {
     //noinspection GroovyAssignabilityCheck
     manifest {
         attributes 'Main-Class': 'mongellaz.application.Application'
+        attributes 'Multi-Release': true
     }
+    archiveClassifier = "all"
+    duplicatesStrategy = "exclude"
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
 }
 
 test {
