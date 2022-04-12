@@ -23,6 +23,13 @@ dependencies {
     implementation 'com.google.inject.extensions:guice-grapher:5.1.0'
 }
 
+jar {
+    //noinspection GroovyAssignabilityCheck
+    manifest {
+        attributes 'Main-Class': 'mongellaz.application.Application'
+    }
+}
+
 test {
     useJUnitPlatform()
 }
