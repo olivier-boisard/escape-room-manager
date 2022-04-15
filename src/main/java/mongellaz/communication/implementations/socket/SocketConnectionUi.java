@@ -7,6 +7,7 @@ import mongellaz.userinterface.ComponentHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -16,13 +17,19 @@ import java.net.Socket;
 public class SocketConnectionUi implements ComponentHandler, HandshakeResultObserver {
 
     @Inject
-    SocketConnectionUi(SocketObserver socketObserver) {
+    SocketConnectionUi(SocketObserver socketObserver, @Nullable SocketConfigurationHandler socketConfigurationHandler) {
         int serverPort = 165;
+        if (socketConfigurationHandler != null) {
+            socketHostNameTextField.setText(socketConfigurationHandler.getHostName());
+        }
         connectionButton.addActionListener(e -> {
-            String ipAddress = ipAddressField.getText();
+            String hostName = socketHostNameTextField.getText();
             try {
-                Socket socket = new Socket(ipAddress, serverPort);
+                Socket socket = new Socket(hostName, serverPort);
                 socketObserver.update(socket);
+                if (socketConfigurationHandler != null) {
+                    socketConfigurationHandler.setHostName(hostName);
+                }
             } catch (IOException ex) {
                 logger.error("Could not connect to socket: {}", ex.getMessage());
                 connectionStatus.setText("Non connecté");
@@ -59,9 +66,10 @@ public class SocketConnectionUi implements ComponentHandler, HandshakeResultObse
     }
 
     private JLabel ipAddressLabel;
-    private JTextField ipAddressField;
+    private JTextField socketHostNameTextField;
     private JButton connectionButton;
     private JPanel mainPanel;
     private JLabel connectionStatus;
+    private SocketConfigurationHandler socketConfigurationHandler;
     private final Logger logger = LogManager.getLogger();
 }
