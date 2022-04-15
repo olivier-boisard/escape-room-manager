@@ -30,11 +30,17 @@ public class Application {
                 new SocketModule("BookPuzzle"),
                 new ScheduledExecutorQueuedCommandSenderModule()
         );
+        Injector chineseMenuInjector = Guice.createInjector(
+                new ChineseMenuPuzzleModule(),
+                new SocketModule("ChineseMenuPuzzle"),
+                new ScheduledExecutorQueuedCommandSenderModule()
+        );
 
         // Setup UI
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Configuration", wifiConfigurationInjector.getInstance(Container.class));
         tabbedPane.add("BONFILS - Livres", bookPuzzleInjector.getInstance(Container.class));
+        tabbedPane.add("BONFILS - Menu Chinois", chineseMenuInjector.getInstance(Container.class));
         GraphicalUserInterface userInterface = new GraphicalUserInterface(tabbedPane, "Enquête Sensorielle");
 
         // Hande window closing
