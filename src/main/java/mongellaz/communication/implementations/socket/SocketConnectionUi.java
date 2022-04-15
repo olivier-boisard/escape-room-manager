@@ -25,11 +25,11 @@ public class SocketConnectionUi implements ComponentHandler, HandshakeResultObse
         connectionButton.addActionListener(e -> {
             String hostName = socketHostNameTextField.getText();
             try {
-                Socket socket = new Socket(hostName, serverPort);
-                socketObserver.update(socket);
                 if (socketConfigurationHandler != null) {
                     socketConfigurationHandler.setHostName(hostName);
                 }
+                Socket socket = new Socket(hostName, serverPort);
+                socketObserver.update(socket);
             } catch (IOException ex) {
                 logger.error("Could not connect to socket: {}", ex.getMessage());
                 connectionStatus.setText("Non connecté");

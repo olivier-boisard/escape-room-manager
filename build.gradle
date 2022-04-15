@@ -21,8 +21,6 @@ dependencies {
     implementation 'com.google.inject:guice:5.1.0'
     testImplementation 'com.google.inject.extensions:guice-grapher:5.1.0'
     implementation 'com.google.inject.extensions:guice-grapher:5.1.0'
-    testImplementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'com.google.code.gson:gson:2.9.0'
 }
 
 task fatJar(type: Jar) {

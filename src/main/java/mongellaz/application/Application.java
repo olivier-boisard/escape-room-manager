@@ -27,7 +27,7 @@ public class Application {
         );
         Injector bookPuzzleInjector = Guice.createInjector(
                 new BookPuzzleModule(),
-                new SocketModule(),
+                new SocketModule("BookPuzzle"),
                 new ScheduledExecutorQueuedCommandSenderModule()
         );
 
