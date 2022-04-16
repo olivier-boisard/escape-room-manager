@@ -14,10 +14,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StatusRequestResponseProcessor implements ByteArrayObserver {
+public class BookPuzzleStatusRequestResponseProcessor implements ByteArrayObserver {
 
     @Inject
-    StatusRequestResponseProcessor(
+    BookPuzzleStatusRequestResponseProcessor(
             LockStateObserver lockStateObserver,
             ConfigurationModeStateObserver configurationModeStateObserver,
             PiccReaderStatusesObserver piccReaderStatusesObserver

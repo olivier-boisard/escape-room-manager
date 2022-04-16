@@ -1,6 +1,6 @@
 package mongellaz.devices.bookpuzzle.commands.statusrequest;
 
-public class StatusRequestFactory {
+public class BookPuzzleStatusRequestFactory {
     public byte[] generate() {
         final byte statusRequest = 0x20;
         final byte endOfTransmission = 0x00;

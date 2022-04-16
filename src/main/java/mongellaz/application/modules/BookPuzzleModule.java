@@ -8,7 +8,7 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import mongellaz.devices.bookpuzzle.BookPuzzleControlUi;
 import mongellaz.devices.bookpuzzle.commands.statusrequest.PiccReaderStatusesObserver;
-import mongellaz.devices.bookpuzzle.commands.statusrequest.StatusRequestResponseProcessor;
+import mongellaz.devices.bookpuzzle.commands.statusrequest.BookPuzzleStatusRequestResponseProcessor;
 import mongellaz.devices.bookpuzzle.commands.toggleconfigurationmode.ConfigurationModeStateObserver;
 import mongellaz.devices.bookpuzzle.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
 import mongellaz.devices.common.togglelock.LockStateObserver;
@@ -40,7 +40,7 @@ public class BookPuzzleModule extends AbstractModule {
                 .annotatedWith(Names.named("MainFrameName"))
                 .to("Puzzle des livres");
         bind(ByteArrayObserver.class).annotatedWith(Names.named("HandshakeResponseProcessor")).to(HandshakeResponseProcessor.class);
-        bind(ByteArrayObserver.class).annotatedWith(Names.named("StatusRequestResponseProcessor")).to(StatusRequestResponseProcessor.class);
+        bind(ByteArrayObserver.class).annotatedWith(Names.named("StatusRequestResponseProcessor")).to(BookPuzzleStatusRequestResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("ToggleLockResponseProcessor")).to(ToggleLockResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("ToggleConfigurationModeResponseProcessor")).to(ToggleConfigurationModeResponseProcessor.class);
         bind(new TypeLiteral<byte[]>() {})
