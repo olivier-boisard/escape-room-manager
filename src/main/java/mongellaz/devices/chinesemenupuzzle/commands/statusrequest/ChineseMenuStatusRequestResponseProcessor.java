@@ -9,7 +9,7 @@ import mongellaz.devices.common.togglelock.LockStateObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObserver {
@@ -80,19 +80,18 @@ public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObser
     }
 
     private int processCurrentWeight(byte[] response) {
-        final int intSizeInBytes = 4;
-        final int weight = ByteBuffer.wrap(response).getInt();
-        chineseMenuWeightObserver.update(weight);
-        return intSizeInBytes;
+        final int nDigits = 10;
+        chineseMenuWeightObserver.update(Integer.parseInt(new String(Arrays.copyOfRange(response, 0, nDigits), StandardCharsets.US_ASCII)));
+        return nDigits;
     }
 
     private int processParameters(byte[] response) {
-        final int intSizeInBytes = 4;
-        final int minWeight = ByteBuffer.wrap(response).getInt();
-        final int maxWeight = ByteBuffer.wrap(response).getInt(intSizeInBytes);
-        final int minIntervalInMs = ByteBuffer.wrap(response).getInt(2 * intSizeInBytes);
+        final int nDigitsPerValue = 10;
+        final int minWeight = Integer.parseInt(new String(Arrays.copyOfRange(response, 0, nDigitsPerValue), StandardCharsets.US_ASCII));
+        final int maxWeight = Integer.parseInt(new String(Arrays.copyOfRange(response, nDigitsPerValue, nDigitsPerValue), StandardCharsets.US_ASCII));
+        final int minIntervalInMs = Integer.parseInt(new String(Arrays.copyOfRange(response, 2 * nDigitsPerValue, nDigitsPerValue), StandardCharsets.US_ASCII));
         chineseMenuConfigurationObserver.update(new ChineseMenuConfiguration(minWeight, maxWeight, minIntervalInMs));
-        return 3 * intSizeInBytes;
+        return 3 * nDigitsPerValue;
     }
 
     private void notifyLockStateObserver(LockState lockState) {
