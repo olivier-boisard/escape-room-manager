@@ -1,3 +1,3 @@
 package mongellaz.devices.chinesemenupuzzle.devicecontroller;
 
-public record ChineseMenuConfiguration(long minWeight, long maxWeight, long holdingTimeMs) {}
+public record ChineseMenuConfiguration(int minWeight, int maxWeight, int holdingTimeMs) {}
