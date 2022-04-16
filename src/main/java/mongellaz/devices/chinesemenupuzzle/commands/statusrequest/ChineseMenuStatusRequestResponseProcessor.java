@@ -3,17 +3,20 @@ package mongellaz.devices.chinesemenupuzzle.commands.statusrequest;
 import com.google.inject.Inject;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.CommunicationException;
+import mongellaz.devices.chinesemenupuzzle.devicecontroller.ChineseMenuConfiguration;
 import mongellaz.devices.common.togglelock.LockState;
 import mongellaz.devices.common.togglelock.LockStateObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObserver {
     @Inject
-    ChineseMenuStatusRequestResponseProcessor(LockStateObserver lockStateObserver) {
+    ChineseMenuStatusRequestResponseProcessor(LockStateObserver lockStateObserver, ChineseMenuConfigurationObserver chineseMenuConfigurationObserver) {
         this.lockStateObserver = lockStateObserver;
+        this.chineseMenuConfigurationObserver = chineseMenuConfigurationObserver;
     }
 
     @Override
@@ -35,6 +38,7 @@ public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObser
                             yield 0;
                         }
                         case lockStatusCode -> processLockStatus(unprocessedResponse);
+                        case parametersCode -> processParameters(unprocessedResponse);
                         case errorCode -> {
                             logger.error("Received error code");
                             yield 0;
@@ -73,10 +77,20 @@ public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObser
         return index;
     }
 
+    private int processParameters(byte[] response) {
+        final int intSizeInBytes = 4;
+        final int minWeight = ByteBuffer.wrap(response).getInt();
+        final int maxWeight = ByteBuffer.wrap(response).getInt(intSizeInBytes);
+        final int minIntervalInMs = ByteBuffer.wrap(response).getInt(2 * intSizeInBytes);
+        chineseMenuConfigurationObserver.update(new ChineseMenuConfiguration(minWeight, maxWeight, minIntervalInMs));
+        return 3 * intSizeInBytes;
+    }
+
     private void notifyLockStateObserver(LockState lockState) {
         lockStateObserver.update(lockState);
     }
 
     private final Logger logger = LogManager.getLogger();
     private final LockStateObserver lockStateObserver;
+    private final ChineseMenuConfigurationObserver chineseMenuConfigurationObserver;
 }

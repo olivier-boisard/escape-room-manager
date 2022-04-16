@@ -1,6 +1,8 @@
 package mongellaz.devices.chinesemenupuzzle;
 
 import com.google.inject.Inject;
+import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuConfigurationObserver;
+import mongellaz.devices.chinesemenupuzzle.devicecontroller.ChineseMenuConfiguration;
 import mongellaz.devices.chinesemenupuzzle.devicecontroller.ChineseMenuDeviceController;
 import mongellaz.devices.common.togglelock.LockState;
 import mongellaz.devices.common.togglelock.LockStateObserver;
@@ -12,7 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @SuppressWarnings("unused")
-public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateObserver {
+public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateObserver, ChineseMenuConfigurationObserver {
     @Inject
     ChineseMenuPuzzleControlUi(ChineseMenuDeviceController chineseMenuDeviceController) {
         toggleLockButton.addActionListener(e -> {
@@ -25,6 +27,13 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
     public void update(LockState lockState) {
         updateLockButton(lockState);
         updateLockStatus(lockState);
+    }
+
+    @Override
+    public void update(ChineseMenuConfiguration chineseMenuConfiguration) {
+        minWeightValueLabel.setText(String.valueOf(chineseMenuConfiguration.minWeight()));
+        maxWeightValueLabel.setText(String.valueOf(chineseMenuConfiguration.maxWeight()));
+        minTimeIntervalValueLabel.setText(String.valueOf(chineseMenuConfiguration.holdingTimeMs()));
     }
 
     @Override
@@ -67,5 +76,8 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
     private JButton toggleLockButton;
     private JLabel lockStateText;
     private JLabel lockStateTextValue;
+    private JLabel minTimeIntervalLabel;
+    private JLabel minTimeIntervalValueLabel;
+
     private final Logger logger = LogManager.getLogger();
 }
