@@ -3,6 +3,7 @@ package mongellaz.devices.chinesemenupuzzle.devicecontroller;
 import com.google.inject.Inject;
 import mongellaz.communication.manager.QueuedCommands;
 import mongellaz.devices.chinesemenupuzzle.commands.handshake.ChineseMenuPuzzleHandshakeFactory;
+import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuStatusRequestFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +17,7 @@ public class ByteArrayControlledChineseMenuDeviceController implements ChineseMe
     public void start() {
         logger.debug("Starting byte device controller");
         queuedCommands.queueCommand(chineseMenuPuzzleHandshakeFactory.generate());
-        //TODO send status request
+        queuedCommands.queueCommand(chineseMenuStatusRequestFactory.generate());
     }
 
     @Override
@@ -31,5 +32,6 @@ public class ByteArrayControlledChineseMenuDeviceController implements ChineseMe
 
     private final QueuedCommands queuedCommands;
     private final ChineseMenuPuzzleHandshakeFactory chineseMenuPuzzleHandshakeFactory = new ChineseMenuPuzzleHandshakeFactory();
+    private final ChineseMenuStatusRequestFactory chineseMenuStatusRequestFactory = new ChineseMenuStatusRequestFactory();
     private final Logger logger = LogManager.getLogger();
 }
