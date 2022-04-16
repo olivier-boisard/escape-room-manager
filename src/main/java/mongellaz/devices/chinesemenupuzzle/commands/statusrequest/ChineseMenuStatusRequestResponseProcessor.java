@@ -88,8 +88,8 @@ public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObser
     private int processParameters(byte[] response) {
         final int nDigitsPerValue = 10;
         final int minWeight = Integer.parseInt(new String(Arrays.copyOfRange(response, 0, nDigitsPerValue), StandardCharsets.US_ASCII));
-        final int maxWeight = Integer.parseInt(new String(Arrays.copyOfRange(response, nDigitsPerValue, nDigitsPerValue), StandardCharsets.US_ASCII));
-        final int minIntervalInMs = Integer.parseInt(new String(Arrays.copyOfRange(response, 2 * nDigitsPerValue, nDigitsPerValue), StandardCharsets.US_ASCII));
+        final int maxWeight = Integer.parseInt(new String(Arrays.copyOfRange(response, nDigitsPerValue, 2 * nDigitsPerValue), StandardCharsets.US_ASCII));
+        final int minIntervalInMs = Integer.parseInt(new String(Arrays.copyOfRange(response, 2 * nDigitsPerValue, 3 * nDigitsPerValue), StandardCharsets.US_ASCII));
         chineseMenuConfigurationObserver.update(new ChineseMenuConfiguration(minWeight, maxWeight, minIntervalInMs));
         return 3 * nDigitsPerValue;
     }
