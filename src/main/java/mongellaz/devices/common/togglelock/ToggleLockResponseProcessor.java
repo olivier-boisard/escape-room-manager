@@ -1,4 +1,4 @@
-package mongellaz.devices.bookpuzzle.commands.togglelock;
+package mongellaz.devices.common.togglelock;
 
 import com.google.inject.Inject;
 import mongellaz.communication.ByteArrayObserver;

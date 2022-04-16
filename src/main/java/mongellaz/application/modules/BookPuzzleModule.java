@@ -11,8 +11,8 @@ import mongellaz.devices.bookpuzzle.commands.statusrequest.PiccReaderStatusesObs
 import mongellaz.devices.bookpuzzle.commands.statusrequest.StatusRequestResponseProcessor;
 import mongellaz.devices.bookpuzzle.commands.toggleconfigurationmode.ConfigurationModeStateObserver;
 import mongellaz.devices.bookpuzzle.commands.toggleconfigurationmode.ToggleConfigurationModeResponseProcessor;
-import mongellaz.devices.bookpuzzle.commands.togglelock.LockStateObserver;
-import mongellaz.devices.bookpuzzle.commands.togglelock.ToggleLockResponseProcessor;
+import mongellaz.devices.common.togglelock.LockStateObserver;
+import mongellaz.devices.common.togglelock.ToggleLockResponseProcessor;
 import mongellaz.devices.bookpuzzle.devicecontroller.BookPuzzleDeviceController;
 import mongellaz.devices.bookpuzzle.devicecontroller.ByteArrayControlledBookPuzzleDeviceController;
 import mongellaz.communication.ByteArrayObserver;

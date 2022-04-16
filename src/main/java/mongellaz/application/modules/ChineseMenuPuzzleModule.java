@@ -8,6 +8,7 @@ import com.google.inject.name.Names;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.DeviceController;
 import mongellaz.devices.chinesemenupuzzle.ChineseMenuPuzzleUi;
+import mongellaz.devices.chinesemenupuzzle.devicecontroller.ByteArrayControlledChineseMenuDeviceController;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.VerticalLayoutContainerProvider;
 
@@ -18,12 +19,11 @@ public class ChineseMenuPuzzleModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ChineseMenuPuzzleUi.class).in(Singleton.class);
+        bind(ByteArrayControlledChineseMenuDeviceController.class).in(Singleton.class);
         bind(ComponentHandler.class).to(ChineseMenuPuzzleUi.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("ControlUi")).to(ChineseMenuPuzzleUi.class);
-        bind(DeviceController.class).toInstance(() -> {
-            //TODO
-        });
+        bind(DeviceController.class).to(ByteArrayControlledChineseMenuDeviceController.class);
     }
 
     @SuppressWarnings("unused")

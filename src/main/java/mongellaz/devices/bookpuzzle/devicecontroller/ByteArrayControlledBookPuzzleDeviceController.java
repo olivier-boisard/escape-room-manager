@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import mongellaz.devices.bookpuzzle.commands.handshake.BookPuzzleHandshakeFactory;
 import mongellaz.devices.bookpuzzle.commands.statusrequest.StatusRequestFactory;
 import mongellaz.devices.bookpuzzle.commands.toggleconfigurationmode.ToggleConfigurationModeCommandFactory;
-import mongellaz.devices.bookpuzzle.commands.togglelock.ToggleLockCommandFactory;
+import mongellaz.devices.common.togglelock.ToggleLockCommandFactory;
 import mongellaz.communication.manager.QueuedCommands;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
