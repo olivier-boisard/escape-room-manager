@@ -39,7 +39,7 @@ public class BookPuzzleStatusRequestResponseProcessor implements ByteArrayObserv
         if (response[0] == expectedCommandCode) {
             try {
                 while (index < response.length) {
-                    byte responseByte = response[index++];
+                    final byte responseByte = response[index++];
                     final byte[] unprocessedResponse = Arrays.copyOfRange(response, index, response.length);
                     index += switch (responseByte) {
                         case expectedCommandCode -> {
