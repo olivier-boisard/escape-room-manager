@@ -14,9 +14,10 @@ import java.util.Arrays;
 
 public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObserver {
     @Inject
-    ChineseMenuStatusRequestResponseProcessor(LockStateObserver lockStateObserver, ChineseMenuConfigurationObserver chineseMenuConfigurationObserver) {
+    ChineseMenuStatusRequestResponseProcessor(LockStateObserver lockStateObserver, ChineseMenuConfigurationObserver chineseMenuConfigurationObserver, ChineseMenuWeightObserver chineseMenuWeightObserver) {
         this.lockStateObserver = lockStateObserver;
         this.chineseMenuConfigurationObserver = chineseMenuConfigurationObserver;
+        this.chineseMenuWeightObserver = chineseMenuWeightObserver;
     }
 
     @Override
@@ -38,6 +39,7 @@ public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObser
                             yield 0;
                         }
                         case lockStatusCode -> processLockStatus(unprocessedResponse);
+                        case currentWeightCode -> processCurrentWeight(unprocessedResponse);
                         case parametersCode -> processParameters(unprocessedResponse);
                         case errorCode -> {
                             logger.error("Received error code");
@@ -77,6 +79,13 @@ public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObser
         return index;
     }
 
+    private int processCurrentWeight(byte[] response) {
+        final int intSizeInBytes = 4;
+        final int weight = ByteBuffer.wrap(response).getInt();
+        chineseMenuWeightObserver.update(weight);
+        return intSizeInBytes;
+    }
+
     private int processParameters(byte[] response) {
         final int intSizeInBytes = 4;
         final int minWeight = ByteBuffer.wrap(response).getInt();
@@ -93,4 +102,5 @@ public class ChineseMenuStatusRequestResponseProcessor implements ByteArrayObser
     private final Logger logger = LogManager.getLogger();
     private final LockStateObserver lockStateObserver;
     private final ChineseMenuConfigurationObserver chineseMenuConfigurationObserver;
+    private final ChineseMenuWeightObserver chineseMenuWeightObserver;
 }
