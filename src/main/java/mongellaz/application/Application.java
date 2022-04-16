@@ -52,6 +52,8 @@ public class Application {
                     wifiConfigurationInjector.getInstance(ScheduledQueuedCommandSender.class).close();
                     bookPuzzleInjector.getInstance(ScheduledQueuedCommandSender.class).close();
                     bookPuzzleInjector.getInstance(SocketConnector.class).shutdown();
+                    chineseMenuInjector.getInstance(ScheduledQueuedCommandSender.class).close();
+                    chineseMenuInjector.getInstance(SocketConnector.class).shutdown();
                 } catch (IOException ex) {
                     logger.error("Could not stop resources: {}", ex.getMessage());
                 }
