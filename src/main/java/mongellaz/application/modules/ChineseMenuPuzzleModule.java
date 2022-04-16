@@ -13,6 +13,7 @@ import mongellaz.devices.chinesemenupuzzle.ChineseMenuPuzzleControlUi;
 import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuStatusRequestResponseProcessor;
 import mongellaz.devices.chinesemenupuzzle.devicecontroller.ByteArrayControlledChineseMenuDeviceController;
 import mongellaz.devices.chinesemenupuzzle.devicecontroller.ChineseMenuDeviceController;
+import mongellaz.devices.common.togglelock.LockStateObserver;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.VerticalLayoutContainerProvider;
 
@@ -25,6 +26,7 @@ public class ChineseMenuPuzzleModule extends AbstractModule {
         bind(ChineseMenuPuzzleControlUi.class).in(Singleton.class);
         bind(ByteArrayControlledChineseMenuDeviceController.class).in(Singleton.class);
         bind(ComponentHandler.class).to(ChineseMenuPuzzleControlUi.class);
+        bind(LockStateObserver.class).to(ChineseMenuPuzzleControlUi.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("ControlUi")).to(ChineseMenuPuzzleControlUi.class);
         bind(DeviceController.class).to(ByteArrayControlledChineseMenuDeviceController.class);
