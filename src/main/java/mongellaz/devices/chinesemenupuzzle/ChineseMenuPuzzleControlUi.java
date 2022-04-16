@@ -8,9 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 
 @SuppressWarnings("unused")
-public class ChineseMenuPuzzleUi implements ComponentHandler {
+public class ChineseMenuPuzzleControlUi implements ComponentHandler {
     @Inject
-    ChineseMenuPuzzleUi(ChineseMenuDeviceController chineseMenuDeviceController) {
+    ChineseMenuPuzzleControlUi(ChineseMenuDeviceController chineseMenuDeviceController) {
         //TODO
     }
 

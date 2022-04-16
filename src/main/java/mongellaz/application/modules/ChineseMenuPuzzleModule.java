@@ -9,7 +9,7 @@ import com.google.inject.name.Names;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.DeviceController;
 import mongellaz.communication.handshake.HandshakeResponseProcessor;
-import mongellaz.devices.chinesemenupuzzle.ChineseMenuPuzzleUi;
+import mongellaz.devices.chinesemenupuzzle.ChineseMenuPuzzleControlUi;
 import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuStatusRequestResponseProcessor;
 import mongellaz.devices.chinesemenupuzzle.devicecontroller.ByteArrayControlledChineseMenuDeviceController;
 import mongellaz.devices.chinesemenupuzzle.devicecontroller.ChineseMenuDeviceController;
@@ -22,11 +22,11 @@ import java.util.ArrayList;
 public class ChineseMenuPuzzleModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(ChineseMenuPuzzleUi.class).in(Singleton.class);
+        bind(ChineseMenuPuzzleControlUi.class).in(Singleton.class);
         bind(ByteArrayControlledChineseMenuDeviceController.class).in(Singleton.class);
-        bind(ComponentHandler.class).to(ChineseMenuPuzzleUi.class);
+        bind(ComponentHandler.class).to(ChineseMenuPuzzleControlUi.class);
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
-        bind(ComponentHandler.class).annotatedWith(Names.named("ControlUi")).to(ChineseMenuPuzzleUi.class);
+        bind(ComponentHandler.class).annotatedWith(Names.named("ControlUi")).to(ChineseMenuPuzzleControlUi.class);
         bind(DeviceController.class).to(ByteArrayControlledChineseMenuDeviceController.class);
         bind(ChineseMenuDeviceController.class).to(ByteArrayControlledChineseMenuDeviceController.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("HandshakeResponseProcessor")).to(HandshakeResponseProcessor.class);
