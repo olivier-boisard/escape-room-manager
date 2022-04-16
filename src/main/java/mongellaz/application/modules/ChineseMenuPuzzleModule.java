@@ -9,6 +9,7 @@ import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.DeviceController;
 import mongellaz.devices.chinesemenupuzzle.ChineseMenuPuzzleUi;
 import mongellaz.devices.chinesemenupuzzle.devicecontroller.ByteArrayControlledChineseMenuDeviceController;
+import mongellaz.devices.chinesemenupuzzle.devicecontroller.ChineseMenuDeviceController;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.VerticalLayoutContainerProvider;
 
@@ -24,6 +25,7 @@ public class ChineseMenuPuzzleModule extends AbstractModule {
         bind(Container.class).toProvider(VerticalLayoutContainerProvider.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("ControlUi")).to(ChineseMenuPuzzleUi.class);
         bind(DeviceController.class).to(ByteArrayControlledChineseMenuDeviceController.class);
+        bind(ChineseMenuDeviceController.class).to(ByteArrayControlledChineseMenuDeviceController.class);
     }
 
     @SuppressWarnings("unused")

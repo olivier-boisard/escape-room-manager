@@ -1,5 +1,7 @@
 package mongellaz.devices.chinesemenupuzzle;
 
+import com.google.inject.Inject;
+import mongellaz.devices.chinesemenupuzzle.devicecontroller.ChineseMenuDeviceController;
 import mongellaz.userinterface.ComponentHandler;
 
 import javax.swing.*;
@@ -7,6 +9,11 @@ import java.awt.*;
 
 @SuppressWarnings("unused")
 public class ChineseMenuPuzzleUi implements ComponentHandler {
+    @Inject
+    ChineseMenuPuzzleUi(ChineseMenuDeviceController chineseMenuDeviceController) {
+        //TODO
+    }
+
     @Override
     public Component getMainPanel() {
         return mainPanel;
