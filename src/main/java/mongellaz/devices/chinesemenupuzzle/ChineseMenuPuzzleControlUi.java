@@ -16,6 +16,7 @@ import java.awt.*;
 
 @SuppressWarnings("unused")
 public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateObserver, ChineseMenuConfigurationObserver, ChineseMenuWeightObserver {
+
     @Inject
     ChineseMenuPuzzleControlUi(ChineseMenuDeviceController chineseMenuDeviceController) {
         toggleLockButton.addActionListener(e -> {
@@ -32,9 +33,27 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
 
     @Override
     public void update(ChineseMenuConfiguration chineseMenuConfiguration) {
-        minWeightValueLabel.setText(String.valueOf(chineseMenuConfiguration.minWeight()));
-        maxWeightValueLabel.setText(String.valueOf(chineseMenuConfiguration.maxWeight()));
-        minTimeIntervalValueLabel.setText(String.valueOf(chineseMenuConfiguration.holdingTimeMs()));
+        updateCurrentMinWeightInGrams(chineseMenuConfiguration.minWeight());
+        updateCurrentMaxWeightInGrams(chineseMenuConfiguration.maxWeight());
+        updateMinTimeIntervalMs(chineseMenuConfiguration.holdingTimeMs());
+    }
+
+    private void updateCurrentMinWeightInGrams(int currentMinWeightInGrams) {
+        minWeightValueLabel.setText(String.valueOf(currentMinWeightInGrams));
+        minWeightSpinner.setModel(createSpinnerNumberModel(currentMinWeightInGrams));
+        minWeightSpinner.setEnabled(true);
+    }
+
+    private void updateCurrentMaxWeightInGrams(int currentMaxWeightInGrams) {
+        maxWeightValueLabel.setText(String.valueOf(currentMaxWeightInGrams));
+        maxWeightSpinner.setModel(createSpinnerNumberModel(currentMaxWeightInGrams));
+        maxWeightSpinner.setEnabled(true);
+    }
+
+    private void updateMinTimeIntervalMs(int currentMinTimeIntervalInMs) {
+        minTimeIntervalValueLabel.setText(String.valueOf(currentMinTimeIntervalInMs));
+        minTimeIntervalSpinner.setModel(createSpinnerNumberModel(currentMinTimeIntervalInMs));
+        maxWeightSpinner.setEnabled(true);
     }
 
     @Override
@@ -45,6 +64,13 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
     @Override
     public Component getMainPanel() {
         return mainPanel;
+    }
+
+    private SpinnerNumberModel createSpinnerNumberModel(int currentMinWeightInGrams) {
+        int minWeightInGrams = 0;
+        int maxWeightInGrams = 20000;
+        int stepSize = 1;
+        return new SpinnerNumberModel(currentMinWeightInGrams, minWeightInGrams, maxWeightInGrams, stepSize);
     }
 
     private void updateLockButton(LockState lockState) {
@@ -85,6 +111,9 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
     private JLabel minTimeIntervalLabel;
 
     private JLabel minTimeIntervalValueLabel;
+    private JSpinner minWeightSpinner;
+    private JSpinner maxWeightSpinner;
+    private JSpinner minTimeIntervalSpinner;
 
     private final Logger logger = LogManager.getLogger();
 }
