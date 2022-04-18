@@ -23,15 +23,8 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
 
     @Inject
     BookPuzzleControlUi(BookPuzzleDeviceController bookPuzzleDeviceController) {
-        toggleLockButton.addActionListener(e -> {
-            bookPuzzleDeviceController.sendToggleLockCommand();
-            toggleLockButton.setEnabled(false);
-        });
-
-        toggleConfigurationModeButton.addActionListener(e -> {
-            bookPuzzleDeviceController.sendToggleConfigurationModeCommand();
-            toggleConfigurationModeButton.setEnabled(false);
-        });
+        configureToggleLockButton(bookPuzzleDeviceController);
+        configureToggleConfigurationModeButton(bookPuzzleDeviceController);
     }
 
     @Override
@@ -60,6 +53,20 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
             }
         });
         piccReaderStatusesTable.getColumn(STATUS_LABEL_STRING).setCellRenderer(statusStringTableCellRenderer);
+    }
+
+    private void configureToggleLockButton(BookPuzzleDeviceController bookPuzzleDeviceController) {
+        toggleLockButton.addActionListener(e -> {
+            bookPuzzleDeviceController.sendToggleLockCommand();
+            toggleLockButton.setEnabled(false);
+        });
+    }
+
+    private void configureToggleConfigurationModeButton(BookPuzzleDeviceController bookPuzzleDeviceController) {
+        toggleConfigurationModeButton.addActionListener(e -> {
+            bookPuzzleDeviceController.sendToggleConfigurationModeCommand();
+            toggleConfigurationModeButton.setEnabled(false);
+        });
     }
 
     private Vector<Vector<String>> convertToRows(Iterable<PiccReaderStatus> piccReaderStatuses) {
