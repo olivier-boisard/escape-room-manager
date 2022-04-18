@@ -53,7 +53,7 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
     private void updateMinTimeIntervalMs(int currentMinTimeIntervalInMs) {
         minTimeIntervalValueLabel.setText(String.valueOf(currentMinTimeIntervalInMs));
         minTimeIntervalSpinner.setModel(createSpinnerNumberModel(currentMinTimeIntervalInMs));
-        maxWeightSpinner.setEnabled(true);
+        minTimeIntervalSpinner.setEnabled(true);
     }
 
     @Override
