@@ -36,6 +36,7 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
         updateCurrentMinWeightInGrams(chineseMenuConfiguration.minWeight());
         updateCurrentMaxWeightInGrams(chineseMenuConfiguration.maxWeight());
         updateMinTimeIntervalMs(chineseMenuConfiguration.holdingTimeMs());
+        sendConfigurationButton.setEnabled(true);
     }
 
     private void updateCurrentMinWeightInGrams(int currentMinWeightInGrams) {
@@ -114,6 +115,7 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
     private JSpinner minWeightSpinner;
     private JSpinner maxWeightSpinner;
     private JSpinner minTimeIntervalSpinner;
+    private JButton sendConfigurationButton;
 
     private final Logger logger = LogManager.getLogger();
 }
