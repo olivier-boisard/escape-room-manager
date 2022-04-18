@@ -11,8 +11,6 @@ public class ScheduledExecutorQueuedCommandSenderModule extends AbstractModule  
     @Override
     protected void configure() {
         bind(ScheduledExecutorQueuedCommandSender.class).in(Singleton.class);
-        bindConstant().annotatedWith(Names.named("CommunicationManagerInitialDelayMs")).to(5000);
-        bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
         bind(ScheduledQueuedCommandSender.class).to(ScheduledExecutorQueuedCommandSender.class);
         bind(QueuedCommands.class).to(ScheduledExecutorQueuedCommandSender.class);
     }

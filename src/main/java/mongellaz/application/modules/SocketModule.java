@@ -35,6 +35,8 @@ public class SocketModule extends AbstractModule {
         bind(ByteArrayObserver.class)
                 .annotatedWith(Names.named("SocketCommunicationManagerReceivedMessageObserver"))
                 .toProvider(ByteArrayObserverProvider.class);
+        bindConstant().annotatedWith(Names.named("CommunicationManagerInitialDelayMs")).to(0);
+        bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
     }
 
     @SuppressWarnings("ClassCanBeRecord")
