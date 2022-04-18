@@ -19,10 +19,8 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
 
     @Inject
     ChineseMenuPuzzleControlUi(ChineseMenuDeviceController chineseMenuDeviceController) {
-        toggleLockButton.addActionListener(e -> {
-            chineseMenuDeviceController.sendToggleLockCommand();
-            toggleLockButton.setEnabled(false);
-        });
+        configureToggleLockButton(chineseMenuDeviceController);
+        configureSendConfigurationButton(chineseMenuDeviceController);
     }
 
     @Override
@@ -37,6 +35,25 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
         updateCurrentMaxWeightInGrams(chineseMenuConfiguration.maxWeightInGrams());
         updateMinTimeIntervalMs(chineseMenuConfiguration.holdingTimeMs());
         sendConfigurationButton.setEnabled(true);
+    }
+
+    private void configureToggleLockButton(ChineseMenuDeviceController chineseMenuDeviceController) {
+        toggleLockButton.addActionListener(e -> {
+            chineseMenuDeviceController.sendToggleLockCommand();
+            toggleLockButton.setEnabled(false);
+        });
+    }
+
+    private void configureSendConfigurationButton(ChineseMenuDeviceController chineseMenuDeviceController) {
+        sendConfigurationButton.addActionListener(e -> chineseMenuDeviceController.sendConfiguration(getConfiguration()));
+    }
+
+    private ChineseMenuConfiguration getConfiguration() {
+        return new ChineseMenuConfiguration(
+                (Integer) minWeightSpinner.getValue(),
+                (Integer) maxWeightSpinner.getValue(),
+                (Integer) minTimeIntervalSpinner.getValue()
+        );
     }
 
     private void updateCurrentMinWeightInGrams(int currentMinWeightInGrams) {
