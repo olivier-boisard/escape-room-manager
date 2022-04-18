@@ -33,8 +33,8 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
 
     @Override
     public void update(ChineseMenuConfiguration chineseMenuConfiguration) {
-        updateCurrentMinWeightInGrams(chineseMenuConfiguration.minWeight());
-        updateCurrentMaxWeightInGrams(chineseMenuConfiguration.maxWeight());
+        updateCurrentMinWeightInGrams(chineseMenuConfiguration.minWeightInGrams());
+        updateCurrentMaxWeightInGrams(chineseMenuConfiguration.maxWeightInGrams());
         updateMinTimeIntervalMs(chineseMenuConfiguration.holdingTimeMs());
         sendConfigurationButton.setEnabled(true);
     }
