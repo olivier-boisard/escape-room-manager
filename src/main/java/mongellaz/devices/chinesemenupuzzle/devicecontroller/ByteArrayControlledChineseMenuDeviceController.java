@@ -37,6 +37,6 @@ public class ByteArrayControlledChineseMenuDeviceController implements ChineseMe
     private final ChineseMenuPuzzleHandshakeFactory chineseMenuPuzzleHandshakeFactory = new ChineseMenuPuzzleHandshakeFactory();
     private final ChineseMenuStatusRequestFactory chineseMenuStatusRequestFactory = new ChineseMenuStatusRequestFactory();
     private final ChineseMenuConfigureRequestFactory chineseMenuConfigureRequestFactory = new ChineseMenuConfigureRequestFactory();
-    private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
+    private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory((byte) 0x05);
     private final Logger logger = LogManager.getLogger();
 }

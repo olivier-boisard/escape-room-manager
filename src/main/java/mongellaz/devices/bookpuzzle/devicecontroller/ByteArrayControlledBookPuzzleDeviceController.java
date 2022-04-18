@@ -35,7 +35,7 @@ public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzle
 
     private final BookPuzzleHandshakeFactory bookPuzzleHandshakeFactory = new BookPuzzleHandshakeFactory();
     private final BookPuzzleStatusRequestFactory bookPuzzleStatusRequestFactory = new BookPuzzleStatusRequestFactory();
-    private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
+    private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory((byte) 0x30);
     private final ToggleConfigurationModeCommandFactory toggleConfigurationModeCommandFactory = new ToggleConfigurationModeCommandFactory();
     private final QueuedCommands queuedCommands;
     private final Logger logger = LogManager.getLogger();
