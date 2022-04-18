@@ -1,6 +1,7 @@
 package mongellaz.devices.common.togglelock;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.CommunicationException;
 import org.apache.logging.log4j.LogManager;
@@ -11,13 +12,14 @@ import java.util.Arrays;
 public class ToggleLockResponseProcessor implements ByteArrayObserver {
 
     @Inject
-    ToggleLockResponseProcessor(LockStateObserver lockStateObserver) {
+    ToggleLockResponseProcessor(LockStateObserver lockStateObserver, @Named("ToggleLockResponseProcessorExpectedCommandCode") Byte expectedCommandCode) {
         this.lockStateObserver = lockStateObserver;
+        this.expectedCommandCode = expectedCommandCode;
     }
 
     @Override
     public void update(final byte[] response) {
-        if (response[0] == EXPECTED_COMMAND_CODE) {
+        if (response[0] == expectedCommandCode) {
             try {
                 checkResponse(response);
                 runExpectedResponseProcess(response);
@@ -30,7 +32,7 @@ public class ToggleLockResponseProcessor implements ByteArrayObserver {
     }
 
     private void checkResponse(byte[] response) throws CommunicationException {
-        final byte[] expectedResponse = {EXPECTED_COMMAND_CODE, 0x03, (byte) 0xF1};
+        final byte[] expectedResponse = {expectedCommandCode, 0x03, (byte) 0xF1};
         if (!Arrays.equals(Arrays.copyOfRange(response, 0, expectedResponse.length), expectedResponse)) {
             throw new CommunicationException("Unexpected response");
         }
@@ -61,7 +63,8 @@ public class ToggleLockResponseProcessor implements ByteArrayObserver {
         lockStateObserver.update(lockState);
     }
 
+
     private final Logger logger = LogManager.getLogger();
     private final LockStateObserver lockStateObserver;
-    private static final byte EXPECTED_COMMAND_CODE = 0x30;
+    private final byte expectedCommandCode;
 }

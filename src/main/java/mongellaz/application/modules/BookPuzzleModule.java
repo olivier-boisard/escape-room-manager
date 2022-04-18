@@ -43,6 +43,7 @@ public class BookPuzzleModule extends AbstractModule {
         bind(ByteArrayObserver.class).annotatedWith(Names.named("StatusRequestResponseProcessor")).to(BookPuzzleStatusRequestResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("ToggleLockResponseProcessor")).to(ToggleLockResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("ToggleConfigurationModeResponseProcessor")).to(ToggleConfigurationModeResponseProcessor.class);
+        bind(Byte.class).annotatedWith(Names.named("ToggleLockResponseProcessorExpectedCommandCode")).toInstance((byte) 0x30);
         bind(new TypeLiteral<byte[]>() {})
                 .annotatedWith(Names.named("ExpectedDeviceFirmwareId"))
                 .toInstance(new byte[]{-123, -14, -98, -29, 67, 25, -22, -10});

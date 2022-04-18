@@ -37,6 +37,7 @@ public class ChineseMenuPuzzleModule extends AbstractModule {
         bind(ChineseMenuDeviceController.class).to(ByteArrayControlledChineseMenuDeviceController.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("HandshakeResponseProcessor")).to(HandshakeResponseProcessor.class);
         bind(ByteArrayObserver.class).annotatedWith(Names.named("StatusRequestResponseProcessor")).to(ChineseMenuStatusRequestResponseProcessor.class);
+        bind(Byte.class).annotatedWith(Names.named("ToggleLockResponseProcessorExpectedCommandCode")).toInstance((byte) 0x05);
         bind(new TypeLiteral<byte[]>() {})
                 .annotatedWith(Names.named("ExpectedDeviceFirmwareId"))
                 .toInstance(new byte[]{0x30, 0x2B, 0x2A, 0x74, (byte) 0xCC, (byte) 0xAF, 0x59, (byte) 0x86});
