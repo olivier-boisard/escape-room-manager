@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class ChineseMenuConfigureRequestFactory {
     public byte[] generate(ChineseMenuConfiguration chineseMenuConfiguration) {
-        final byte configureCode = 0x30;
+        final byte configureCode = 0x21;
         final byte endMessageCode = 0x00;
         final int outputBufferSize = 64;
         final byte[] outputBuffer = new byte[outputBufferSize];
