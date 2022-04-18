@@ -58,20 +58,14 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
 
     private void updateCurrentMinWeightInGrams(int currentMinWeightInGrams) {
         minWeightValueLabel.setText(String.valueOf(currentMinWeightInGrams));
-        minWeightSpinner.setModel(createSpinnerNumberModel(currentMinWeightInGrams));
-        minWeightSpinner.setEnabled(true);
     }
 
     private void updateCurrentMaxWeightInGrams(int currentMaxWeightInGrams) {
         maxWeightValueLabel.setText(String.valueOf(currentMaxWeightInGrams));
-        maxWeightSpinner.setModel(createSpinnerNumberModel(currentMaxWeightInGrams));
-        maxWeightSpinner.setEnabled(true);
     }
 
     private void updateMinTimeIntervalMs(int currentMinTimeIntervalInMs) {
         minTimeIntervalValueLabel.setText(String.valueOf(currentMinTimeIntervalInMs));
-        minTimeIntervalSpinner.setModel(createSpinnerNumberModel(currentMinTimeIntervalInMs));
-        minTimeIntervalSpinner.setEnabled(true);
     }
 
     @Override
