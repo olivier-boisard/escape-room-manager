@@ -2,6 +2,8 @@ package mongellaz.devices.chinesemenupuzzle.devicecontroller;
 
 import com.google.inject.Inject;
 import mongellaz.communication.manager.QueuedCommands;
+import mongellaz.devices.chinesemenupuzzle.commands.configure.ChineseMenuConfiguration;
+import mongellaz.devices.chinesemenupuzzle.commands.configure.ChineseMenuConfigureRequestFactory;
 import mongellaz.devices.chinesemenupuzzle.commands.handshake.ChineseMenuPuzzleHandshakeFactory;
 import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuStatusRequestFactory;
 import mongellaz.devices.common.togglelock.ToggleLockCommandFactory;
@@ -28,12 +30,13 @@ public class ByteArrayControlledChineseMenuDeviceController implements ChineseMe
 
     @Override
     public void sendConfiguration(ChineseMenuConfiguration chineseMenuConfiguration) {
-        //TODO
+        queuedCommands.queueCommand(chineseMenuConfigureRequestFactory.generate(chineseMenuConfiguration));
     }
 
     private final QueuedCommands queuedCommands;
     private final ChineseMenuPuzzleHandshakeFactory chineseMenuPuzzleHandshakeFactory = new ChineseMenuPuzzleHandshakeFactory();
     private final ChineseMenuStatusRequestFactory chineseMenuStatusRequestFactory = new ChineseMenuStatusRequestFactory();
+    private final ChineseMenuConfigureRequestFactory chineseMenuConfigureRequestFactory = new ChineseMenuConfigureRequestFactory();
     private final ToggleLockCommandFactory toggleLockCommandFactory = new ToggleLockCommandFactory();
     private final Logger logger = LogManager.getLogger();
 }

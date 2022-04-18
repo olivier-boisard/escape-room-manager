@@ -1,9 +1,9 @@
 package mongellaz.devices.chinesemenupuzzle;
 
 import com.google.inject.Inject;
-import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuConfigurationObserver;
+import mongellaz.devices.chinesemenupuzzle.commands.configure.ChineseMenuConfigurationObserver;
 import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuWeightObserver;
-import mongellaz.devices.chinesemenupuzzle.devicecontroller.ChineseMenuConfiguration;
+import mongellaz.devices.chinesemenupuzzle.commands.configure.ChineseMenuConfiguration;
 import mongellaz.devices.chinesemenupuzzle.devicecontroller.ChineseMenuDeviceController;
 import mongellaz.devices.common.togglelock.LockState;
 import mongellaz.devices.common.togglelock.LockStateObserver;

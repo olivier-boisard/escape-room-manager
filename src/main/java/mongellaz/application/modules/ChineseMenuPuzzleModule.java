@@ -10,7 +10,7 @@ import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.DeviceController;
 import mongellaz.communication.handshake.HandshakeResponseProcessor;
 import mongellaz.devices.chinesemenupuzzle.ChineseMenuPuzzleControlUi;
-import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuConfigurationObserver;
+import mongellaz.devices.chinesemenupuzzle.commands.configure.ChineseMenuConfigurationObserver;
 import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuStatusRequestResponseProcessor;
 import mongellaz.devices.chinesemenupuzzle.commands.statusrequest.ChineseMenuWeightObserver;
 import mongellaz.devices.chinesemenupuzzle.devicecontroller.ByteArrayControlledChineseMenuDeviceController;
