@@ -31,7 +31,7 @@ public class SocketConnector implements SocketObserver {
     }
 
     private void startReader(Socket socket) {
-        int initialDelayMs=0;
+        int initialDelayMs = 0;
         int rateMs = 100;
         dataReaderExecutorService.scheduleAtFixedRate(
                 (new SocketDataRetriever(socket, socketCommunicationManager.receivedMessageObserver))::loop,
