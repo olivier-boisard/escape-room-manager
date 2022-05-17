@@ -6,10 +6,7 @@ import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.ByteArrayObserversStack;
 import mongellaz.communication.Heartbeat;
 import mongellaz.communication.handshake.HandshakeResultObserver;
-import mongellaz.communication.implementations.socket.SocketConfigurationHandler;
-import mongellaz.communication.implementations.socket.SocketConnectionUi;
-import mongellaz.communication.implementations.socket.SocketConnector;
-import mongellaz.communication.implementations.socket.SocketObserver;
+import mongellaz.communication.implementations.socket.*;
 import mongellaz.communication.manager.QueuedCommands;
 import mongellaz.communication.manager.ScheduledExecutorQueuedCommandSender;
 import mongellaz.userinterface.ComponentHandler;
@@ -32,6 +29,7 @@ public class SocketModule extends AbstractModule {
         bind(ComponentHandler.class).annotatedWith(Names.named("ConnectionUi")).to(SocketConnectionUi.class);
         bind(HandshakeResultObserver.class).to(SocketConnectionUi.class);
         bind(QueuedCommands.class).to(ScheduledExecutorQueuedCommandSender.class);
+        bind(ConnectionFailedCallback.class).to(SocketConnectionUi.class);
         bind(ByteArrayObserver.class)
                 .annotatedWith(Names.named("SocketCommunicationManagerReceivedMessageObserver"))
                 .toProvider(ByteArrayObserverProvider.class);
