@@ -1,6 +1,8 @@
 package mongellaz.devices.bookpuzzle.commands.statusrequest;
 
-public class BookPuzzleStatusRequestFactory {
+import mongellaz.communication.ByteArrayGenerator;
+
+public class BookPuzzleStatusRequestFactory implements ByteArrayGenerator {
     public byte[] generate() {
         final byte statusRequest = 0x20;
         final byte endOfTransmission = 0x00;
