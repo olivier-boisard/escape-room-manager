@@ -1,5 +1,7 @@
 package mongellaz.devices.chinesemenupuzzle.commands.configure;
 
+import mongellaz.communication.ByteArrayGenerator;
+
 import java.util.Arrays;
 
 public class ChineseMenuConfigureRequestFactory {
