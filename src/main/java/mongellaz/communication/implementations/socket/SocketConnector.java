@@ -16,14 +16,22 @@ public class SocketConnector implements SocketObserver {
     SocketConnector(SocketCommunicationManager socketCommunicationManager, DeviceController deviceController) {
         this.socketCommunicationManager = socketCommunicationManager;
         this.deviceController = deviceController;
+        socketQueuedCommandSender = new SocketQueuedCommandSender();
+        isRunning = false;
     }
 
     @Override
     public void update(Socket socket) {
-        logger.info("Starting socket connector");
-        startReader(socket);
-        updateCommandSender(socket);
-        startDeviceController();
+        if (!isRunning) {
+            logger.info("Starting socket connector");
+            startReader(socket);
+            updateCommandSender(socket);
+            startDeviceController();
+            isRunning = true;
+        } else {
+            logger.info("Updating socket");
+            socketQueuedCommandSender.update(socket);
+        }
     }
 
     public void shutdown() {
@@ -31,7 +39,7 @@ public class SocketConnector implements SocketObserver {
     }
 
     private void startReader(Socket socket) {
-        int initialDelayMs=0;
+        int initialDelayMs = 0;
         int rateMs = 100;
         dataReaderExecutorService.scheduleAtFixedRate(
                 (new SocketDataRetriever(socket, socketCommunicationManager.receivedMessageObserver))::loop,
@@ -42,15 +50,18 @@ public class SocketConnector implements SocketObserver {
     }
 
     private void updateCommandSender(Socket socket) {
-        socketCommunicationManager.scheduledQueuedCommandSender.updateQueuedCommandSender(new SocketQueuedCommandSender(socket));
+        socketQueuedCommandSender.update(socket);
+        socketCommunicationManager.scheduledQueuedCommandSender.updateQueuedCommandSender(socketQueuedCommandSender);
     }
 
     private void startDeviceController() {
         deviceController.start();
     }
 
+    private final SocketQueuedCommandSender socketQueuedCommandSender;
     private final SocketCommunicationManager socketCommunicationManager;
     private final DeviceController deviceController;
+    private boolean isRunning;
     private final Logger logger = LogManager.getLogger();
     private final ScheduledExecutorService dataReaderExecutorService = Executors.newSingleThreadScheduledExecutor();
 

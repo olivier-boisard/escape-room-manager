@@ -10,13 +10,7 @@ import java.net.Socket;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class SocketQueuedCommandSender implements QueuedCommandSender {
-    public SocketQueuedCommandSender(Socket socket) {
-        this.socket = socket;
-    }
-
-    private final Socket socket;
-
+public class SocketQueuedCommandSender implements QueuedCommandSender, SocketObserver {
     @Override
     public void sendNextCommand() {
         byte[] command = commands.poll();
@@ -38,16 +32,23 @@ public class SocketQueuedCommandSender implements QueuedCommandSender {
 
     @Override
     public void shutdown() {
-        if (!socket.isClosed()) {
-            try {
+        try {
+            if (socket != null && !socket.isClosed()) {
                 socket.close();
                 logger.info("Closed socket");
-            } catch (IOException e) {
-                logger.error("Could not close socket: {}", e.getMessage());
             }
+        } catch (IOException e) {
+            logger.error("Could not close socket: {}", e.getMessage());
         }
     }
 
+    @Override
+    public void update(Socket socket) {
+        this.socket = socket;
+    }
+
+    private Socket socket;
     private final Queue<byte[]> commands = new ConcurrentLinkedQueue<>();
+
     private final Logger logger = LogManager.getLogger();
 }
