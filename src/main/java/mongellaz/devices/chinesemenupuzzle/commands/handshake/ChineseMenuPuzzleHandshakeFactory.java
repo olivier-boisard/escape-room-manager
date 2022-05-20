@@ -1,8 +1,6 @@
 package mongellaz.devices.chinesemenupuzzle.commands.handshake;
 
-import mongellaz.communication.ByteArrayGenerator;
-
-public class ChineseMenuPuzzleHandshakeFactory implements ByteArrayGenerator {
+public class ChineseMenuPuzzleHandshakeFactory {
     public byte[] generate() {
         // Variable declarations
         final byte handshakeCode = 0x10;

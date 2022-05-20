@@ -1,9 +1,6 @@
 package mongellaz.devices.bookpuzzle.commands.handshake;
 
-import mongellaz.communication.ByteArrayGenerator;
-
-public class BookPuzzleHandshakeFactory implements ByteArrayGenerator {
-    @Override
+public class BookPuzzleHandshakeFactory {
     public byte[] generate() {
         // Variable declarations
         final byte handshakeCode = 0x10;

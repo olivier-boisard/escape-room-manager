@@ -1,8 +1,6 @@
 package mongellaz.devices.bookpuzzle.commands.toggleconfigurationmode;
 
-import mongellaz.communication.ByteArrayGenerator;
-
-public class ToggleConfigurationModeCommandFactory implements ByteArrayGenerator {
+public class ToggleConfigurationModeCommandFactory {
     public byte[] generate() {
         final byte lockCommand = 0x40;
         final byte toggle = 0x03;
