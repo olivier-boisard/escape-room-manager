@@ -1,8 +1,6 @@
 package mongellaz.devices.chinesemenupuzzle.commands.statusrequest;
 
-import mongellaz.communication.ByteArrayGenerator;
-
-public class ChineseMenuStatusRequestFactory implements ByteArrayGenerator {
+public class ChineseMenuStatusRequestFactory {
     public byte[] generate() {
         final byte statusRequest = 0x20;
         final byte endOfTransmission = 0x00;
