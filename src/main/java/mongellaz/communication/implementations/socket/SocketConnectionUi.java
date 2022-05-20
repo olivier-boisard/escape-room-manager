@@ -14,10 +14,10 @@ import java.io.IOException;
 import java.net.Socket;
 
 @SuppressWarnings("unused")
-public class SocketConnectionUi implements ComponentHandler, HandshakeResultObserver, ConnectionFailedCallback {
+public class SocketConnectionUi implements ComponentHandler, HandshakeResultObserver {
 
     @Inject
-    SocketConnectionUi(Iterable<SocketObserver> socketObservers, @Nullable SocketConfigurationHandler socketConfigurationHandler) {
+    SocketConnectionUi(SocketObserver socketObserver, @Nullable SocketConfigurationHandler socketConfigurationHandler) {
         int serverPort = 165;
         if (socketConfigurationHandler != null) {
             socketHostNameTextField.setText(socketConfigurationHandler.getHostName());
@@ -29,20 +29,13 @@ public class SocketConnectionUi implements ComponentHandler, HandshakeResultObse
                     socketConfigurationHandler.setHostName(hostName);
                 }
                 Socket socket = new Socket(hostName, serverPort);
-                for (SocketObserver socketObserver : socketObservers) {
-                    socketObserver.update(socket);
-                }
+                socketObserver.update(socket);
             } catch (IOException ex) {
-                handleFailedConnection(ex.getMessage());
+                logger.error("Could not connect to socket: {}", ex.getMessage());
+                connectionStatus.setText("Non connecté");
+                connectionStatus.setForeground(Color.RED);
             }
         });
-    }
-
-    @Override
-    public void handleFailedConnection(String message) {
-        logger.error("Could not connect to socket: {}", message);
-        connectionStatus.setText("Non connecté");
-        connectionStatus.setForeground(Color.RED);
     }
 
     @Override
@@ -71,12 +64,12 @@ public class SocketConnectionUi implements ComponentHandler, HandshakeResultObse
     public Component getMainPanel() {
         return mainPanel;
     }
+
     private JLabel ipAddressLabel;
     private JTextField socketHostNameTextField;
     private JButton connectionButton;
     private JPanel mainPanel;
     private JLabel connectionStatus;
     private SocketConfigurationHandler socketConfigurationHandler;
-
     private final Logger logger = LogManager.getLogger();
 }

@@ -3,7 +3,6 @@ package mongellaz.application;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import mongellaz.application.modules.*;
-import mongellaz.communication.Heartbeat;
 import mongellaz.communication.implementations.socket.SocketConnector;
 import mongellaz.communication.manager.ScheduledQueuedCommandSender;
 import mongellaz.userinterface.GraphicalUserInterface;
@@ -53,10 +52,8 @@ public class Application {
                     wifiConfigurationInjector.getInstance(ScheduledQueuedCommandSender.class).close();
                     bookPuzzleInjector.getInstance(ScheduledQueuedCommandSender.class).close();
                     bookPuzzleInjector.getInstance(SocketConnector.class).shutdown();
-                    bookPuzzleInjector.getInstance(Heartbeat.class).shutdown();
                     chineseMenuInjector.getInstance(ScheduledQueuedCommandSender.class).close();
                     chineseMenuInjector.getInstance(SocketConnector.class).shutdown();
-                    chineseMenuInjector.getInstance(Heartbeat.class).shutdown();
                 } catch (IOException ex) {
                     logger.error("Could not stop resources: {}", ex.getMessage());
                 }

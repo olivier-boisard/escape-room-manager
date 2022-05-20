@@ -1,10 +1,12 @@
 package mongellaz.application.modules;
 
-import com.google.inject.*;
+import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.ByteArrayObserversStack;
-import mongellaz.communication.Heartbeat;
 import mongellaz.communication.handshake.HandshakeResultObserver;
 import mongellaz.communication.implementations.socket.SocketConfigurationHandler;
 import mongellaz.communication.implementations.socket.SocketConnectionUi;
@@ -14,9 +16,6 @@ import mongellaz.communication.manager.QueuedCommands;
 import mongellaz.communication.manager.ScheduledExecutorQueuedCommandSender;
 import mongellaz.userinterface.ComponentHandler;
 import mongellaz.userinterface.PersistentConfigurationHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SocketModule extends AbstractModule {
     public SocketModule(String nameSpace) {
@@ -31,20 +30,13 @@ public class SocketModule extends AbstractModule {
         bind(SocketConfigurationHandler.class).to(PersistentConfigurationHandler.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("ConnectionUi")).to(SocketConnectionUi.class);
         bind(HandshakeResultObserver.class).to(SocketConnectionUi.class);
+        bind(SocketObserver.class).to(SocketConnector.class);
         bind(QueuedCommands.class).to(ScheduledExecutorQueuedCommandSender.class);
         bind(ByteArrayObserver.class)
                 .annotatedWith(Names.named("SocketCommunicationManagerReceivedMessageObserver"))
                 .toProvider(ByteArrayObserverProvider.class);
         bindConstant().annotatedWith(Names.named("CommunicationManagerInitialDelayMs")).to(0);
         bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
-    }
-
-    @Provides
-    private static Iterable<SocketObserver> provideSocketObservers(SocketConnector socketConnector, Heartbeat heartbeat) {
-        List<SocketObserver> socketObservers = new ArrayList<>();
-        socketObservers.add(socketConnector);
-        socketObservers.add(heartbeat);
-        return socketObservers;
     }
 
     @SuppressWarnings("ClassCanBeRecord")
