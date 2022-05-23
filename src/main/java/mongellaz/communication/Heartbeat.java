@@ -19,7 +19,7 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
     @Inject
     Heartbeat(
             QueuedCommands queuedCommands,
-            ByteArrayGenerator byteArrayGenerator,
+            @Named("HeartBeatByteArrayGenerator") ByteArrayGenerator byteArrayGenerator,
             @Named("HeartBeatNewSocketObserver") SocketObserver timeoutCallback,
             ConnectionFailedCallback connectionFailedCallback
     ) {

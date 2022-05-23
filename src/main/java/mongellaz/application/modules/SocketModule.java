@@ -24,6 +24,7 @@ public class SocketModule extends AbstractModule {
     protected void configure() {
         bind(SocketConnector.class).in(Singleton.class);
         bind(SocketConnectionUi.class).in(Singleton.class);
+        bind(Heartbeat.class).in(Singleton.class);
         bind(String.class).annotatedWith(Names.named("PersistentConfigurationHandlerNameSpace")).toInstance(nameSpace);
         bind(SocketConfigurationHandler.class).to(PersistentConfigurationHandler.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("ConnectionUi")).to(SocketConnectionUi.class);

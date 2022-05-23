@@ -29,11 +29,13 @@ public class Application {
         Injector bookPuzzleInjector = Guice.createInjector(
                 new BookPuzzleModule(),
                 new SocketModule("BookPuzzle"),
+                new BookPuzzleSocketModule(),
                 new ScheduledExecutorQueuedCommandSenderModule()
         );
         Injector chineseMenuInjector = Guice.createInjector(
                 new ChineseMenuPuzzleModule(),
                 new SocketModule("ChineseMenuPuzzle"),
+                new ChineseMenuPuzzleSocketModule(),
                 new ScheduledExecutorQueuedCommandSenderModule()
         );
 
