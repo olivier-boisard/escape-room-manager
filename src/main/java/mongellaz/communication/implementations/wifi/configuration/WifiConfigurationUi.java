@@ -6,6 +6,8 @@ import mongellaz.devices.wifi.commands.connection.ConnectionStateObserver;
 import mongellaz.devices.wifi.commands.connection.WifiConfiguration;
 import mongellaz.devices.wifi.commands.connection.WifiConfigurationObserver;
 import mongellaz.userinterface.ComponentHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +24,7 @@ public class WifiConfigurationUi implements ComponentHandler, ConnectionStateObs
 
     @Override
     public void update(ConnectionState connectionState) {
+        logger.debug("Received connection state: {}", connectionState);
         if (connectionState.success()) {
             int[] ipAddress = connectionState.ipAddress();
             String ipAddressStr = ipAddress[0] + "." + ipAddress[1] + "." + ipAddress[2] + "." + ipAddress[3];
@@ -46,6 +49,7 @@ public class WifiConfigurationUi implements ComponentHandler, ConnectionStateObs
         return mainPanel;
     }
 
+    private final Logger logger=LogManager.getLogger();
     private JLabel ssidLabel;
     private JLabel passwordLabel;
     private JTextField ssidTextField;

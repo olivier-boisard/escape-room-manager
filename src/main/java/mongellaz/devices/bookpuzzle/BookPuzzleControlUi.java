@@ -34,18 +34,21 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
 
     @Override
     public void update(LockState lockState) {
+        logger.debug("Update lock state");
         updateLockButton(lockState);
         updateLockStatus(lockState);
     }
 
     @Override
     public void update(ConfigurationModeState configurationModeState) {
+        logger.debug("Update configuration mode state");
         updateConfigurationModeButton(configurationModeState);
         updateConfigurationModeState(configurationModeState);
     }
 
     @Override
     public void update(Iterable<PiccReaderStatus> piccReaderStatuses) {
+        logger.debug("Update PICC reader status");
         piccReaderStatusesTable.setModel(new DefaultTableModel(convertToRows(piccReaderStatuses), getColumnNames()){
             @Override
             public boolean isCellEditable(int row, int column) {

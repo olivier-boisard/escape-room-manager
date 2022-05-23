@@ -47,6 +47,7 @@ public class SocketConnectionUi implements ComponentHandler, HandshakeResultObse
 
     @Override
     public void update(HandshakeResult handshakeResult) {
+        logger.debug("Received handshake results: {}", handshakeResult);
         String connectionStatusString = null;
         Color textColor = null;
         if (handshakeResult == HandshakeResult.SUCCESS) {

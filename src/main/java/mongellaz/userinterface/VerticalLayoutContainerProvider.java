@@ -6,7 +6,6 @@ import com.google.inject.Provider;
 import javax.swing.*;
 import java.awt.*;
 
-@SuppressWarnings("ClassCanBeRecord")
 public class VerticalLayoutContainerProvider implements Provider<Container> {
 
     @Inject

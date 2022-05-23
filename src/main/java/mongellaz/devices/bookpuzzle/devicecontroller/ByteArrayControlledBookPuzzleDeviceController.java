@@ -25,11 +25,13 @@ public class ByteArrayControlledBookPuzzleDeviceController implements BookPuzzle
 
     @Override
     public void sendToggleLockCommand() {
+        logger.debug("Send toggle lock command");
         queuedCommands.queueCommand(toggleLockCommandFactory.generate());
     }
 
     @Override
     public void sendToggleConfigurationModeCommand() {
+        logger.debug("Send configuration mode command");
         queuedCommands.queueCommand(toggleConfigurationModeCommandFactory.generate());
     }
 

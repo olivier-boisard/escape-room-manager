@@ -28,6 +28,7 @@ public class ScheduledExecutorQueuedCommandSender implements ScheduledQueuedComm
 
     @Override
     public void start() {
+        logger.info("Starting execution service");
         commandWriterExecutorService.scheduleAtFixedRate(
                 queuedCommandSender::sendNextCommand,
                 initialDelayMs,
@@ -47,6 +48,7 @@ public class ScheduledExecutorQueuedCommandSender implements ScheduledQueuedComm
 
     @Override
     public void updateQueuedCommandSender(QueuedCommandSender queuedCommandSender) {
+        logger.debug("Received new queued command sender");
         this.queuedCommandSender = queuedCommandSender;
         start();
     }

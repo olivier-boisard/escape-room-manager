@@ -18,6 +18,7 @@ public class ToggleConfigurationModeResponseProcessor implements ByteArrayObserv
     @Override
     public void update(final byte[] response) {
         if (response[0] == EXPECTED_COMMAND_CODE) {
+            logger.debug("Processing command: {}", response);
             try {
                 checkResponse(response);
                 runResponseIsValidProcess(response[3]);

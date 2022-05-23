@@ -25,12 +25,14 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
 
     @Override
     public void update(LockState lockState) {
+        logger.debug("Update lock state: {}", lockState);
         updateLockButton(lockState);
         updateLockStatus(lockState);
     }
 
     @Override
     public void update(ChineseMenuConfiguration chineseMenuConfiguration) {
+        logger.debug("Update configuration");
         updateCurrentMinWeightInGrams(chineseMenuConfiguration.minWeightInGrams());
         updateCurrentMaxWeightInGrams(chineseMenuConfiguration.maxWeightInGrams());
         updateMinTimeIntervalMs(chineseMenuConfiguration.holdingTimeMs());
@@ -57,19 +59,23 @@ public class ChineseMenuPuzzleControlUi implements ComponentHandler, LockStateOb
     }
 
     private void updateCurrentMinWeightInGrams(int currentMinWeightInGrams) {
+        logger.debug("Update current min weight in grams:{}", currentMinWeightInGrams);
         minWeightValueLabel.setText(String.valueOf(currentMinWeightInGrams));
     }
 
     private void updateCurrentMaxWeightInGrams(int currentMaxWeightInGrams) {
+        logger.debug("Update current max weight in grams:{}", currentMaxWeightInGrams);
         maxWeightValueLabel.setText(String.valueOf(currentMaxWeightInGrams));
     }
 
     private void updateMinTimeIntervalMs(int currentMinTimeIntervalInMs) {
+        logger.debug("Update current min interval in ms: {}", currentMinTimeIntervalInMs);
         minTimeIntervalValueLabel.setText(String.valueOf(currentMinTimeIntervalInMs));
     }
 
     @Override
     public void update(int weightInGrams) {
+        logger.debug("Update weight in grams: {}", weightInGrams);
         currentWeightValueLabel.setText(weightInGrams + "g");
     }
 

@@ -36,6 +36,8 @@ public class SocketQueuedCommandSender implements QueuedCommandSender {
             if (socket != null && !socket.isClosed()) {
                 socket.close();
                 logger.info("Closed socket");
+            } else {
+                logger.debug("No socket to close");
             }
         } catch (IOException e) {
             logger.error("Could not close socket: {}", e.getMessage());

@@ -4,6 +4,8 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 import mongellaz.communication.ByteArrayObserver;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -32,6 +34,7 @@ public class ByteArrayObserversStackSerialPortMessageListener implements SerialP
 
     @Override
     public void serialEvent(SerialPortEvent event) {
+        logger.debug("Received serial event");
         final byte[] message = event.getReceivedData();
         final int messageDelimiterSize = getMessageDelimiter().length;
         final byte[] trimmedMessage = Arrays.copyOfRange(message, 0, message.length - messageDelimiterSize);
@@ -41,4 +44,5 @@ public class ByteArrayObserversStackSerialPortMessageListener implements SerialP
     }
 
     private final List<ByteArrayObserver> byteArrayObservers = new LinkedList<>();
+    private final Logger logger= LogManager.getLogger();
 }

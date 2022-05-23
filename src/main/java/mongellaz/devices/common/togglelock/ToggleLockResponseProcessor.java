@@ -20,6 +20,7 @@ public class ToggleLockResponseProcessor implements ByteArrayObserver {
     @Override
     public void update(final byte[] response) {
         if (response[0] == expectedCommandCode) {
+            logger.debug("Processing response: {}", response);
             try {
                 checkResponse(response);
                 runExpectedResponseProcess(response);

@@ -35,10 +35,12 @@ public class SocketConnector implements SocketObserver {
     }
 
     public void shutdown() {
+        logger.debug("Shutdown");
         dataReaderExecutorService.shutdown();
     }
 
     private void startReader(Socket socket) {
+        logger.info("Start service for reader");
         int initialDelayMs = 0;
         int rateMs = 100;
         dataReaderExecutorService.scheduleAtFixedRate(
@@ -50,11 +52,13 @@ public class SocketConnector implements SocketObserver {
     }
 
     private void updateCommandSender(Socket socket) {
+        logger.debug("Update command sender");
         socketQueuedCommandSender.setSocket(socket);
         socketCommunicationManager.scheduledQueuedCommandSender.updateQueuedCommandSender(socketQueuedCommandSender);
     }
 
     private void startDeviceController() {
+        logger.info("Start device controller");
         deviceController.start();
     }
 

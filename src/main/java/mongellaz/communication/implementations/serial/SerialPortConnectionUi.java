@@ -37,6 +37,7 @@ public class SerialPortConnectionUi implements ComponentHandler, HandshakeResult
             if (selectedSerialPort == null) {
                 logger.error("Invalid serial port {}", selectedItem);
             } else {
+                logger.info("Found valid serial port {}", selectedItem);
                 serialPortObserver.update(selectedSerialPort);
             }
 

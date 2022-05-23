@@ -15,6 +15,7 @@ public class HandshakeResponseProcessor implements ByteArrayObserver {
             @Named("ExpectedDeviceFirmwareId") byte[] expectedDeviceFirmwareId,
             HandshakeResultObserver handshakeResultObserver
     ) {
+        logger.debug("Create instance");
         this.expectedDeviceFirmwareId = expectedDeviceFirmwareId;
         this.handshakeResultObserver = handshakeResultObserver;
     }
@@ -30,9 +31,7 @@ public class HandshakeResponseProcessor implements ByteArrayObserver {
                 logger.info("Received expected response");
             } else {
                 handshakeResult = HandshakeResult.FAILURE;
-                if (logger.isErrorEnabled()) {
-                    logger.error("Invalid response: {}", Arrays.toString(response));
-                }
+                logger.error("Invalid response: {}", response);
             }
             notifyHandshakeResultObserver(handshakeResult);
         } else {
@@ -41,6 +40,7 @@ public class HandshakeResponseProcessor implements ByteArrayObserver {
     }
 
     private void notifyHandshakeResultObserver(HandshakeResult wifiHandshakeResult) {
+        logger.debug("Notify");
         handshakeResultObserver.update(wifiHandshakeResult);
     }
 

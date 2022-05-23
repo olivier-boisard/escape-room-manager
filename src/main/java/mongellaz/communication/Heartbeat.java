@@ -40,7 +40,7 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
     }
 
     public void shutdown() {
-        logger.info("Shut down");
+        logger.info("Shutdown");
         messageSendingExecutorService.shutdown();
         watchDogExecutorService.shutdown();
     }

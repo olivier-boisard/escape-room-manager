@@ -19,10 +19,10 @@ public class SerialPortConnector implements SerialPortObserver {
 
     @Override
     public void update(SerialPort serialPort) {
-        logger.info("Establishing connection with serial port");
         if (!serialPort.openPort()) {
             logger.error("Could not connect to serial port");
         } else {
+            logger.info("Established connection with serial port");
             serialPort.addDataListener(serialPortCommunicationManager.serialPortMessageListener);
             serialPortCommunicationManager.scheduledQueuedCommandSender.updateQueuedCommandSender(new SerialPortQueuedCommandSender(serialPort));
             deviceController.start();

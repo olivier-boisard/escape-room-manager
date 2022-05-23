@@ -20,6 +20,8 @@ public class SerialPortQueuedCommandSender implements QueuedCommandSender {
         if (command != null) {
             logger.info("Sending command to serial port: {}", command);
             serialPort.writeBytes(command, command.length);
+        } else {
+            logger.debug("No command to send");
         }
     }
 

@@ -25,11 +25,13 @@ public class ByteArrayControlledChineseMenuDeviceController implements ChineseMe
 
     @Override
     public void sendToggleLockCommand() {
+        logger.debug("Send toggle lock command");
         queuedCommands.queueCommand(toggleLockCommandFactory.generate());
     }
 
     @Override
     public void sendConfiguration(ChineseMenuConfiguration chineseMenuConfiguration) {
+        logger.debug("Send configuration command");
         queuedCommands.queueCommand(chineseMenuConfigureRequestFactory.generate(chineseMenuConfiguration));
     }
 
