@@ -29,8 +29,8 @@ public class SocketDataRetriever {
                         logger.warn("Reached end of stream");
                     }
                     totalReadBytes += readBytes;
-                    dispatchReadData(buffer, totalReadBytes);
                 } while (buffer[totalReadBytes - 1] != MESSAGE_END_CODE);
+                dispatchReadData(buffer, totalReadBytes);
             } catch (IOException e) {
                 logger.error("Could not get socket input stream: {}", e.getMessage());
             }
