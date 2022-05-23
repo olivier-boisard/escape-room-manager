@@ -6,10 +6,7 @@ import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.ByteArrayObserversStack;
 import mongellaz.communication.Heartbeat;
 import mongellaz.communication.handshake.HandshakeResultObserver;
-import mongellaz.communication.implementations.socket.SocketConfigurationHandler;
-import mongellaz.communication.implementations.socket.SocketConnectionUi;
-import mongellaz.communication.implementations.socket.SocketConnector;
-import mongellaz.communication.implementations.socket.SocketObserver;
+import mongellaz.communication.implementations.socket.*;
 import mongellaz.communication.manager.QueuedCommands;
 import mongellaz.communication.manager.ScheduledExecutorQueuedCommandSender;
 import mongellaz.userinterface.ComponentHandler;
@@ -25,7 +22,7 @@ public class SocketModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(SocketConnector.class);
+        bind(SocketConnector.class).in(Singleton.class);
         bind(SocketConnectionUi.class).in(Singleton.class);
         bind(String.class).annotatedWith(Names.named("PersistentConfigurationHandlerNameSpace")).toInstance(nameSpace);
         bind(SocketConfigurationHandler.class).to(PersistentConfigurationHandler.class);
@@ -35,6 +32,8 @@ public class SocketModule extends AbstractModule {
         bind(ByteArrayObserver.class)
                 .annotatedWith(Names.named("SocketCommunicationManagerReceivedMessageObserver"))
                 .toProvider(ByteArrayObserverProvider.class);
+        bind(ConnectionFailedCallback.class).to(SocketConnectionUi.class);
+        bind(SocketObserver.class).annotatedWith(Names.named("HeartBeatNewSocketObserver")).to(SocketConnector.class);
         bindConstant().annotatedWith(Names.named("CommunicationManagerInitialDelayMs")).to(0);
         bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
     }
@@ -51,8 +50,9 @@ public class SocketModule extends AbstractModule {
     private static class ByteArrayObserverProvider implements Provider<ByteArrayObserver> {
 
         @Inject
-        ByteArrayObserverProvider(Iterable<ByteArrayObserver> responseObservers) {
+        ByteArrayObserverProvider(Iterable<ByteArrayObserver> responseObservers, Heartbeat heartbeat) {
             this.responseObservers = responseObservers;
+            this.heartbeat = heartbeat;
         }
 
         @Override
@@ -61,10 +61,13 @@ public class SocketModule extends AbstractModule {
             for (ByteArrayObserver responseObserver : responseObservers) {
                 byteArrayObserversStack.addByteArrayObserver(responseObserver);
             }
+            byteArrayObserversStack.addByteArrayObserver(heartbeat);
             return byteArrayObserversStack;
         }
 
+
         private final Iterable<ByteArrayObserver> responseObservers;
+        private final Heartbeat heartbeat;
     }
 
     private final String nameSpace;

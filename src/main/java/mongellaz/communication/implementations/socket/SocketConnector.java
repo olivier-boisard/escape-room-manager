@@ -30,7 +30,7 @@ public class SocketConnector implements SocketObserver {
             isRunning = true;
         } else {
             logger.info("Updating socket");
-            socketQueuedCommandSender.update(socket);
+            socketQueuedCommandSender.setSocket(socket);
         }
     }
 
@@ -50,7 +50,7 @@ public class SocketConnector implements SocketObserver {
     }
 
     private void updateCommandSender(Socket socket) {
-        socketQueuedCommandSender.update(socket);
+        socketQueuedCommandSender.setSocket(socket);
         socketCommunicationManager.scheduledQueuedCommandSender.updateQueuedCommandSender(socketQueuedCommandSender);
     }
 

@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class SocketQueuedCommandSender implements QueuedCommandSender, SocketObserver {
+public class SocketQueuedCommandSender implements QueuedCommandSender {
     @Override
     public void sendNextCommand() {
         byte[] command = commands.poll();
@@ -42,8 +42,7 @@ public class SocketQueuedCommandSender implements QueuedCommandSender, SocketObs
         }
     }
 
-    @Override
-    public void update(Socket socket) {
+    public void setSocket(Socket socket) {
         this.socket = socket;
     }
 
