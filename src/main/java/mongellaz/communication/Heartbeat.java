@@ -27,7 +27,7 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
         this.byteArrayGenerator = byteArrayGenerator;
         this.timeoutCallback = timeoutCallback;
         this.connectionFailedCallback = connectionFailedCallback;
-        lastReceivedMessageTimeMs = -1;
+        setLastReceivedMessageTimeMs(-1);
     }
 
     @Override
@@ -48,30 +48,32 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
     @Override
     public void update(byte[] data) {
         logger.debug("Received data");
-        lastReceivedMessageTimeMs = System.currentTimeMillis();
+        setLastReceivedMessageTimeMs(System.currentTimeMillis());
     }
 
     private void startCommandSendingThread() {
         logger.info("Start command sending thread");
-        messageSendingExecutorService.scheduleAtFixedRate(
+        messageSendingExecutorService.scheduleWithFixedDelay(
                 () -> queuedCommands.queueCommand(byteArrayGenerator.generate()),
                 INITIAL_DELAY_MS,
-                RATE_MS,
+                DELAY_MS,
                 TimeUnit.MILLISECONDS
         );
     }
 
     private void startWatchdogThread() {
         logger.info("Start watchdog thread");
-        watchDogExecutorService.scheduleAtFixedRate(
+        watchDogExecutorService.scheduleWithFixedDelay(
                 () -> {
                     try {
-                        if (System.currentTimeMillis() - lastReceivedMessageTimeMs >= TIME_OUT_MS) {
+                        long now = System.currentTimeMillis();
+                        if (now - getLastReceivedMessageTimeMs() >= TIME_OUT_MS) {
                             if (hostName == null || port == 0) {
                                 logger.warn("No socket address set");
                             } else {
                                 logger.info("Resetting connection");
                                 timeoutCallback.update(new Socket(hostName, port));
+                                setLastReceivedMessageTimeMs(now);
                             }
                         }
                     } catch (IOException e) {
@@ -79,11 +81,22 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
                     }
                 },
                 INITIAL_DELAY_MS * 3L,
-                RATE_MS * 3L,
+                DELAY_MS * 3L,
                 TimeUnit.MILLISECONDS
         );
     }
 
+    private void setLastReceivedMessageTimeMs(long lastReceivedMessageTimeMs) {
+        synchronized (mutex) {
+            this.lastReceivedMessageTimeMs = lastReceivedMessageTimeMs;
+        }
+    }
+
+    public long getLastReceivedMessageTimeMs() {
+        synchronized (mutex) {
+            return lastReceivedMessageTimeMs;
+        }
+    }
 
     private String hostName;
     private int port;
@@ -92,9 +105,11 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
     private final ConnectionFailedCallback connectionFailedCallback;
     private final ByteArrayGenerator byteArrayGenerator;
     private static final int INITIAL_DELAY_MS = 5000;
-    private static final int RATE_MS = 1000;
+    private static final int DELAY_MS = 1000;
     private static final int TIME_OUT_MS = 3000;
     private long lastReceivedMessageTimeMs;
+
+    private final Object mutex = new Object();
     private final ScheduledExecutorService messageSendingExecutorService = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService watchDogExecutorService = Executors.newSingleThreadScheduledExecutor();
     private final Logger logger = LogManager.getLogger();

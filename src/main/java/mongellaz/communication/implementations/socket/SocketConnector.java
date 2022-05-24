@@ -42,11 +42,11 @@ public class SocketConnector implements SocketObserver {
     private void startReader(Socket socket) {
         logger.info("Start service for reader");
         int initialDelayMs = 0;
-        int rateMs = 100;
-        dataReaderExecutorService.scheduleAtFixedRate(
+        int delayMs = 100;
+        dataReaderExecutorService.scheduleWithFixedDelay(
                 (new SocketDataRetriever(socket, socketCommunicationManager.receivedMessageObserver))::loop,
                 initialDelayMs,
-                rateMs,
+                delayMs,
                 TimeUnit.MILLISECONDS
         );
     }

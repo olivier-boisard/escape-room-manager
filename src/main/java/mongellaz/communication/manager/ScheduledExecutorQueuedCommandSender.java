@@ -14,10 +14,10 @@ public class ScheduledExecutorQueuedCommandSender implements ScheduledQueuedComm
     @Inject
     ScheduledExecutorQueuedCommandSender(
             @Named("CommunicationManagerInitialDelayMs") int initialDelayMs,
-            @Named("CommunicationManagerRateMs") int rateMs
+            @Named("CommunicationManagerDelayMs") int delayMs
     ) {
         this.initialDelayMs = initialDelayMs;
-        this.rateMs = rateMs;
+        this.delayMs = delayMs;
     }
 
     @Override
@@ -29,10 +29,10 @@ public class ScheduledExecutorQueuedCommandSender implements ScheduledQueuedComm
     @Override
     public void start() {
         logger.info("Starting execution service");
-        commandWriterExecutorService.scheduleAtFixedRate(
+        commandWriterExecutorService.scheduleWithFixedDelay(
                 queuedCommandSender::sendNextCommand,
                 initialDelayMs,
-                rateMs,
+                delayMs,
                 TimeUnit.MILLISECONDS
         );
     }
@@ -54,7 +54,7 @@ public class ScheduledExecutorQueuedCommandSender implements ScheduledQueuedComm
     }
 
     final int initialDelayMs;
-    final int rateMs;
+    final int delayMs;
     private QueuedCommandSender queuedCommandSender;
     private final ScheduledExecutorService commandWriterExecutorService = Executors.newSingleThreadScheduledExecutor();
     private final Logger logger = LogManager.getLogger();

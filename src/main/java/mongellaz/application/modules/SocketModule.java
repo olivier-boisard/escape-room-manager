@@ -36,7 +36,7 @@ public class SocketModule extends AbstractModule {
         bind(ConnectionFailedCallback.class).to(SocketConnectionUi.class);
         bind(SocketObserver.class).annotatedWith(Names.named("HeartBeatNewSocketObserver")).to(SocketConnector.class);
         bindConstant().annotatedWith(Names.named("CommunicationManagerInitialDelayMs")).to(0);
-        bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
+        bindConstant().annotatedWith(Names.named("CommunicationManagerDelayMs")).to(100);
     }
 
     @Provides

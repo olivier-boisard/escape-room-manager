@@ -19,7 +19,7 @@ public class SerialPortModule extends AbstractModule {
         bind(SerialPortConnectionUi.class).in(Singleton.class);
         bind(ComponentHandler.class).annotatedWith(Names.named("ConnectionUi")).to(SerialPortConnectionUi.class);
         bindConstant().annotatedWith(Names.named("CommunicationManagerInitialDelayMs")).to(5000);
-        bindConstant().annotatedWith(Names.named("CommunicationManagerRateMs")).to(100);
+        bindConstant().annotatedWith(Names.named("CommunicationManagerDelayMs")).to(100);
         bind(HandshakeResultObserver.class).to(SerialPortConnectionUi.class);
         bind(SerialPortObserver.class).to(SerialPortConnector.class);
     }
