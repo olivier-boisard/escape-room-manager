@@ -11,29 +11,38 @@ import java.util.Arrays;
 
 public class SocketDataRetriever {
 
-    public SocketDataRetriever(Socket socket, ByteArrayObserver byteArrayObserver) {
+    public SocketDataRetriever(Socket socket, ByteArrayObserver byteArrayObserver, Object mutex) {
         this.socket = socket;
         this.byteArrayObserver = byteArrayObserver;
+        this.mutex = mutex;
     }
 
     public void loop() {
-        if (socket != null) {
-            try {
-                DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                int bufferSize = 256;
-                final byte[] buffer = new byte[bufferSize];
-                int totalReadBytes = 0;
-                do {
-                    int readBytes = dataInputStream.read(buffer, totalReadBytes, buffer.length - totalReadBytes);
-                    if (readBytes < 0) {
-                        logger.warn("Reached end of stream");
-                    }
-                    totalReadBytes += readBytes;
-                } while (buffer[totalReadBytes - 1] != MESSAGE_END_CODE);
-                dispatchReadData(buffer, totalReadBytes);
-            } catch (IOException e) {
-                logger.error("Could not get socket input stream: {}", e.getMessage());
+        synchronized (mutex) {
+            if (socket != null) {
+                try {
+                    DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                    int bufferSize = 256;
+                    final byte[] buffer = new byte[bufferSize];
+                    int totalReadBytes = 0;
+                    do {
+                        int readBytes = dataInputStream.read(buffer, totalReadBytes, buffer.length - totalReadBytes);
+                        if (readBytes < 0) {
+                            logger.warn("Reached end of stream");
+                        }
+                        totalReadBytes += readBytes;
+                    } while (buffer[totalReadBytes - 1] != MESSAGE_END_CODE);
+                    dispatchReadData(buffer, totalReadBytes);
+                } catch (IOException e) {
+                    logger.error("Could not get socket input stream: {}", e.getMessage());
+                }
             }
+        }
+    }
+
+    public void setSocket(Socket socket) {
+        synchronized (mutex) {
+            this.socket = socket;
         }
     }
 
@@ -44,8 +53,9 @@ public class SocketDataRetriever {
         }
     }
 
-    private final Socket socket;
+    private Socket socket;
     private final ByteArrayObserver byteArrayObserver;
+    private final Object mutex;
     private final Logger logger = LogManager.getLogger();
     private static final byte MESSAGE_END_CODE = 0x00;
 }

@@ -12,11 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 public class SocketConnector implements SocketObserver {
 
+    private SocketDataRetriever socketDataRetriever;
+
     @Inject
     SocketConnector(SocketCommunicationManager socketCommunicationManager, DeviceController deviceController) {
         this.socketCommunicationManager = socketCommunicationManager;
         this.deviceController = deviceController;
-        socketQueuedCommandSender = new SocketQueuedCommandSender();
+        socketQueuedCommandSender = new SocketQueuedCommandSender(mutex);
         isRunning = false;
     }
 
@@ -31,6 +33,7 @@ public class SocketConnector implements SocketObserver {
         } else {
             logger.info("Updating socket");
             socketQueuedCommandSender.setSocket(socket);
+            socketDataRetriever.setSocket(socket);
         }
     }
 
@@ -43,8 +46,9 @@ public class SocketConnector implements SocketObserver {
         logger.info("Start service for reader");
         int initialDelayMs = 0;
         int delayMs = 100;
+        socketDataRetriever = new SocketDataRetriever(socket, socketCommunicationManager.receivedMessageObserver, mutex);
         dataReaderExecutorService.scheduleWithFixedDelay(
-                (new SocketDataRetriever(socket, socketCommunicationManager.receivedMessageObserver))::loop,
+                socketDataRetriever::loop,
                 initialDelayMs,
                 delayMs,
                 TimeUnit.MILLISECONDS
@@ -65,6 +69,7 @@ public class SocketConnector implements SocketObserver {
     private final SocketQueuedCommandSender socketQueuedCommandSender;
     private final SocketCommunicationManager socketCommunicationManager;
     private final DeviceController deviceController;
+    private final Object mutex = new Object();
     private boolean isRunning;
     private final Logger logger = LogManager.getLogger();
     private final ScheduledExecutorService dataReaderExecutorService = Executors.newSingleThreadScheduledExecutor();

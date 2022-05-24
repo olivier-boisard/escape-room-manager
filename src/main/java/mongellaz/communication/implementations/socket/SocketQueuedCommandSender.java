@@ -11,16 +11,22 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SocketQueuedCommandSender implements QueuedCommandSender {
+    public SocketQueuedCommandSender(Object mutex) {
+        this.mutex = mutex;
+    }
+
     @Override
     public void sendNextCommand() {
-        byte[] command = commands.poll();
-        if (command != null) {
-            try {
-                logger.info("Send command to socket: {}", command);
-                DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                dataOutputStream.write(command);
-            } catch (IOException e) {
-                logger.error("Could not write data: {}", e.getMessage());
+        synchronized (mutex) {
+            byte[] command = commands.poll();
+            if (command != null) {
+                try {
+                    logger.info("Send command to socket: {}", command);
+                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    dataOutputStream.write(command);
+                } catch (IOException e) {
+                    logger.error("Could not write data: {}", e.getMessage());
+                }
             }
         }
     }
@@ -32,24 +38,30 @@ public class SocketQueuedCommandSender implements QueuedCommandSender {
 
     @Override
     public void shutdown() {
-        try {
-            if (socket != null && !socket.isClosed()) {
-                socket.close();
-                logger.info("Closed socket");
-            } else {
-                logger.debug("No socket to close");
+        synchronized (mutex) {
+            try {
+                if (socket != null && !socket.isClosed()) {
+                    socket.close();
+                    logger.info("Closed socket");
+                } else {
+                    logger.debug("No socket to close");
+                }
+            } catch (IOException e) {
+                logger.error("Could not close socket: {}", e.getMessage());
             }
-        } catch (IOException e) {
-            logger.error("Could not close socket: {}", e.getMessage());
         }
     }
 
     public void setSocket(Socket socket) {
-        this.socket = socket;
+        synchronized (mutex) {
+            this.socket = socket;
+        }
     }
 
     private Socket socket;
     private final Queue<byte[]> commands = new ConcurrentLinkedQueue<>();
 
     private final Logger logger = LogManager.getLogger();
+
+    private final Object mutex;
 }
