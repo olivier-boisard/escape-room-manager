@@ -5,6 +5,7 @@ import mongellaz.communication.DeviceController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,19 +20,24 @@ public class SocketConnector implements SocketObserver {
         this.socketCommunicationManager = socketCommunicationManager;
         this.deviceController = deviceController;
         socketQueuedCommandSender = new SocketQueuedCommandSender(mutex);
-        isRunning = false;
     }
 
     @Override
     public void update(Socket socket) {
-        if (!isRunning) {
+        if (currentSocket == null) {
             logger.info("Starting socket connector");
             startReader(socket);
             updateCommandSender(socket);
             startDeviceController();
-            isRunning = true;
+            currentSocket = socket;
         } else {
             logger.info("Updating socket");
+            try {
+                currentSocket.close();
+            } catch (IOException e) {
+                logger.warn("Could not close previous socket: {}. Going forward with connection", e.getMessage());
+            }
+            currentSocket = socket;
             socketQueuedCommandSender.setSocket(socket);
             socketDataRetriever.setSocket(socket);
         }
@@ -66,11 +72,11 @@ public class SocketConnector implements SocketObserver {
         deviceController.start();
     }
 
+    private Socket currentSocket = null;
     private final SocketQueuedCommandSender socketQueuedCommandSender;
     private final SocketCommunicationManager socketCommunicationManager;
     private final DeviceController deviceController;
     private final Object mutex = new Object();
-    private boolean isRunning;
     private final Logger logger = LogManager.getLogger();
     private final ScheduledExecutorService dataReaderExecutorService = Executors.newSingleThreadScheduledExecutor();
 

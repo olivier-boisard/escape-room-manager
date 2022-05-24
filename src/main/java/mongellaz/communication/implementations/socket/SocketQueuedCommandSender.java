@@ -17,16 +17,16 @@ public class SocketQueuedCommandSender implements QueuedCommandSender {
 
     @Override
     public void sendNextCommand() {
-        synchronized (mutex) {
-            byte[] command = commands.poll();
-            if (command != null) {
-                try {
-                    logger.info("Send command to socket: {}", command);
+        byte[] command = commands.poll();
+        if (command != null) {
+            try {
+                logger.info("Send command to socket: {}", command);
+                synchronized (mutex) {
                     DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     dataOutputStream.write(command);
-                } catch (IOException e) {
-                    logger.error("Could not write data: {}", e.getMessage());
                 }
+            } catch (IOException e) {
+                logger.error("Could not write data: {}", e.getMessage());
             }
         }
     }

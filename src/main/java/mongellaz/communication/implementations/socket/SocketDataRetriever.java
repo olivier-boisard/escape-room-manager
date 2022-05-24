@@ -18,13 +18,13 @@ public class SocketDataRetriever {
     }
 
     public void loop() {
-        synchronized (mutex) {
-            if (socket != null) {
-                try {
+        if (socket != null) {
+            try {
+                int totalReadBytes = 0;
+                int bufferSize = 256;
+                final byte[] buffer = new byte[bufferSize];
+                synchronized (mutex) {
                     DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                    int bufferSize = 256;
-                    final byte[] buffer = new byte[bufferSize];
-                    int totalReadBytes = 0;
                     do {
                         int readBytes = dataInputStream.read(buffer, totalReadBytes, buffer.length - totalReadBytes);
                         if (readBytes < 0) {
@@ -32,10 +32,10 @@ public class SocketDataRetriever {
                         }
                         totalReadBytes += readBytes;
                     } while (buffer[totalReadBytes - 1] != MESSAGE_END_CODE);
-                    dispatchReadData(buffer, totalReadBytes);
-                } catch (IOException e) {
-                    logger.error("Could not get socket input stream: {}", e.getMessage());
                 }
+                dispatchReadData(buffer, totalReadBytes);
+            } catch (IOException e) {
+                logger.error("Could not get socket input stream: {}", e.getMessage());
             }
         }
     }
