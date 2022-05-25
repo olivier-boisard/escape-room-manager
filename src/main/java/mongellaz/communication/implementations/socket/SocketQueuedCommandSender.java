@@ -22,8 +22,10 @@ public class SocketQueuedCommandSender implements QueuedCommandSender {
             try {
                 logger.info("Send command to socket: {}", command);
                 synchronized (mutex) {
+                    logger.info("Entered mutex-synchronized block");
                     DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     dataOutputStream.write(command);
+                    logger.info("Leaving mutex-synchronized block");
                 }
             } catch (IOException e) {
                 logger.error("Could not write data: {}", e.getMessage());
@@ -39,6 +41,7 @@ public class SocketQueuedCommandSender implements QueuedCommandSender {
     @Override
     public void shutdown() {
         synchronized (mutex) {
+            logger.info("Entered mutex-synchronized block");
             try {
                 if (socket != null && !socket.isClosed()) {
                     socket.close();
@@ -49,6 +52,7 @@ public class SocketQueuedCommandSender implements QueuedCommandSender {
             } catch (IOException e) {
                 logger.error("Could not close socket: {}", e.getMessage());
             }
+            logger.info("Leaving mutex-synchronized block");
         }
     }
 

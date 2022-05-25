@@ -23,16 +23,20 @@ public class SocketDataRetriever {
                 int totalReadBytes = 0;
                 int bufferSize = 256;
                 final byte[] buffer = new byte[bufferSize];
-                synchronized (mutex) {
-                    DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                    do {
-                        int readBytes = dataInputStream.read(buffer, totalReadBytes, buffer.length - totalReadBytes);
-                        if (readBytes < 0) {
-                            logger.warn("Reached end of stream");
+                do {
+                    synchronized (mutex) {
+                        logger.debug("Entered mutex-synchronized block");
+                        DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                        if (dataInputStream.available() > 0) {
+                            int readBytes = dataInputStream.read(buffer, totalReadBytes, buffer.length - totalReadBytes);
+                            if (readBytes < 0) {
+                                logger.warn("Reached end of stream");
+                            }
+                            totalReadBytes += readBytes;
                         }
-                        totalReadBytes += readBytes;
-                    } while (buffer[totalReadBytes - 1] != MESSAGE_END_CODE);
-                }
+                        logger.debug("Leaving mutex-synchronized block");
+                    }
+                } while (buffer[totalReadBytes - 1] != MESSAGE_END_CODE);
                 dispatchReadData(buffer, totalReadBytes);
             } catch (IOException e) {
                 logger.error("Could not get socket input stream: {}", e.getMessage());
@@ -42,6 +46,7 @@ public class SocketDataRetriever {
 
     public void setSocket(Socket socket) {
         synchronized (mutex) {
+            logger.info("Entered mutex-synchronized block");
             this.socket = socket;
         }
     }
