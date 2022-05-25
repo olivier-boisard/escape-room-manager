@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 public class SocketConnector implements SocketObserver {
 
-    private SocketDataRetriever socketDataRetriever;
 
     @Inject
     SocketConnector(SocketCommunicationManager socketCommunicationManager, DeviceController deviceController) {
@@ -74,6 +73,7 @@ public class SocketConnector implements SocketObserver {
 
     private Socket currentSocket = null;
     private final SocketQueuedCommandSender socketQueuedCommandSender;
+    private SocketDataRetriever socketDataRetriever;
     private final SocketCommunicationManager socketCommunicationManager;
     private final DeviceController deviceController;
     private final Object mutex = new Object();
