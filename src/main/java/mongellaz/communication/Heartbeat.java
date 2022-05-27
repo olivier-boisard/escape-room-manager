@@ -81,7 +81,7 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
                     }
                 },
                 INITIAL_DELAY_MS * 3L,
-                DELAY_MS * 3L,
+                DELAY_MS / 2,
                 TimeUnit.MILLISECONDS
         );
     }
