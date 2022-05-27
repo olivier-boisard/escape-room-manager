@@ -32,7 +32,7 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
 
     @Override
     public void update(Socket socket) {
-        logger.debug("Update socket");
+        logger.info("Update socket");
         hostName = socket.getInetAddress().getHostName();
         port = socket.getPort();
         startCommandSendingThread();
@@ -47,7 +47,7 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
 
     @Override
     public void update(byte[] data) {
-        logger.debug("Received data");
+        logger.debug("Received data: {}", data);
         setLastReceivedMessageTimeMs(System.currentTimeMillis());
     }
 
