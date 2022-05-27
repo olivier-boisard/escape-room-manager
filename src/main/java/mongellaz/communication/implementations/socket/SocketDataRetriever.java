@@ -41,6 +41,8 @@ public class SocketDataRetriever {
             } catch (IOException e) {
                 logger.error("Could not get socket input stream: {}", e.getMessage());
             }
+        } else {
+            logger.debug("No socket");
         }
     }
 
