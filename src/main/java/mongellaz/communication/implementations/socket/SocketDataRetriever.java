@@ -36,7 +36,7 @@ public class SocketDataRetriever {
                         }
                         logger.debug("Leaving mutex-synchronized block");
                     }
-                } while (buffer[totalReadBytes - 1] != MESSAGE_END_CODE);
+                } while (continueReadingBuffer(buffer, totalReadBytes));
                 dispatchReadData(buffer, totalReadBytes);
             } catch (IOException e) {
                 logger.error("Could not get socket input stream: {}", e.getMessage());
@@ -51,6 +51,14 @@ public class SocketDataRetriever {
             logger.info("Entered mutex-synchronized block");
             this.socket = socket;
         }
+    }
+
+    private boolean continueReadingBuffer(byte[] buffer, int totalReadBytes) {
+        boolean mustContinue = totalReadBytes == 0;
+        if (!mustContinue) {
+            mustContinue = buffer[totalReadBytes - 1] != MESSAGE_END_CODE;
+        }
+        return mustContinue;
     }
 
     private void dispatchReadData(byte[] buffer, int totalReadBytes) {
