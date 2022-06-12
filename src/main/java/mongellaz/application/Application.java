@@ -19,7 +19,7 @@ import java.io.IOException;
 public class Application {
     public static void main(String[] args) {
         Logger logger = LogManager.getLogger();
-        logger.info("Start - running version v202205241726");
+        logger.info("Start - running version v202206120841");
 
         // Get main UI components
         Injector wifiConfigurationInjector = Guice.createInjector(
