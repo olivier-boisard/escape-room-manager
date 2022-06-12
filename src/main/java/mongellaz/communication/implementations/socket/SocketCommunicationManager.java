@@ -5,12 +5,11 @@ import com.google.inject.name.Named;
 import mongellaz.communication.ByteArrayObserver;
 import mongellaz.communication.manager.ScheduledQueuedCommandSender;
 
-@SuppressWarnings("ClassCanBeRecord")
 public class SocketCommunicationManager {
     @Inject
     SocketCommunicationManager(
             ScheduledQueuedCommandSender scheduledQueuedCommandSender,
-            @Named("SocketCommunicationManagerReceivedMessageObserver") ByteArrayObserver receivedMessageObserver
+            @Named("SocketCommunicationManagerReceivedMessageObservers") ByteArrayObserver receivedMessageObserver
     ) {
         this.scheduledQueuedCommandSender = scheduledQueuedCommandSender;
         this.receivedMessageObserver = receivedMessageObserver;

@@ -31,7 +31,7 @@ public class SocketModule extends AbstractModule {
         bind(HandshakeResultObserver.class).to(SocketConnectionUi.class);
         bind(QueuedCommands.class).to(ScheduledExecutorQueuedCommandSender.class);
         bind(ByteArrayObserver.class)
-                .annotatedWith(Names.named("SocketCommunicationManagerReceivedMessageObserver"))
+                .annotatedWith(Names.named("SocketCommunicationManagerReceivedMessageObservers"))
                 .toProvider(ByteArrayObserverProvider.class);
         bind(ConnectionFailedCallback.class).to(SocketConnectionUi.class);
         bind(SocketObserver.class).annotatedWith(Names.named("HeartBeatNewSocketObserver")).to(SocketConnector.class);
