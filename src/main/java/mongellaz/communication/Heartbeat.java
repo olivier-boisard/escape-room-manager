@@ -55,8 +55,8 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
         logger.info("Start command sending thread");
         messageSendingExecutorService.scheduleWithFixedDelay(
                 () -> queuedCommands.queueCommand(byteArrayGenerator.generate()),
-                INITIAL_DELAY_MS,
-                DELAY_MS,
+                COMMAND_SENDER_INITIAL_DELAY_MS,
+                COMMAND_SENDER_DELAY_MS,
                 TimeUnit.MILLISECONDS
         );
     }
@@ -80,8 +80,8 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
                         connectionFailedCallback.handleFailedConnection(e.getMessage());
                     }
                 },
-                INITIAL_DELAY_MS * 3L,
-                DELAY_MS / 2,
+                WATCHDOG_INITIAL_DELAY_MS,
+                WATCHDOG_DELAY_MS,
                 TimeUnit.MILLISECONDS
         );
     }
@@ -104,9 +104,11 @@ public class Heartbeat implements ByteArrayObserver, SocketObserver {
     private final QueuedCommands queuedCommands;
     private final ConnectionFailedCallback connectionFailedCallback;
     private final ByteArrayGenerator byteArrayGenerator;
-    private static final int INITIAL_DELAY_MS = 5000;
-    private static final int DELAY_MS = 1000;
+    private static final int COMMAND_SENDER_INITIAL_DELAY_MS = 2000;
+    private static final int COMMAND_SENDER_DELAY_MS = 1000;
     private static final int TIME_OUT_MS = 3000;
+    private static final int WATCHDOG_INITIAL_DELAY_MS = 5000;
+    private static final int WATCHDOG_DELAY_MS = 500;
     private long lastReceivedMessageTimeMs;
 
     private final Object mutex = new Object();
