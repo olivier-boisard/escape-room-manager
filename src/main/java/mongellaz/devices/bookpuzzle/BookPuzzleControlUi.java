@@ -16,15 +16,17 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 import java.util.Vector;
 
 @SuppressWarnings("unused")
 public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
 
     @Inject
-    BookPuzzleControlUi(BookPuzzleDeviceController bookPuzzleDeviceController) {
+    BookPuzzleControlUi(BookPuzzleDeviceController bookPuzzleDeviceController, List<String> readerNames) {
         configureToggleLockButton(bookPuzzleDeviceController);
         configureToggleConfigurationModeButton(bookPuzzleDeviceController);
+        this.readerNames = readerNames;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
                 case NEW_PICC -> NEW_CHIP_STRING;
             };
             Vector<String> row = new Vector<>();
-            row.add("Lecteur " + ++i);
+            row.add(readerNames.get(i++));
             row.add(statusString);
             data.add(row);
         }
@@ -170,6 +172,8 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
             return component;
         }
     }
+
+    private final List<String> readerNames;
 
     private JPanel mainPanel;
     private JButton toggleLockButton;
