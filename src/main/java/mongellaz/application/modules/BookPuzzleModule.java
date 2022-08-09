@@ -23,6 +23,7 @@ import mongellaz.userinterface.VerticalLayoutContainerProvider;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookPuzzleModule extends AbstractModule {
     @Override
@@ -47,6 +48,14 @@ public class BookPuzzleModule extends AbstractModule {
         bind(new TypeLiteral<byte[]>() {})
                 .annotatedWith(Names.named("ExpectedDeviceFirmwareId"))
                 .toInstance(new byte[]{-123, -14, -98, -29, 67, 25, -22, -10});
+
+        List<String> readerNames = new ArrayList<>();
+        readerNames.add("BABAR - NANTES – RAYNAUD - 173");
+        readerNames.add("JEAN DE LA FONTAINE - BORDEAUX – LASSERRE - 08");
+        readerNames.add("ESMERALDA - PARIS – LAFLEUR - 108");
+        readerNames.add("PONT - TOULOUSE – DELORME - 36");
+        readerNames.add("LION - LYON – ROUSSEL - 75");
+        bind(new TypeLiteral<List<String>>() {}).annotatedWith(Names.named("ReaderNames")).toInstance(readerNames);
     }
 
     @SuppressWarnings("unused")

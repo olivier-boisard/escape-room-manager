@@ -1,6 +1,7 @@
 package mongellaz.devices.bookpuzzle;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import mongellaz.devices.bookpuzzle.devicecontroller.BookPuzzleDeviceController;
 import mongellaz.devices.bookpuzzle.commands.toggleconfigurationmode.ConfigurationModeStateObserver;
 import mongellaz.devices.common.togglelock.LockStateObserver;
@@ -23,7 +24,7 @@ import java.util.Vector;
 public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver, ConfigurationModeStateObserver, PiccReaderStatusesObserver {
 
     @Inject
-    BookPuzzleControlUi(BookPuzzleDeviceController bookPuzzleDeviceController, List<String> readerNames) {
+    BookPuzzleControlUi(BookPuzzleDeviceController bookPuzzleDeviceController, @Named("ReaderNames") List<String> readerNames) {
         configureToggleLockButton(bookPuzzleDeviceController);
         configureToggleConfigurationModeButton(bookPuzzleDeviceController);
         this.readerNames = readerNames;
@@ -51,7 +52,7 @@ public class BookPuzzleControlUi implements ComponentHandler, LockStateObserver,
     @Override
     public void update(Iterable<PiccReaderStatus> piccReaderStatuses) {
         logger.debug("Update PICC reader status");
-        piccReaderStatusesTable.setModel(new DefaultTableModel(convertToRows(piccReaderStatuses), getColumnNames()){
+        piccReaderStatusesTable.setModel(new DefaultTableModel(convertToRows(piccReaderStatuses), getColumnNames()) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
